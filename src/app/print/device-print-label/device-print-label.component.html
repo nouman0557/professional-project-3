@@ -1,0 +1,56 @@
+<div class="invoice box-printLabel" *ngIf="device">
+    <div class="label-print">
+        <div class="top">
+            <div class="left">
+                <h3>{{device.storeName}}</h3>
+            </div>
+            <div class='center'>
+                <h3>
+                    {{device?.brand_model_name}}
+                </h3>
+            </div>
+            <div class="right">
+                <h3>
+                    {{device?.Customer?.first_name + ' ' + device?.Customer?.last_name | uppercase }}
+                </h3>
+            </div>
+        </div>
+        <div class="top-mid">
+            <div class="left">
+                <h3>Device ID:<span>{{device.device_keeping_unit}}</span></h3>
+            </div>
+            <div class="center">
+                <h3>Serial Number:<span>{{device.serial_number || N/A}}</span></h3>
+            </div>
+            <div class="right">
+                <h3>IMEI:<span>{{device.imei_ssn}}</span></h3>
+            </div>
+        </div>
+        <div class="mid">
+            <div class="product-name">
+                <ngx-barcode class="fontPoppin font10 mb5 mtMin5 color000 dBlock text-center"
+                    [bc-value]="device.imei_ssn" [bc-width]="3.5" [bc-height]="70" [bc-display-value]="true"
+                    [bc-margin]="4" [bc-margin-top]="4" [bc-margin-bottom]="4" [bc-margin-left]="4"
+                    [bc-margin-right]="4">
+                </ngx-barcode>
+                <!-- <i class="icon-code_bar color000 font100 lineHeight08 dBlock"></i> -->
+                <h3>{{device.brand_model_name}}<span>{{device.description}}</span>
+                </h3>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="left">
+                <h3><span>{{device?.Checkin.check_in_date | customDateFormat }}</span><span>{{device?.Checkin.check_in_date | date:'HH:mm:ss'}}</span>
+                </h3>
+            </div>
+            <div class="center">
+                <h3><span>{{device?.Customer?.address_1}}</span></h3>
+            </div>
+            <div class="right">
+                <h3><span>Device passcode:</span><span
+                        class="fontSemiBold">{{device?.Checkin.is_pattern ? device?.Checkin?.pattern_code || 'N/A' :  device?.Checkin?.password  || 'N/A'}}</span>
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>

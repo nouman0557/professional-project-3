@@ -1,0 +1,2289 @@
+query searchSystemSupplier($search:String!){
+  searchSystemSupplier(search: $search){
+  _id
+  supplier_company
+  supplier_company_phone
+  website
+  address_1
+  address_2
+  city
+  state
+  zip_code
+  Country {
+    _id
+    name
+    short_name
+    is_active
+    identification_types
+    }
+  supplier_first_name
+  supplier_last_name
+  supplier_phone
+  supplier_mobile
+  supplier_email
+  }
+}
+
+mutation createSupplier($input: supplierInput){
+createSupplier(input: $input){
+  _id
+  supplier_company
+  supplier_company_phone
+  supplier_company_email
+  website
+  address_1
+  address_2
+  city
+  state
+  zip_code
+  is_verify_supplier
+  is_buyback
+  supplier_keeping_unit
+  Country{
+     _id
+    name
+  }
+  supplier_first_name
+  supplier_last_name
+  supplier_phone
+  supplier_mobile
+  supplier_email
+
+ }
+}
+mutation supplierChangeBuyback($id: ID!, $input:Boolean!){
+  SupplierChangeBuyBack(_id:$id,isBuyBack:$input){
+    _id
+    supplier_company
+    is_buyback
+  }
+}
+
+query Supplier($location_id:ID,$limit: Int,$skip: Int){
+suppliers(location_id:$location_id,limit: $limit,skip:$skip){
+    _id
+  supplier_company
+  supplier_company_phone
+  supplier_company_email
+  website
+  address_1
+  address_2
+  city
+  state
+  zip_code
+  supplier_keeping_unit
+  is_verify_supplier
+  is_buyback
+  Country{
+     _id
+    name
+  }
+  supplier_first_name
+  supplier_last_name
+  supplier_phone
+  supplier_mobile
+  supplier_email
+  payment_settings {
+    paymentType {
+        _id
+        name
+        icon
+      }
+      isActive
+    }
+  }
+} 
+query getBrandWiseDevices($search:String! , $location_id: ID!){
+  getBrandWiseDevices(search:$search , location_id : $location_id){
+    _id 
+    brand_name
+    system_devices{
+      _id 
+      product_name
+      product_price
+      is_system_created
+    }
+  }
+}
+
+
+query compareSupplierWithSystem($input: systemSupplierInput){
+  compareSupplierWithSystem(input: $input){
+      _id
+      supplier_company
+      supplier_company_phone
+      supplier_company_email
+      website
+      address_1
+      address_2
+      city
+      state
+      zip_code
+      Country{
+         _id
+        name
+      }
+      supplier_first_name
+      supplier_last_name
+      supplier_phone
+      supplier_mobile
+      supplier_email
+      
+  }
+}
+
+ query getAllSupplierRestock($location_id: ID!,$search: String){
+    getAllSupplierRestock(location_id: $location_id,search: $search){
+      _id
+      supplier_company
+      supplier_company_phone
+      supplier_company_email
+      website
+      address_1
+      address_2
+      city
+      state
+      zip_code
+      supplier_keeping_unit
+      is_verify_supplier
+      is_buyback
+      Country{
+        _id
+        name
+      }
+      supplier_first_name
+      supplier_last_name
+      supplier_phone
+      supplier_mobile
+      supplier_email
+      payment_settings {
+          paymentType {
+              _id
+              name
+              icon
+          }
+          isActive
+        }
+    }
+  }
+
+mutation importSuppliersData($input: [importSupplierInput]){
+ importSuppliersData(input:$input){
+    alreadyExistSuppliers{
+      _id
+      supplier_company
+      supplier_company_phone
+      supplier_company_email
+      website
+      address_1
+      address_2
+      city
+      state
+      zip_code
+      Country{
+         _id
+        name
+      }
+      supplier_first_name
+      supplier_last_name
+      supplier_phone
+      supplier_mobile
+      supplier_email
+    }
+    suppliersInvalidData{
+      _id
+      supplier_company
+      supplier_company_phone
+      supplier_company_email
+      website
+      address_1
+      address_2
+      city
+      state
+      zip_code
+      Country{
+         _id
+        name
+      }
+      supplier_first_name
+      supplier_last_name
+      supplier_phone
+      supplier_mobile
+      supplier_email
+    }
+    newlyAddedSuppliers{
+      _id
+      supplier_company
+      supplier_company_phone
+      supplier_company_email
+      website
+      address_1
+      address_2
+      city
+      state
+      zip_code
+      Country{
+         _id
+        name
+      }
+      supplier_first_name
+      supplier_last_name
+      supplier_phone
+      supplier_mobile
+      supplier_email
+    }
+   }
+}
+
+ 
+mutation createShippingType($input: ShippingTypeInput!){
+   createShippingType(input: $input){
+    _id
+    shipment_name
+    shipment_price
+    delivery_time_days
+    threshold
+    hours
+    minutes
+    am_pm
+    time_zone
+    icon
+    BusinessLocation{
+      _id
+      store_name
+    }
+  }
+}
+
+query getAllShippingType($location_id: ID!,$limit: Int,$skip: Int, $supplierID: ID){
+getAllShippingType(location_id: $location_id,limit: $limit,skip:$skip, supplierID: $supplierID){
+    _id
+    shipment_name
+    shipment_price
+    delivery_time_days
+    threshold
+    icon
+    hours
+    minutes
+    am_pm
+    time_zone
+    tracking_url
+    BusinessLocation{
+      _id
+      store_name
+    }
+  }
+}
+
+mutation updateShippingType($id: ID!,$input: ShippingTypeInput!){
+  updateShippingType(id: $id,input: $input)
+}
+
+query getShippingType($id: ID!){
+getShippingType(id: $id){
+    _id
+    shipment_name
+    shipment_price
+    delivery_time_days
+    hours
+    minutes
+    am_pm
+    time_zone
+    threshold
+    icon
+    BusinessLocation{
+      _id
+      store_name
+    }
+  }
+}
+
+mutation deleteShippingType($id: ID!){
+  deleteShippingType(id: $id)
+}
+
+mutation removedMultiSuppliers($id: [ID!]){
+  removedMultiSuppliers(id: $id)
+}
+
+query getAllSuppliers {
+  suppliers {
+ _id
+  supplier_company
+  supplier_company_phone
+  supplier_company_email
+  website
+  address_1
+  address_2
+  city
+  state
+  zip_code
+  supplier_keeping_unit
+  Country{
+     _id
+    name
+  }
+  supplier_first_name
+  supplier_last_name
+  supplier_phone
+  supplier_mobile
+  supplier_email
+  }
+}
+
+mutation removedSupplier($id: ID!) {
+  removedSupplier(id: $id)
+}
+
+mutation updateSupplier($id: ID!, $input: supplierInput) {
+  updateSupplier(id: $id, input: $input)
+}
+
+query checkSupplierEmailAndCompanyPhone(
+  $supplierField: String!
+  $type: String!
+) {
+  checkSupplierEmailAndCompanyPhone(supplierField: $supplierField, type: $type)
+}
+
+mutation createProduct($input: productInput) {
+  createProduct(input: $input) {
+    _id
+  }
+}
+
+query getProductbyID($id: ID, $locationId: ID!) {
+  getProductbyID(id: $id, locationId: $locationId) {
+    _id
+    product_name
+    description
+  }
+}
+
+query ProductsBySupplier($supplierId: ID!, $locationId: ID!, $stock: String) {
+  ProductsBySupplier(
+    supplierId: $supplierId
+    locationId: $locationId
+    stock: $stock
+  ) {
+    _id
+    product_name
+    description
+  }
+}
+
+mutation deleteProduct($productIds: [ID]){
+  deleteProduct(productIds:$productIds)
+}
+
+
+mutation createBrand($input: brandInput) {
+  createBrand(input: $input) {
+    _id
+    name
+  }
+}
+
+mutation updateProduct($id: ID!, $input: productInput) {
+  updateProduct(id: $id, input: $input)
+}
+
+query getCountries {
+  countries {
+    _id
+    name
+    short_name
+    identification_types
+  }
+}
+
+query getPurchaseOrdersAndSearch($input: searchInput) {
+  getPurchaseOrdersAndSearch(input: $input) {
+    transaction {
+      _id
+      order_status
+      transaction_type
+      transaction_keeping_unit
+      shipping_tracking_no
+      shipping_company_name
+      created_at
+      transaction_date
+      arrival_Date
+      remaining_amount
+      total_amount
+      dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      dynamic_status_list {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      sub_total_amount
+      tax_amount
+      ShippingType {
+        _id
+        shipment_name
+        shipment_price
+        delivery_time_days
+        hours
+        minutes
+        am_pm
+        time_zone
+        threshold
+        icon
+      }
+      Supplier{
+        _id
+        supplier_company
+      }
+      received_additional_cost
+    }
+    suppliers {
+      _id
+      supplier_company
+    }
+    available_status
+  }
+}
+
+query importSearchProducts($search: [String!], $locationId: ID!) {
+  importSearchProducts(search: $search, locationId: $locationId) {
+    _id
+    product_name
+  }
+}
+
+query GetSupplierPurchaseHistory($supplierID: ID!, $businessLocation: ID!) {
+  GetSupplierPurchaseHistory(
+    supplierID: $supplierID
+    businessLocation: $businessLocation
+  ) {
+    totalAmount
+    avgItemPerVisit
+    totalVisiter
+    avgPurchase
+  }
+}
+
+query GetAllProductAccounts {
+  GetAllProductAccounts {
+    expenses {
+      _id
+      account_code
+      account_name
+      slug
+      parent_account_Id { 
+        account_name
+      }
+    }
+    income {
+      _id
+      account_code
+      account_name
+      slug
+      parent_account_Id { 
+        account_name
+      }
+    }
+    inventory {
+      _id
+      account_code
+      account_name
+      slug
+      parent_account_Id { 
+        account_name
+      }
+    }
+  }
+}
+
+query GetSupplierPurchaseOrders($supplierID: ID!, $businessLocation: ID!) {
+  GetSupplierPurchaseOrders(
+    supplierID: $supplierID
+    businessLocation: $businessLocation
+  ) {
+    transaction_date
+    order_status
+  }
+}
+
+query GetSupplierPurchasePayments($supplierID: ID!, $businessLocation: ID!) {
+  GetSupplierPurchasePayments(
+    supplierID: $supplierID
+    businessLocation: $businessLocation
+  ) {
+    amount
+    method
+    paid_on
+    Transaction{
+    order_status
+    }
+  }
+}
+
+query GetSupplierPurchaseBills($supplierID: ID!, $businessLocation: ID!) {
+  GetSupplierPurchaseBills( supplierID: $supplierID, businessLocation: $businessLocation ) {
+   _id
+  }
+}
+
+query getAllDeviceModelByBrand($id: ID!) {
+  getAllDeviceModelByBrand(brandId: $id) {
+    _id
+    name
+  }
+}
+
+mutation createDeviceModel($input: deviceModelInput) {
+  createDeviceModel(input: $input) {
+    _id
+    name
+  }
+}
+
+query getAllCompatibleDeviceTags($search: String!) {
+  searchDeviceTags(search : $search ) {
+    name
+  }
+}
+
+query uniqueSKUNumberForProduct($locationId: ID , $sku: String) { 
+  uniqueSKUNumberForProduct(locationId: $locationId , sku: $sku)
+}
+
+query uniqueSkUNumberForSupplier($locationId: ID , $sku_number: String , $supplier_id: ID) { 
+  uniqueSkUNumberForSupplier(locationId: $locationId , sku_number: $sku_number , supplier_id: $supplier_id)
+}
+
+query getAllAccountTypeWise($search: String , $type: Account_Type) {
+  GetAllAccountTypeWise(search: $search , type: $type) {
+    _id
+    account_code
+    account_name
+    slug
+    account_type_Id {
+      _id
+      title
+    }
+    parent_account_Id {
+      _id
+      account_name
+    }
+    Opening_balance
+    account_balance
+    description
+  }
+}
+
+query getProductsAndSearch($locationId: ID,$search: String,$limit: Int,$skip: Int,$filterType: filterType , 
+      $is_deleted : Boolean , $productType : productTypes){
+   getProductsAndSearch(locationId: $locationId,search: $search,limit: $limit,skip: $skip,filterType: $filterType
+      is_deleted : $is_deleted , productType : $productType){
+    _id
+    product_name
+    description
+    image
+    is_bundle_product
+    bundle_products{
+      bundleProduct{
+        bundleProductID{
+          _id
+          product_name
+          is_product
+          ProductStockPrice{
+            qty_available
+            alert_quantity
+            average_cost
+          }
+        }
+        quantity
+        selling_price
+        avg_cost
+      }
+      is_manufactured_qty
+      total_selling_price
+      total_avg_cost
+    }
+    max_bundle
+    is_product
+    is_track_stock
+    alert_qty
+    ideal_qty
+    is_serial_number
+    openingStock
+    sell_price
+    sell_price_inc_tax
+    Brand {
+      _id
+      brand_name
+    }
+    DeviceModel {
+      _id
+      name
+    }
+    barcode
+    sku
+    is_completed_product
+    compatilable_devices
+    average_cost
+    last_cost
+    image
+    Suppliers{
+     supplier_id{
+        _id
+        supplier_company
+        supplier_company_phone
+        website
+     }
+    sku_number
+    current_stock
+    }
+    Business{
+      _id
+      business_keeping_unit
+      business_system_name
+    }
+    BusinessLocation{
+      _id
+      store_name
+      store_nick_name
+      location_keeping_unit
+    }
+    tags
+    sale_item
+    total_sale
+    incoming_item
+    ProductStockPrice{
+      _id
+      Product{
+        _id
+      }
+      income_account {
+        _id
+        account_name
+      }
+      expense_account {
+        _id
+        account_name
+      }
+      inventory_account {
+        _id
+        account_name
+      }
+      discount_amount
+      percentage_discount
+      price_without_bundle
+      default_sell_price
+      total_cost
+      ideal_quantity
+      opening_stock
+      qty_available
+      alert_quantity
+      shelf_qty
+      order_qty
+      is_profit_percentage
+      profit_value
+      profit_amount
+      default_sell_price
+      SellTax{
+        _id
+        name
+        amount
+        is_percentage
+        is_tax_group
+      }
+      is_sell_tax_percentage
+      sell_tax_value
+      sell_tax_amount
+      sell_price_inc_tax
+      last_cost
+      average_cost
+    }
+    servicesBrandModel {
+      ServiceBrand {
+        _id
+        brand_name
+      }
+      ServiceDeviceModel {
+        _id
+        name
+      }
+      service_max_price
+      service_min_price
+      ServiceItem {
+        _id
+        product_name
+      }
+    }
+    isAddedDeviceModel
+   }
+  }
+
+  query getProductsforAddBundleProduct($locationId: ID , $is_service: Boolean , $search: String,$brandID: ID , $modelID: ID) {
+    getProductsforAddBundleProduct(locationId: $locationId , is_service: $is_service , search: $search,brandID:$brandID,modelID:$modelID) {
+      _id
+      is_product
+      product_name
+      sell_price
+      ProductStockPrice {
+        qty_available
+        average_cost
+      }
+    }
+  }
+
+  mutation generateSKUNumber {
+   generateSKUNumber
+  }
+
+  mutation createChartOfAccountByType($input: ChartOfAccountInput , $account_type: Account_Type) {
+    createChartOfAccountByType(input: $input , account_type: $account_type) {
+      _id
+    account_code
+    account_name
+    slug
+    account_type_Id {
+      _id
+      title
+    }
+    parent_account_Id {
+      _id
+      account_name
+    }
+    Opening_balance
+    account_balance
+    description
+    }
+  }
+
+mutation createPurchaseOrder($input: createPurchaseOrderInput,$transactionId : ID) {
+  createPurchaseOrder(input : $input , transactionId :$transactionId) {
+    _id
+    transaction_keeping_unit
+    transaction_type
+    received_additional_cost
+    discount_value
+    discount_amount
+    transaction_type
+    transaction_date
+      dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      Supplier{
+         _id
+         supplier_keeping_unit
+         supplier_company
+         supplier_company_phone
+         payment_settings {
+        paymentType {
+          _id
+          name
+          icon
+        }
+        isActive
+      }
+    }
+    refund_amount
+    shipping_amount
+  }
+}
+
+mutation saveManufacturedBundle($input: [BundleInput]){
+  saveManufacturedBundle(input:$input)
+}
+
+mutation createManufacturedBundle($input: [BundleInput]){
+  createManufacturedBundle(input:$input)
+}
+
+mutation purchaseOrderReceiving(
+ $transactionId: ID!,
+ $extra_Items : [inputOrderReceivingProduct]
+ $input: purchaseOrderReceivingInput,
+ $btnCaption: String!
+) {
+  purchaseOrderReceiving(transactionId: $transactionId , extra_Items : $extra_Items , input: $input,btnCaption:$btnCaption) {
+    _id
+    transaction_keeping_unit
+    transaction_type
+    received_additional_cost
+    discount_value
+    discount_amount
+    transaction_type
+    transaction_date
+    supplier_rma_number
+    cancel_by {
+      first_name
+      last_name
+    }
+    cancel_at
+    updated_by {
+      first_name
+      last_name
+    }
+    arrival_Date
+    updated_at
+    supplier_order_number
+    created_by {
+      id
+      first_name
+      last_name
+    }
+    Tax{
+        _id
+        name
+        amount
+        tax_type
+        is_percentage
+    }
+      tax_amount
+      tax_value
+      is_tax_percentage
+      shipping_company_name
+      shipping_tracking_no
+      shipping_estimated_days
+      dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      ShippingType{
+        _id
+        shipment_name
+        shipment_price
+        delivery_time_days
+        threshold
+        icon
+      }
+      total_amount
+      sub_total_amount
+      remaining_amount
+      is_private
+      additional_notes
+      received_note
+      TransactionPayment {
+        _id
+        amount
+        method
+        paid_on
+        card_used_no
+      }
+      Supplier{
+         _id
+         supplier_keeping_unit
+         supplier_company
+         supplier_company_phone
+         payment_settings {
+        paymentType {
+          _id
+          name
+          icon
+        }
+        isActive
+    }
+      }
+      TransactionPurchaseLine {
+        _id
+        stock_sku_number
+        quantity
+        receiving_quantity
+        receive_quantity
+        Product {
+          _id
+          product_name
+          description
+          sku
+        }
+        product_cost_price
+        is_extra_item
+        total_amount
+      }
+      TransactionBuyBackLine{
+        _id
+        System_Device {
+          _id
+          product_name
+          product_price
+          product_brand {
+            _id
+            brand_name
+          }
+        }
+        quantity
+        device_price
+        sub_total
+        total_amount
+        received_qty
+        approve_qty
+
+      }
+      BusinessLocation {
+        address_1
+      }
+      created_at
+      dynamic_status_list {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      is_additional_cost
+      is_extra_items
+      is_missing_items
+      order_estimate_amount
+      ReceivingLogs {
+        _id
+        stock_sku_number
+        Product {
+          product_name
+        }
+        receivedDate
+        quantity
+        receive_quantity
+        quantity_returned
+      }
+      refund_amount
+      shipping_amount
+  }
+}
+
+query getProductAndBundlebySupplier($input: inputSearchProductWithSuppler){
+    getProductAndBundlebySupplier(input: $input){
+    Transaction{
+      _id
+      sub_total_amount
+      Tax{
+        _id
+        name
+        amount
+        tax_type
+        is_percentage
+      }
+      transaction_date
+      transaction_keeping_unit
+      remaining_amount
+      arrival_Date
+      discount_amount
+      discount_value
+      shipping_amount
+      tax_amount
+      tax_value
+      is_discount_percentage
+      transaction_hours
+      transaction_minutes
+      transaction_am_pm
+      is_tax_percentage
+      shipping_company_name
+      shipping_tracking_no
+      shipping_estimated_days
+      ShippingType{
+        _id
+        shipment_name
+        shipment_price
+        delivery_time_days
+         hours
+         minutes
+         am_pm
+         time_zone
+        threshold
+        icon
+      }
+      TransactionPayment {
+        _id
+        amount
+        method
+        paid_on
+        card_used_no
+      }
+      total_amount
+      is_private
+      additional_notes
+      received_note
+      Supplier{
+         _id
+         supplier_keeping_unit
+         supplier_company
+         supplier_company_phone
+         payment_settings {
+          paymentType {
+              _id
+              name
+              icon
+          }
+          isActive
+        }
+      }
+    }
+    ProductList{
+      _id
+      product_name
+      is_bundle_product
+      sku
+      incoming_item
+      Suppliers{
+         supplier_id {
+          supplier_company
+         }
+         sku_number
+         incoming_item
+         instock
+         ordered_qty
+         price_purchase
+         productPrices {
+            bundle_order_qty
+            qty_available
+            average_cost
+            alert_quantity
+            default_sell_price
+        }
+      }
+      sell_price_inc_tax
+      average_cost
+      max_bundle
+      ProductStockPrice{
+        bundle_order_qty
+        qty_available
+        average_cost
+        alert_quantity
+        default_sell_price
+      }
+    }
+  }
+}
+
+mutation createPurchaseOrderpayment($input: inputPurchaseOrderPaymentMethod) {
+    createPurchaseOrderpayment(input: $input) {
+      _id
+      amount
+      method
+      paid_on
+      card_used_no
+      Transaction {
+        dynamic_status {
+          status_name
+          status_font_color
+          status_background_color
+          status_icon
+        }
+        dynamic_status_list {
+          status_name
+          status_font_color
+          status_background_color
+          status_icon
+        }
+      }
+    }
+}
+
+query getAllOrderStatus {
+  GetAllOrderStatus {
+    status_name
+    status_font_color
+    status_background_color
+    status_icon
+  }
+}
+
+query getTaxsByLocation($location_id: ID!,$taxType: TaxTypeEnum){
+  getTaxsByLocation(location_id: $location_id,taxType: $taxType){
+    _id
+    name
+    amount
+    tax_type
+    is_percentage
+    is_tax_group
+  }
+}
+
+mutation orderStatusUpdate($orderID: ID! , $order_status: String , $status_Input: statusInput) {
+  OrderStatusUpdate(orderID: $orderID , order_status: $order_status , status_Input: $status_Input) {
+    _id
+  }
+}
+
+mutation AddShippingDetail($orderID: ID!,$company_name: String!,$tracking_number: String!,$estimated_days: String!){
+  AddShippingDetail(orderID: $orderID,company_name: $company_name,tracking_number: $tracking_number,estimated_days: $estimated_days){
+    _id
+    transaction_type
+    transaction_status
+    order_status
+    shipping_tracking_no
+    dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+    }
+    dynamic_status_list {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+    }
+    shipping_estimated_days
+    shipping_company_name
+  }
+}
+
+
+
+query getPurchaseOrderbyID($orderID : ID! ) {
+  getPurchaseOrderbyID(orderID : $orderID ) {
+    _id
+    transaction_keeping_unit
+    transaction_type
+    received_additional_cost
+    discount_value
+    discount_amount
+    transaction_type
+    transaction_date
+    supplier_rma_number
+    cancel_by {
+      first_name
+      last_name
+    }
+    cancel_at
+    updated_by {
+      first_name
+      last_name
+    }
+    arrival_Date
+    updated_at
+    supplier_order_number
+    created_by {
+      id
+      first_name
+      last_name
+    }
+    Tax{
+        _id
+        name
+        amount
+        tax_type
+        is_percentage
+    }
+      tax_amount
+      tax_value
+      is_tax_percentage
+      shipping_company_name
+      shipping_tracking_no
+      shipping_estimated_days
+      dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      ShippingType{
+        _id
+        shipment_name
+        tracking_url
+        shipment_price
+        delivery_time_days
+        threshold
+        icon
+      }
+      total_amount
+      sub_total_amount
+      remaining_amount
+      is_private
+      additional_notes
+      received_note
+      TransactionPayment {
+        _id
+        amount
+        method
+        paid_on
+        card_used_no
+      }
+      Supplier{
+         _id
+         supplier_keeping_unit
+         supplier_company
+         supplier_company_phone
+         payment_settings {
+        paymentType {
+          _id
+          name
+          icon
+        }
+        isActive
+      }
+      }
+      TransactionPurchaseLine {
+        _id
+        stock_sku_number
+        quantity
+        receiving_quantity
+        receive_quantity
+        Product {
+          _id
+          product_name
+          description
+          sku
+        }
+        product_cost_price
+        is_extra_item
+        total_amount
+      }
+      TransactionBuyBackLine{
+        _id
+        System_Device {
+          _id
+          product_name
+          product_price
+          product_brand {
+            _id
+            brand_name
+          }
+        }
+        quantity
+        device_price
+        sub_total
+        total_amount
+        received_qty
+        approve_qty
+
+      }
+      BusinessLocation {
+        address_1
+      }
+      created_at
+      dynamic_status_list {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      is_additional_cost
+      is_extra_items
+      is_missing_items
+      order_estimate_amount
+      ReceivingLogs {
+        _id
+        stock_sku_number
+        Product {
+          product_name
+        }
+        receivedDate
+        quantity
+        receive_quantity
+        quantity_returned
+      }
+      refund_amount
+      shipping_amount
+  }
+}
+
+mutation addAdditionalCost($orderID: ID! , $amount: Float!) {
+  addAdditionalCost(orderID: $orderID , amount: $amount) {
+    _id
+    transaction_keeping_unit
+    transaction_type
+    received_additional_cost
+    discount_value
+    discount_amount
+    transaction_type
+    transaction_date
+    supplier_rma_number
+    cancel_by {
+      first_name
+      last_name
+    }
+    cancel_at
+    updated_by {
+      first_name
+      last_name
+    }
+    arrival_Date
+    updated_at
+    supplier_order_number
+    created_by {
+      id
+      first_name
+      last_name
+    }
+    Tax{
+        _id
+        name
+        amount
+        tax_type
+        is_percentage
+    }
+      tax_amount
+      tax_value
+      is_tax_percentage
+      shipping_company_name
+      shipping_tracking_no
+      shipping_estimated_days
+      dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      ShippingType{
+        _id
+        shipment_name
+        shipment_price
+        delivery_time_days
+        threshold
+        icon
+      }
+      total_amount
+      sub_total_amount
+      remaining_amount
+      is_private
+      additional_notes
+      received_note
+      TransactionPayment {
+        _id
+        amount
+        method
+        paid_on
+        card_used_no
+      }
+      Supplier{
+         _id
+         supplier_keeping_unit
+         supplier_company
+         supplier_company_phone
+         payment_settings {
+        paymentType {
+          _id
+          name
+          icon
+        }
+        isActive
+    }
+      }
+      TransactionPurchaseLine {
+        _id
+        stock_sku_number
+        quantity
+        receiving_quantity
+        receive_quantity
+        Product {
+          _id
+          product_name
+          description
+          sku
+        }
+        product_cost_price
+        is_extra_item
+        total_amount
+      }
+      TransactionBuyBackLine{
+        _id
+        System_Device {
+          _id
+          product_name
+          product_price
+          product_brand {
+            _id
+            brand_name
+          }
+        }
+        quantity
+        device_price
+        sub_total
+        total_amount
+        received_qty
+        approve_qty
+
+      }
+      BusinessLocation {
+        address_1
+      }
+      created_at
+      dynamic_status_list {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      is_additional_cost
+      is_extra_items
+      is_missing_items
+      order_estimate_amount
+      ReceivingLogs {
+        _id
+        stock_sku_number
+        Product {
+          product_name
+        }
+        receivedDate
+        quantity
+        receive_quantity
+        quantity_returned
+      }
+      shipping_amount
+  }
+}
+
+
+query supplierPOList($input : SupplierOrderListingInput) {
+  supplierPOList(input : $input) {
+    transaction {
+      _id
+      transaction_keeping_unit
+      received_additional_cost
+      transaction_date
+      transaction_type
+      created_by {
+        id
+        first_name
+        last_name
+      }
+      Tax{
+          _id
+          name
+          amount
+          tax_type
+          is_percentage
+      }
+        tax_amount
+        tax_value
+        is_tax_percentage
+        shipping_company_name
+        shipping_tracking_no
+        shipping_estimated_days
+        dynamic_status {
+          status_name
+          status_font_color
+          status_background_color
+          status_icon
+        }
+        ShippingType{
+          _id
+          shipment_name
+          shipment_price
+          delivery_time_days
+          threshold
+          icon
+        }
+        total_amount
+        sub_total_amount
+        remaining_amount
+        is_private
+        additional_notes
+        received_note
+        TransactionPayment {
+          _id
+          amount
+          method
+          paid_on
+        }
+        Supplier{
+          _id
+          supplier_keeping_unit
+          supplier_company
+          supplier_company_phone
+        }
+        TransactionPurchaseLine {
+          _id
+          stock_sku_number
+          quantity
+          receiving_quantity
+          receive_quantity
+          Product {
+            _id
+            product_name
+            description
+            sku
+          }
+          product_cost_price
+          total_amount
+        }
+        BusinessLocation {
+          address_1
+        }
+        created_at
+    }
+    available_status
+  }
+}
+
+mutation poSupplierOrderNumber($orderID: ID!,$order_number: String!){
+  POSupplierOrderNumber(orderID: $orderID,order_number: $order_number){
+    _id
+    transaction_keeping_unit
+    transaction_type
+    received_additional_cost
+    transaction_type
+    transaction_date
+    supplier_order_number
+    created_by {
+      id
+      first_name
+      last_name
+    }
+    Tax{
+        _id
+        name
+        amount
+        tax_type
+        is_percentage
+    }
+      tax_amount
+      tax_value
+      is_tax_percentage
+      shipping_company_name
+      shipping_tracking_no
+      shipping_estimated_days
+      dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      ShippingType{
+        _id
+        shipment_name
+        shipment_price
+        delivery_time_days
+        threshold
+        icon
+      }
+      total_amount
+      sub_total_amount
+      remaining_amount
+      is_private
+      additional_notes
+      received_note
+      TransactionPayment {
+        _id
+        amount
+        method
+        paid_on
+      }
+      Supplier{
+         _id
+         supplier_keeping_unit
+         supplier_company
+         supplier_company_phone
+      }
+      TransactionPurchaseLine {
+        _id
+        stock_sku_number
+        quantity
+        receiving_quantity
+        receive_quantity
+        Product {
+          _id
+          product_name
+          description
+          sku
+        }
+        product_cost_price
+        is_extra_item
+        total_amount
+      }
+      TransactionBuyBackLine{
+        _id
+        System_Device {
+          _id
+          product_name
+          product_price
+          product_brand {
+            _id
+            brand_name
+          }
+        }
+        quantity
+        device_price
+        sub_total
+        total_amount
+      }
+      BusinessLocation {
+        address_1
+      }
+      created_at
+      dynamic_status_list {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      is_additional_cost
+      is_extra_items
+      is_missing_items
+  }
+}
+
+mutation deletePayment($transactionId: ID! , $paymentId: ID!) {
+  deletePayment(transactionId: $transactionId , paymentId: $paymentId)
+}
+
+mutation POStatusUpdate($orderID: ID! , $status_type: POStatusName) {
+  POStatusUpdate(orderID: $orderID , status_type: $status_type) {
+    dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+    }
+    dynamic_status_list {
+      status_name
+      status_font_color
+      status_background_color
+      status_icon
+    }
+  }
+}
+
+query supplierPaymentSettingList($supplier_id: ID!) {
+  supplierPaymentSettingList(supplier_id: $supplier_id) {
+    payment_settings {
+      paymentType {
+          _id
+          name
+          icon
+        }
+      isActive
+    }
+  }
+}
+
+query isManufactureBunldeProduct($location_id: ID!){
+  isManufactureBunldeProduct(location_id: $location_id)
+}
+
+mutation SupplierSortOrder($_id: ID!,$sort_order: Int!){
+  SupplierSortOrder(_id: $_id, sort_order:$sort_order){
+    _id
+    supplier_company
+    supplier_company_phone
+  }
+}
+
+mutation SupplierPaymentSettings($supplier_id: ID! , $payment_id: ID! , $is_active: Boolean!) {
+  SupplierPaymentSettings(supplier_id: $supplier_id , payment_id: $payment_id , is_active: $is_active) { 
+    payment_settings {
+      paymentType {
+          _id
+          name
+          icon
+        }
+      isActive
+    }
+  }
+}
+
+query getCreditLine {
+  getCreditLine {
+    _id
+    credit_line
+  }
+}
+
+mutation PODelete($orderID: ID!) {
+  PODelete(orderID: $orderID)
+}
+
+mutation POCancel($orderID: ID! , $refund_payment_type: RefundPaymentType! , 
+$refund_date: String! , $username: String! , $password: String! , $refund_amount: Float ) {
+  POCancel(orderID: $orderID , refund_payment_type: $refund_payment_type ,
+   refund_date: $refund_date , username: $username , password: $password , refund_amount : $refund_amount)
+   }
+mutation createBuyBackOrder($transactionId: ID , $input: createBuyBackInput) {
+  createBuyBackOrder(transactionId: $transactionId , input: $input) {
+    _id
+    ref_no
+    transaction_keeping_unit
+  }
+}
+
+mutation deleteSystemDevice($ID: ID!) {
+  deleteSystemDevice(id: $ID ) 
+}
+
+mutation BuybackCancel($orderID: ID! , $username: String! , $password: String!) {
+  BuybackCancel(orderID: $orderID ,  username: $username , password: $password)
+}
+mutation BuybackReceiving($orderID: ID! , $input: ReceivingBuyBackInput!) {
+  BuybackReceiving(orderID: $orderID ,  input: $input)
+}
+
+query getProductBySupplier($input: inputSearchProductBySupplier){
+  getProductBySupplier(input: $input){
+     _id
+    product_name
+    description
+    is_bundle_product
+    max_bundle
+    is_product
+    is_track_stock
+    alert_qty
+    ideal_qty
+    is_serial_number
+    openingStock
+    sell_price
+    sell_price_inc_tax
+    Brand {
+      _id
+      brand_name
+    }
+    DeviceModel {
+      _id
+      name
+    }
+    barcode
+    sku
+    compatilable_devices
+    average_cost
+    last_cost
+    image
+    Suppliers{
+     supplier_id{
+        _id
+        supplier_company
+        supplier_company_phone
+        website
+     }
+    sku_number
+    current_stock
+    }
+    Business{
+      _id
+      business_keeping_unit
+      business_system_name
+    }
+    BusinessLocation{
+      _id
+      store_name
+      store_nick_name
+      location_keeping_unit
+    }
+    tags
+    sale_item
+    total_sale
+    incoming_item
+    ProductStockPrice{
+      _id
+      Product{
+        _id
+      }
+      income_account {
+        _id
+        account_name
+      }
+      expense_account {
+        _id
+        account_name
+      }
+      inventory_account {
+        _id
+        account_name
+      }
+      discount_amount
+      percentage_discount
+      price_without_bundle
+      default_sell_price
+      total_cost
+      ideal_quantity
+      opening_stock
+      qty_available
+      alert_quantity
+      shelf_qty
+      order_qty
+      is_profit_percentage
+      profit_value
+      profit_amount
+      default_sell_price
+      SellTax{
+        _id
+        name
+        amount
+        is_percentage
+        is_tax_group
+      }
+      is_sell_tax_percentage
+      sell_tax_value
+      sell_tax_amount
+      sell_price_inc_tax
+      last_cost
+      average_cost
+    }
+
+  }
+}
+
+query getRMAOrder($transactionId: ID){
+  getRMAOrder(transactionId: $transactionId){
+    _id
+    transaction_type
+    transaction_status
+    order_status
+    dynamic_status{
+      status_name
+      status_font_color
+      status_background_color
+      status_icon
+    }
+    transaction_payment_status
+    transaction_keeping_unit
+    ref_no
+    supplier_order_number
+    transaction_date
+    sub_total_amount
+    total_amount
+    TransactionRMA{
+        _id
+      Supplier{
+        _id
+        supplier_company
+        supplier_company_phone
+        website
+      }
+      Product{
+        _id
+        product_name
+        description
+        ProductStockPrice{
+          qty_available
+        }
+      }
+      skuNo
+      rma_quantity
+      approved_quantity
+      receiving_quantity
+      productCostPrice
+      sub_total
+      total_amount
+      created_at
+    }
+    supplier_rma_number
+    created_at
+  }
+}
+
+mutation createRMAOrder($transactionId: ID,$input: createRMAInput){
+ createRMAOrder(transactionId: $transactionId,input: $input){
+   _id
+}
+}
+
+mutation updateRMAStatus($input: TransactionRMAStatusInput){
+ updateRMAStatus(input: $input){
+   _id
+  dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+    }
+    dynamic_status_list {
+      status_name
+      status_font_color
+      status_background_color
+      status_icon
+    }
+}
+}
+
+mutation createReceivingRMA($input: TransactionReceivingRMAInput){
+  createReceivingRMA(input: $input){
+    _id
+    transaction_type
+ dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      dynamic_status_list {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+    }
+  }
+}
+
+mutation createPaymentRefund($input: refundInput) {
+  createPaymentRefund(input: $input)
+}
+
+mutation restoreProduct($productIds: [ID]) {
+  restoreProduct(productIds: $productIds)
+}
+
+mutation createDeviceTag($tag: String! , $tag_version: String!) {
+  createDeviceTag(tag: $tag , tag_version: $tag_version) { 
+    _id
+    name
+  }
+}
+
+mutation createSupplierManageCredit($input : SupplierManageStoreCreditInput!){
+  createSupplierManageCredit(input : $input){
+    order_id
+    transaction_no
+    date
+    reason
+    amount
+    balance
+    note
+    is_increase
+  }
+}
+mutation createTransferStoreCredit($input: SupplierTransferStoreCreditInput){
+  createTransferStoreCredit(input: $input){
+    date
+    is_increase
+    transaction_no
+    order_id
+    amount
+    balance
+    note 
+    reason
+
+  }
+}
+query getSupplierTransferCreditlogs($supplierId: ID!, $locationId: ID, $limit: Int, $skip: Int){
+  getSupplierTransferCreditlogs(supplierId: $supplierId, locationId: $locationId, limit:$limit, skip:$skip){
+    order_id
+    transaction_no
+    date
+    reason
+    amount
+    balance
+    note
+    is_increase
+  }
+}
+
+mutation deleteLogAndUpdateStock($orderID : ID! , $logID : ID! , $location_id : ID!) {
+  deleteLogAndUpdateStock(orderID : $orderID , logID : $logID , location_id : $location_id) {
+    _id
+    transaction_keeping_unit
+    transaction_type
+    received_additional_cost
+    discount_value
+    discount_amount
+    transaction_type
+    transaction_date
+    supplier_rma_number
+    cancel_by {
+      first_name
+      last_name
+    }
+    cancel_at
+    updated_by {
+      first_name
+      last_name
+    }
+    arrival_Date
+    updated_at
+    supplier_order_number
+    created_by {
+      id
+      first_name
+      last_name
+    }
+    Tax{
+        _id
+        name
+        amount
+        tax_type
+        is_percentage
+    }
+      tax_amount
+      tax_value
+      is_tax_percentage
+      shipping_company_name
+      shipping_tracking_no
+      shipping_estimated_days
+      dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      ShippingType{
+        _id
+        shipment_name
+        shipment_price
+        delivery_time_days
+        threshold
+        icon
+      }
+      total_amount
+      sub_total_amount
+      remaining_amount
+      is_private
+      additional_notes
+      received_note
+      TransactionPayment {
+        _id
+        amount
+        method
+        paid_on
+        card_used_no
+      }
+      Supplier{
+         _id
+         supplier_keeping_unit
+         supplier_company
+         supplier_company_phone
+         payment_settings {
+        paymentType {
+          _id
+          name
+          icon
+        }
+        isActive
+    }
+      }
+      TransactionPurchaseLine {
+        _id
+        stock_sku_number
+        quantity
+        receiving_quantity
+        receive_quantity
+        Product {
+          _id
+          product_name
+          description
+          sku
+        }
+        product_cost_price
+        is_extra_item
+        total_amount
+      }
+      TransactionBuyBackLine{
+        _id
+        System_Device {
+          _id
+          product_name
+          product_price
+          product_brand {
+            _id
+            brand_name
+          }
+        }
+        quantity
+        device_price
+        sub_total
+        total_amount
+        received_qty
+        approve_qty
+
+      }
+      BusinessLocation {
+        address_1
+      }
+      created_at
+      dynamic_status_list {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      is_additional_cost
+      is_extra_items
+      is_missing_items
+      order_estimate_amount
+      ReceivingLogs {
+        _id
+        stock_sku_number
+        Product {
+          product_name
+        }
+        receivedDate
+        quantity
+        receive_quantity
+        quantity_returned
+      }
+      refund_amount
+      shipping_amount
+  }
+}
+
+mutation POTransactionFlow($orderID : ID! ) {
+  POTransactionFlow(orderID : $orderID) {
+    _id
+    transaction_keeping_unit
+    transaction_type
+    received_additional_cost
+    discount_value
+    discount_amount
+    transaction_type
+    transaction_date
+    supplier_rma_number
+    cancel_by {
+      first_name
+      last_name
+    }
+    cancel_at
+    updated_by {
+      first_name
+      last_name
+    }
+    arrival_Date
+    updated_at
+    supplier_order_number
+    created_by {
+      id
+      first_name
+      last_name
+    }
+    Tax{
+      _id
+      name
+      amount
+      tax_type
+      is_percentage
+    }
+    tax_amount
+    tax_value
+    is_tax_percentage
+    shipping_company_name
+    shipping_tracking_no
+    shipping_estimated_days
+    dynamic_status {
+      status_name
+      status_font_color
+      status_background_color
+      status_icon
+    }
+    ShippingType{
+      _id
+      shipment_name
+      shipment_price
+      delivery_time_days
+      threshold
+      icon
+    }
+    total_amount
+    sub_total_amount
+    remaining_amount
+    is_private
+    additional_notes
+    received_note
+    TransactionPayment {
+      _id
+      amount
+      method
+      paid_on
+      card_used_no
+    }
+    Supplier{
+      _id
+      supplier_keeping_unit
+      supplier_company
+      supplier_company_phone
+      payment_settings {
+        paymentType {
+          _id
+          name
+          icon
+        }
+        isActive
+      }
+    }
+    TransactionPurchaseLine {
+      _id
+      stock_sku_number
+      quantity
+      receiving_quantity
+      receive_quantity
+      Product {
+        _id
+        product_name
+        description
+        sku
+      }
+      product_cost_price
+      is_extra_item
+      total_amount
+    }
+    TransactionBuyBackLine{
+      _id
+      System_Device {
+        _id
+        product_name
+        product_price
+        product_brand {
+          _id
+          brand_name
+        }
+      }
+      quantity
+      device_price
+      sub_total
+      total_amount
+      received_qty
+      approve_qty
+
+    }
+    BusinessLocation {
+      address_1
+    }
+    created_at
+    dynamic_status_list {
+      status_name
+      status_font_color
+      status_background_color
+      status_icon
+    }
+    is_additional_cost
+    is_extra_items
+    is_missing_items
+    order_estimate_amount
+    ReceivingLogs {
+      _id
+      stock_sku_number
+      Product {
+        product_name
+      }
+      receivedDate
+      quantity
+      receive_quantity
+      quantity_returned
+    }
+    refund_amount
+    shipping_amount
+  }
+}
+
+mutation CreatePOToRMA($transactionId : ID! ) {
+  CreatePOToRMA(transactionId : $transactionId ) {
+    _id
+    transaction_type
+    transaction_date
+    supplier_rma_number
+      dynamic_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      Supplier{
+         _id
+         supplier_keeping_unit
+         supplier_company
+         supplier_company_phone
+         payment_settings {
+        paymentType {
+          _id
+          name
+          icon
+        }
+        isActive
+    }
+      }
+  }
+}
+
+

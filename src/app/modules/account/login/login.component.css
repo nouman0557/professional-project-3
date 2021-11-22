@@ -1,0 +1,7 @@
+.block-event {
+    pointer-events: none;
+}
+#store-status-section .currernt-status li.block-event.active a {
+    background-color: #000;
+    color: #fff;
+}

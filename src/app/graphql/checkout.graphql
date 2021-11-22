@@ -1,0 +1,143 @@
+query getCheckOutOrder($orderID: ID , $businessLocation: ID) {
+    getCheckOutOrder(orderID: $orderID , businessLocation: $businessLocation) {
+        _id
+        transaction_type
+        transaction_status
+        order_status
+        transaction_payment_status
+        transaction_keeping_unit
+        ref_no
+        supplier_order_number
+        transaction_date
+        transaction_hours
+        transaction_minutes
+        transaction_am_pm
+        sub_total_amount
+        is_apply_sale_tax
+        Tax {
+            _id
+            name
+            amount
+            tax_type
+            is_percentage
+        }
+        tax_amount
+        tax_value
+        is_tax_percentage
+        discount_amount
+        discount_value
+        is_discount_percentage
+        shipping_company_name
+        shipping_tracking_no
+        shipping_estimated_days
+        shipping_amount
+        delivery_address
+        total_amount
+        remaining_amount
+        is_private
+        additional_notes
+        received_note
+        receivedBy
+        receivedDate
+        arrival_Date
+        received_additional_cost
+        TransactionSellLine {
+            is_device
+            is_attach_device
+            product_type
+            sell_line_product_type
+            Device {
+                _id
+                device_keeping_unit
+                deviceBrand{
+                    _id
+      brand_name
+      description
+    }
+    deviceModel{
+      _id
+      name
+    }
+            }
+            Product {
+                _id
+                product_name
+                description
+            }
+            product_sku
+            supplier_sku
+            products {
+                product_type
+                sell_line_product_type
+                Product {
+                    _id
+                    product_name
+                    description
+                }
+                product_sku
+                supplier_sku
+                quantity
+                product_purchase_price
+                product_sale_price
+                sub_total_amount
+                total_amount
+                customProduct {
+                    _id
+                    name
+                }
+            }
+            GiftCard {
+                _id
+                card_no
+                gift_card_keeping_unit
+                name
+            }
+            customProduct {
+                _id
+                name
+                quantity
+                cost_price
+                selling_price
+                note
+                is_taxable
+            }
+            quantity
+            product_purchase_price
+            product_sale_price
+            tax_amount
+            tax_value
+            is_tax_percentage
+            is_discount_percentage
+            discount_amount
+            discount_value
+            sub_total_amount
+            total_amount
+            serial_number
+        }
+        TransactionPayment {
+            _id
+            amount
+            method
+            paid_on
+            card_used_no
+        }
+        Customer {
+            _id
+            email
+            first_name
+            last_name
+            CustomerStoreWiseRecord {
+                net_term {
+                    pay_term_number
+                    pay_term_type
+                    credit_limit
+                    interest_rate
+                    used_credit
+                }
+                store_credit {
+                    credit_amount
+                }
+            }
+        }
+    }
+}

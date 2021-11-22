@@ -1,0 +1,1352 @@
+<section id="stock-section" class="discountsAndGifts">
+    <div class="row">
+        <div class="col-lg-12 p0">
+            <div class="iconActions">
+                <a><img src="../../../../assets/images/minimized.png" alt="" width="14"></a>
+                <!-- <a><img src="../../../../assets/images/close.png" alt="" width="14"></a> -->
+            </div>
+            <div class="switchable-wrapper discounts-wrapper">
+                <div class="summary-title">
+                    <ul class="nav nav-pills" id="pills-st-tab" role="tablist">
+                        <li [ngClass]="{'nav-item':true, 'active':discounts}"><a (click)="loadSection('D')" class="nav-link active" id="pills-tab-st-one" data-toggle="pill" role="tab" aria-controls="tab-one" aria-selected="true">Discounts</a></li>
+                        <li [ngClass]="{'nav-item':true, 'active':gifts}"><a (click)="loadSection('G')" class="nav-link" id="pills-tab-st-two" data-toggle="pill" role="tab" aria-controls="tab-two" aria-selected="false">Gift Cards</a></li>
+                    </ul>
+                </div>
+                <div class="tab-content" id="pills-st-tabContent">
+                    <div *ngIf="discounts" class="tab-pane fade active show" id="tab-st-one" role="tabpanel" aria-labelledby="pills-tab-st-one">
+                        <div *ngIf="discounList.length == 0 && !addDiscounts && discountSearch.value == ''" class="discount-bg">
+                            <button (click)="open('existingDiscounts','addDiscounts')" type="button" class="btn btn-lg add-dis">CREATE A DISCOUNT
+                                <img src="../../../../assets/images/add.png" width="30px" height="30px" />
+                            </button>
+                        </div>
+                        <div *ngIf="existingDiscounts" id="stock-supplier">
+                            <div class="top-info discounts-top">
+                                <div class="btn-group">
+                                    <div class="filterLinks newfilters">
+                                        <label>Filter by:</label>
+                                        <a [ngClass]="{'active':discountFilter == 'All'}" (click)="updateFilters('All')" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">All</a>
+                                        <a [ngClass]="{'active':discountFilter == 'Active'}" (click)="updateFilters('Active')" href="JavaScript:void(0)"class="color000 fontSemiBold fontPoppin">Active</a>
+                                        <a [ngClass]="{'active':discountFilter == 'Scheduled'}" (click)="updateFilters('Scheduled')" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Schedule</a>
+                                        <a [ngClass]="{'active':discountFilter == 'Expired'}" (click)="updateFilters('Expired')" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Disabled</a>
+                                    </div>
+                                </div>
+                                <div class="cut-search-area">
+                                    <div class="search-field input-group">
+                                        <input type="text" [formControl]="discountSearch" class="form-control" placeholder="Search...">
+                                        <a href="JavaScript:void(0)" class="input-group-addon">
+                                            <i *ngIf="discountSearch.value" (click)="discountSearch.reset()"
+                                                class="fas fa-times-circle"></i>
+                                            <i class="icon-search"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="po-wrapper" [ngClass]="{'empty':existingDiscounts && discounList.length == 0 && !addDiscounts && discountSearch.value != ''}">
+                                <div *ngIf='discountLoader==true' class="luna-loading"></div>
+                                <div class="empty-text">
+                                    <h2><i class="fa fa-cogs" aria-hidden="true"></i>No Discounts Available</h2>
+                                </div>
+                                <div class="po-top-info">
+                                    <div class="inner"><span>Campaign Name</span></div>
+                                    <div class="inner"><span>Status</span></div>
+                                    <div class="inner"><span>Date</span></div>
+                                    <div class="inner cWd"><span>Summary</span></div>
+                                    <div class="inner cWd"><span>Statistics</span></div>
+                                    <div class="inner cWd"><span>Stores</span></div>
+                                    <div class="inner"><span>Most Recent Change</span></div>
+                                </div>
+                                <div class="po-inner-list">
+                                    <accordion [isAnimated]="true" [closeOthers]="true">
+                                        <accordion-group *ngFor="let dis of discounList; let i = index;">
+                                            <ul accordion-heading>
+                                                <li>
+                                                    <div class="inner"><span>{{dis.name}}</span></div>
+                                                    <div class="inner" *ngIf='dis.is_active'><span>Active</span></div>
+                                                    <div class="inner" *ngIf='!dis.is_active'><span>Not Active</span>
+                                                    </div>
+                                                    <div *ngIf="dis.start_date != null || dis.end_date != null" class="inner">
+                                                        <span><b>From:</b>{{dis.start_date | date :'short' }}</span>
+                                                        <span> <b>To:</b>{{dis.end_date | date :'short' }} </span>
+                                                    </div>
+                                                    <div *ngIf="dis.start_date == null || dis.end_date == null" class="inner">
+                                                        <span><b>Unlimited</b></span>
+                                                    </div>
+                                                    <div class="inner cWd"><span>{{dis.Discount.length}} discounts</span> </div>
+                                                    <div class="inner cWd"><span>1,200 People</span></div>
+                                                    <div class="inner cWd"><span>(4)</span></div>
+                                                    <div class="inner">
+                                                        <span>{{dis.updated_at | date : 'longDate'}}</span>
+                                                        <span class="fa fa-angle-down"></span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <ul>
+                                                <li *ngFor="let d of dis.Discount; let j = index;">
+                                                    <div class="inner"><span>{{d.code}}</span></div>
+                                                    <div class="inner"><span>{{d.status}}</span>
+                                                    </div>
+                                                    <div *ngIf="d.schedule_from != null || d.schedule_to != null" class="inner">
+                                                        <span><b>From:</b>{{d.schedule_from | date :'short' }}</span>
+                                                        <span> <b>To:</b>{{d.schedule_to | date :'short' }} </span>
+                                                    </div>
+                                                    <div *ngIf="d.schedule_from == null || d.schedule_to == null" class="inner">
+                                                        <span><b>Unlimited</b></span>
+                                                    </div>
+                                                    <div *ngIf="!d.is_percentage" class="inner cWd"><span>-{{d.discount_amount}} USD</span> </div>
+                                                    <div *ngIf="d.is_percentage" class="inner cWd"><span>-{{d.discount_amount}} % OFF</span> </div>
+                                                    <div class="inner cWd"><span>100 people</span></div>
+                                                    <div class="inner cWd"><span>Schereville</span></div>
+                                                    <div class="inner"><span>{{d.updated_at | date : 'longDate'}}</span></div>
+                                                </li>
+                                            </ul>
+                                        </accordion-group>
+                                    </accordion>
+                                </div>
+                            </div>
+                            <div class="stock-list-action">
+                                <div class="buttons-add">
+                                    <a (click)="exportAsCSV('discounList')">Export</a>
+                                    <a (click)="open('existingDiscounts','addDiscounts')">Craete Discount</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="addDiscounts" id="stock-supplier">
+                            <div class="business-info-inner addDiscounts">
+                                <div class="top">
+                                    <div class="lt">
+                                        <a (click)="cancel('addDiscounts','existingDiscounts')" class="back-cust-list">Back</a>
+                                    </div>
+                                    <div class="rt">
+                                        <div class="form-action-buttons save-btn">
+                                            <div class="cust-btns">
+                                                <button style="min-width: 137px;" type="submit" (click)="addDiscount()" class="btn btn-default">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="business-inner">
+                                <div class="col-lg-9 pl0">
+                                    <form autocomplete="off" [formGroup]="addDiscountForm">
+                                        <div class="customer-form-content">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one">
+                                                        <div class="label">
+                                                            <label class="title" for="disType">Create Discount Code
+                                                            </label>
+                                                        </div>
+                                                        <div class="label">
+                                                            <div class="col-lg-8 p0 mb10">
+                                                                <label [ngClass]="{'is-invalid':addDiscountSubmitted && faddDiscountForm.Campaign.errors}" class="lt"> Campaign name</label>
+                                                                <input type="text" [formControl]="campaignSearch" value={{selectedCampaign.name}} class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Campaign">
+                                                                <button (click)="createCampaing()" class="btn btn-default btn-choose add-campaign" type="button">Add</button>
+                                                                <ul class="compaign_list" *ngIf="!campaignsList">
+                                                                    <li *ngFor="let campaign of allCampaigns; let i = index;" class="pr-suggestion-list" (click)="selectCampaign(campaign)">
+                                                                        <a>{{campaign.name}}</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- <div class="col-lg-4 date-adjust">
+                                                                <label class="lt"> Date </label>
+                                                                <input type="text"
+                                                                    value="{{selectedCampaign.end_date | date :'short'}}"
+                                                                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                                                    placeholder="12/12/2019" readonly>
+                                                            </div> -->
+                                                            <div class="col-lg-12 p0 mb10">
+                                                                <label for="create-code" [ngClass]="{ 'is-invalid': addDiscountSubmitted && faddDiscountForm.code.errors}">
+                                                                    Create Code
+                                                                </label>
+                                                                <input formControlName="code" type="text" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="BF25-OFF">
+                                                                <button class="campaingn-adjust-gen-code" type="button" (click)="generateCouponCode()"> Generate Code
+                                                                </button>
+                                                                <p>This is the code customers will write to make the discount valid.
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-lg-12 p0 mb10">
+                                                                <label for="create-code"> Tags </label>
+                                                                <input [formControl]="searchDiscountTag" (keypress)="addTag($event,'searchDiscountTag','selectedDicountTags')" (focusout)="closeLists()" type="text" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Type a tag">
+                                                                <button (click)="addTagToList('searchDiscountTag','selectedDicountTags')" class="btn btn-default btn-choose add-campaign" type="button">Add</button>
+                                                                <ul *ngIf="!discountTagsList">
+                                                                    <li class="pr-suggestion-list" (click)="selectDiscountTag(tag.name)" *ngFor="let tag of allDiscountTags; let i = index;">
+                                                                        <a>{{tag.name}} </a>
+                                                                    </li>
+                                                                </ul>
+                                                                <div class="tag-setup">
+                                                                    <span *ngFor="let tag of selectedDicountTags; let i = index;" class="tags-con"><span>#</span>{{tag}}
+                                                                    <a><i (click)="removeDiscountAndCustomerTags(tag,'selectedDicountTags')"
+                                                                                class="fa fa-close"></i></a></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12 p0 mb10">
+                                                                <label for="availOn" class="lt">Available On:</label>
+                                                                <div id="discount-cat-btn" class="btn-group "
+                                                                    role="group" aria-label="Basic example">
+                                                                    <a class="btn btn-primary btn-sm increase-width"
+                                                                        (click)="setDiscountProperties('addDiscountForm','is_minimum_amount')"
+                                                                        [ngClass]="{'active':addDiscountForm.controls.is_minimum_amount.value , 'notActive' : !addDiscountForm.controls.is_minimum_amount.value }"
+                                                                        data-toggle="dis-cat" data-title="$"> This Store
+                                                                    </a>
+                                                                    <a class="btn btn-primary btn-sm increase-width"
+                                                                        (click)="setDiscountProperties('addDiscountForm','is_minimum_amount')"
+                                                                        [ngClass]="{'active':!addDiscountForm.controls.is_minimum_amount.value , 'notActive' : addDiscountForm.controls.is_minimum_amount.value }"
+                                                                        data-toggle="dis-cat" data-title="%"> All
+                                                                        Stores</a>
+                                                                    <input class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon"
+                                                                        type="text" placeholder="Search Store">
+                                                                    <input type="hidden" name="dis-cat" id="dis-cat">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one two">
+                                                        <div class="label">
+                                                            <label class="title" for="disType">Discount Detail</label>
+                                                        </div>
+                                                        <div class="content">
+                                                            <label [ngClass]="{ 'is-invalid': addDiscountSubmitted && addDiscountForm.controls.discount_amount.value == ''}" for="disType" class="lt">
+                                                                Discount type & value:<sup>*</sup>
+                                                            </label>
+                                                            <div class="input-group rt">
+                                                                <div id="discount-cat-btn" class="btn-group " role="group" aria-label="Basic example">
+                                                                    <a (click)="setDiscountProperties('addDiscountForm','is_percentage')" class="btn btn-primary btn-sm" data-toggle="dis-cat" data-title="$" [ngClass]="{'active':!addDiscountForm.controls.is_percentage.value , 'notActive' : addDiscountForm.controls.is_percentage.value }">$</a>
+                                                                    <a (click)="setDiscountProperties('addDiscountForm','is_percentage')" class="btn btn-primary btn-sm" data-toggle="dis-cat" data-title="%" [ngClass]="{'active': addDiscountForm.controls.is_percentage.value , 'notActive' : !addDiscountForm.controls.is_percentage.value }">%</a>
+                                                                    <input formControlName="discount_amount" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" type="text" placeholder="00">
+                                                                    <input type="hidden" name="dis-cat" id="dis-cat">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="">
+                                                        <div class="content">
+                                                            <label for="disType" class="lt">
+                                                                Does it require a minimum purchase?<sup>*</sup></label>
+                                                            <div id="discount-cat-btn" class="btn-group " role="group" aria-label="Basic example">
+                                                                <a class="btn btn-primary btn-sm" (click)="setDiscountProperties('addDiscountForm','is_minimum_purchase')" [ngClass]="{'active':addDiscountForm.controls.is_minimum_purchase.value , 'notActive' : !addDiscountForm.controls.is_minimum_purchase.value }" data-toggle="dis-cat" data-title="$">Yes</a>
+                                                                <a class="btn btn-primary btn-sm" (click)="setDiscountProperties('addDiscountForm','is_minimum_purchase')" [ngClass]="{'active':!addDiscountForm.controls.is_minimum_purchase.value , 'notActive' : addDiscountForm.controls.is_minimum_purchase.value }" data-toggle="dis-cat" data-title="%"> No</a>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="addDiscountForm.controls.is_minimum_purchase.value" class="content pt20">
+                                                            <label [ngClass]="{ 'is-invalid': addDiscountSubmitted && addDiscountForm.controls.is_minimum_purchase.value && addDiscountForm.controls.how_much_amount.value == ''}" for="minReq" class="lt">Minimum requirements:
+                                                                <sup>*</sup></label>
+                                                            <div id="discount-cat-btn" class="btn-group wd70percent" role="group" aria-label="Basic example">
+                                                                <a class="btn btn-primary btn-sm increase-width" (click)="setDiscountProperties('addDiscountForm','is_minimum_amount')" [ngClass]="{'active':addDiscountForm.controls.is_minimum_amount.value , 'notActive' : !addDiscountForm.controls.is_minimum_amount.value }" data-toggle="dis-cat" data-title="$"> Purchase
+                                                                    Amount </a>
+                                                                <a class="btn btn-primary btn-sm increase-width" (click)="setDiscountProperties('addDiscountForm','is_minimum_amount')" [ngClass]="{'active':!addDiscountForm.controls.is_minimum_amount.value , 'notActive' : addDiscountForm.controls.is_minimum_amount.value }" data-toggle="dis-cat" data-title="%"> Quantity of
+                                                                    Items </a>
+                                                                <input class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" formControlName="how_much_amount" type="text" placeholder="3">
+                                                                <input type="hidden" name="dis-cat" id="dis-cat">
+                                                            </div>
+                                                        </div>
+                                                        <div class="content pt20">
+                                                            <label for="minReq" class="lt">Chosse one option:
+                                                                <sup>*</sup></label>
+                                                            <div id="discount-cat-btn" class="btn-group " role="group" aria-label="Basic example">
+                                                                <a class="btn btn-primary btn-sm increase-width" (click)="setDiscountProperties('addDiscountForm','is_entire_order')" [ngClass]="{'active':addDiscountForm.controls.is_entire_order.value , 'notActive' : !addDiscountForm.controls.is_entire_order.value }" data-toggle="dis-cat" data-title="$"> Entire Order
+                                                                </a>
+                                                                <a class="btn btn-primary btn-sm increase-width" (click)="setDiscountProperties('addDiscountForm','is_entire_order')" [ngClass]="{'active':!addDiscountForm.controls.is_entire_order.value , 'notActive' : addDiscountForm.controls.is_entire_order.value }" data-toggle="dis-cat" data-title="%"> Selected
+                                                                    Product </a>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!addDiscountForm.controls.is_entire_order.value" class="content pt20">
+                                                            <input [formControl]="searchProducts" type="text" list="codes" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Search a products">
+                                                            <ul class="compaign_list" *ngIf="!closeList">
+                                                                <li class="pr-suggestion-list" (click)="selectProduct(product)" *ngFor="let product of allProducts; let i = index;">
+                                                                    <a>{{product.product_name}}</a>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="tag-setup">
+                                                                <span *ngFor="let product of selectedProduct; let i = index;" class="tags-con">
+                                                                    {{product.product_name}} <a><i
+                                                                            (click)="removeTags(product._id,'selectedProduct')"
+                                                                            class="fa fa-close"></i></a></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one three">
+                                                        <div class="label">
+                                                            <label class="title" for="disType">Customer Segmentation
+                                                            </label>
+                                                            <label style="color: #5f5f5f;">Select all the option you need
+                                                            </label>
+                                                        </div>
+                                                        <div class="row mb15">
+                                                            <div class="col-lg-12">
+                                                                <div class="selectCust">
+                                                                    <div class="cust-left">
+                                                                        <input [checked]="addDiscountForm.controls.is_customer_since.value"
+                                                                        (click)="setCustomerDiscountProperties('addDiscountForm','is_customer_since','is_new_customer_only')"
+                                                                         type="radio" id="test1" name="radio-group">
+                                                                        <label for="test1">Customer since</label>
+                                                                        <input (focusout)="updateDiscountBar()" type="text" formControlName = "customer_since" placeholder="12/12/2019" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" bsDatepicker [bsConfig]="{ isAnimated: true }" >
+                                                                    </div>
+                                                                    <div class="cust-right">
+                                                                        <input [checked]="addDiscountForm.controls.is_new_customer_only.value"
+                                                                        (click)="setCustomerDiscountProperties('addDiscountForm','is_new_customer_only','is_customer_since')"
+                                                                         type="radio" id="test2" name="radio-group">
+                                                                        <label for="test2">New customer only</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb15">
+                                                            <div class="col-lg-8">
+                                                                <div class="content">
+                                                                    <input [checked]="addDiscountForm.controls.is_customer_spent_amount.value" (click)="setDiscountProperties('addDiscountForm','is_customer_spent_amount')" class="checkbox-custom" type="checkbox" id="spend" name="spend">
+                                                                    <label for="spend" class="checkbox-custom-label lt">Customer that have spent:
+                                                                    </label>
+                                                                    <div class="spendWrap">
+                                                                        <div class="spendleft">
+                                                                            <div *ngIf="addDiscountForm.controls.is_customer_spent_amount.value" id="discount-cat-btn" class="btn-group " role="group" aria-label="min cash">
+                                                                                <a class="btn btn-primary btn-sm" (click)="setDiscountProperties('addDiscountForm','is_customer_more_then_said_amount')" [ngClass]="{'active':addDiscountForm.controls.is_customer_more_then_said_amount.value , 
+                                                                        'notActive' : !addDiscountForm.controls.is_customer_more_then_said_amount.value }" data-toggle="dis-cat" data-title="More">More</a>
+                                                                                <a class="btn btn-primary btn-sm" (click)="setDiscountProperties('addDiscountForm','is_customer_more_then_said_amount')" [ngClass]="{'active':!addDiscountForm.controls.is_customer_more_then_said_amount.value , 'notActive' : addDiscountForm.controls.is_customer_more_then_said_amount.value }" data-toggle="dis-cat" data-title="Less">
+                                                                                    Less</a>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="spendright">
+                                                                            <label class="spendAmountLabel" *ngIf="addDiscountForm.controls.is_customer_spent_amount.value">Amount:
+                                                                            </label>
+                                                                            <input (focusout)="updateDiscountBar()" [ngClass]="{'is-invalid' : addDiscountForm.controls.is_customer_spent_amount.value && addDiscountForm.controls.spent_amount.value == ''}" *ngIf="addDiscountForm.controls.is_customer_spent_amount.value" formControlName="spent_amount" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon spendAmountinput cust-seg-congigure" type="text" placeholder="$00,00">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb15">
+                                                            <div class="col-lg-12">
+                                                                <label for="create-code">Tags:</label>
+                                                                <input type="text" [formControl]="searchCustomerTag" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Search tags">
+                                                                <!-- <button (click)="addTagToList('searchCustomerTag','selectedCustomerTags')" class="btn btn-default btn-choose add-campaign" type="button">Add</button> -->
+                                                                <ul class="compaign_list" *ngIf="!customerTagsList">
+                                                                    <li class="pr-suggestion-list" (click)="selectCustomerTag(tag.name)" *ngFor="let tag of allCustomerTags; let i = index;">
+                                                                        <a>{{tag.name}}</a>
+                                                                    </li>
+                                                                </ul>
+                                                                <div class="tag-setup">
+                                                                    <span *ngFor="let tag of selectedCustomerTags; let i = index;" class="tags-con">#{{tag}} <a>
+                                                                        <i (click)="removeDiscountAndCustomerTags(tag,'selectedCustomerTags')" class="fa fa-close"></i></a>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb30">
+                                                            <div class="col-lg-12">
+                                                                <div class="label">
+                                                                    <label class="title" for="disType">Estimated people reached
+                                                                    </label>
+                                                                </div>
+                                                                <div class="peopleProgress">
+                                                                    <p>{{effectedCustomers}} of {{totalCustomers}} people</p>
+                                                                    <progressbar [animate]="true" type="success" [value]="effectedCustomers"></progressbar>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one three">
+                                                        <div class="label">
+                                                            <label class="title" for="disType">Discount Code Limit
+                                                            </label>
+
+                                                        </div>
+                                                        <div class="row mb15">
+                                                            <div class="col-lg-12">
+                                                                <div class="content lst">
+                                                                    <label style="color: #5f5f5f; margin-bottom: 5px;">Number of times this discount code can be used per customer</label>
+                                                                    <div class="input-group rt">
+                                                                        <div id="discount-cat-btn" class="btn-group " role="group" aria-label="Basic example">
+                                                                            <a (click)="setDiscountProperties('addDiscountForm','is_percentage')" class="btn btn-primary btn-sm" data-toggle="dis-cat" data-title="$" [ngClass]="{'active':!addDiscountForm.controls.is_percentage.value , 'notActive' : addDiscountForm.controls.is_percentage.value }">Unlimited</a>
+                                                                            <a (click)="setDiscountProperties('addDiscountForm','is_percentage')" class="btn btn-primary btn-sm" data-toggle="dis-cat" data-title="%" [ngClass]="{'active': addDiscountForm.controls.is_percentage.value , 'notActive' : !addDiscountForm.controls.is_percentage.value }">Restrict
+                                                                                to</a>
+                                                                            <input formControlName="discount_amount" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" type="text" placeholder="0">
+                                                                            <input type="hidden" name="dis-cat" id="dis-cat">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb15">
+                                                            <div class="col-lg-3">
+                                                                <input [checked]="addDiscountForm.controls.can_schedule.value" (click)="setDiscountProperties('addDiscountForm','can_schedule')" class="checkbox-custom" type="checkbox" name="disDate" id="disDate">
+                                                                <label for="disDate" class="checkbox-custom-label">Schedule | From:
+                                                                </label>
+                                                                <input [ngClass]="{'disable-input-field':!addDiscountForm.controls.can_schedule.value , 
+                                                                'is-invalid': addDiscountForm.controls.can_schedule.value && addDiscountForm.controls.schedule_from_date.value == ''}" formControlName="schedule_from_date" placement="top" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" type="date" placeholder="12/12/2019" [value]="date | date: 'yyyy-MM-dd'">
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                <div class="content">
+                                                                    <label for="appliesto1" class="checkbox-custom-label lt">To:
+                                                                    </label>
+                                                                    <input [ngClass]="{'disable-input-field':!addDiscountForm.controls.can_schedule.value , 
+                                                                'is-invalid': addDiscountForm.controls.can_schedule.value && addDiscountForm.controls.schedule_to_date.value == ''}" formControlName="schedule_to_date" placement="top" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon rt" type="date" placeholder="12/12/2019" [value]="date | date: 'yyyy-MM-dd'">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-4">
+                                                                        <label for="appliesto1" class="checkbox-custom-label">Time:
+                                                                        </label>
+                                                                        <input [ngClass]="{'disable-input-field':!addDiscountForm.controls.can_schedule.value , 
+                                                                        'is-invalid': addDiscountForm.controls.can_schedule.value && addDiscountForm.controls.schedule_from_time.value == ''}" formControlName="schedule_from_time" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" type="time" placeholder="13:00">
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <label for="appliesto1" class="checkbox-custom-label">To:
+                                                                        </label>
+                                                                        <input [ngClass]="{'disable-input-field':!addDiscountForm.controls.can_schedule.value  , 
+                                                                        'is-invalid': addDiscountForm.controls.can_schedule.value && addDiscountForm.controls.schedule_to_time.value == ''}" formControlName="schedule_to_time" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" type="time" placeholder="23:00">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb30">
+                                                            <div class="col-lg-12">
+                                                                <input [checked]="addDiscountForm.controls.send_email.value" type="checkbox" (click)="setDiscountProperties('addDiscountForm','send_email')" style="margin-top: 5px;margin-right: 10px;" class="checkbox-custom" type="checkbox" id="emailCheck" name="emailCheck">
+                                                                <label for="emailCheck" class="checkbox-custom-label lt">
+                                                                    Send Email to Customers who are affected by your Customer Segmentation Prefrences
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-lg-3 p0">
+                                    <div class="dis-ltwrapper">
+                                        <div class="dis-inner">
+                                            <div class="dis-top">
+                                                <div class="top">
+                                                    <h3>{{selectedCampaign.name||"My Campaign"}}</h3>
+                                                </div>
+                                                <div class="mid">
+                                                    <p>Coupon</p>
+                                                    <h2>{{addDiscountForm.controls.code.value||""}}</h2>
+                                                    <p>{{addDiscountForm.controls.discount_amount.value||""}}
+                                                        <i *ngIf="addDiscountForm.controls.is_percentage.value">%</i>
+                                                        <i *ngIf="!addDiscountForm.controls.is_percentage.value">$</i> Discount
+                                                    </p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <p>Restrictions apply</p>
+                                                </div>
+                                            </div>
+                                            <div class="dis-mid">
+                                                <h2>Resumen</h2>
+                                                <div class="content">
+                                                    <p>One use only per customer</p>
+                                                    <p *ngIf="addDiscountForm.controls.is_minimum_purchase.value">
+                                                        <a *ngIf="addDiscountForm.controls.is_minimum_amount.value">${{addDiscountForm.controls.how_much_amount.value||""}}.00 minimum</a>
+                                                        <a *ngIf="!addDiscountForm.controls.is_minimum_amount.value">{{addDiscountForm.controls.how_much_amount.value||""}} minimum items</a>
+                                                         </p>
+                                                    <p>Applies to <span *ngIf="addDiscountForm.controls.is_entire_order.value">Entire
+                                                            Order</span>
+                                                        <span *ngIf="!addDiscountForm.controls.is_entire_order.value">Selectd
+                                                            Product</span>
+                                                    </p>
+                                                    <p *ngIf="addDiscountForm.controls.is_customer_spent_amount.value">Applies to Customers that have spend: 
+                                                        <span *ngIf="addDiscountForm.controls.is_customer_more_then_said_amount.value">Above ${{addDiscountForm.controls.spent_amount.value}}</span>
+                                                        <span *ngIf="!addDiscountForm.controls.is_customer_more_then_said_amount.value">Less ${{addDiscountForm.controls.spent_amount.value}}</span>
+                                                    </p>
+                                                    <p>Valid through :
+                                                        <span><span>{{addDiscountForm.controls.schedule_from_date.value||""}}</span> to
+                                                        <span>{{addDiscountForm.controls.schedule_to_date.value||""}}</span></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="dis-bottom">
+                                                <div class="t">
+                                                    <p>Copyright &copy; 2020 Mr. Repair it, All right reserved.</p>
+                                                    <p>Your are receving this email because you opted in via website.
+                                                    </p>
+                                                </div>
+                                                <div class="m">
+                                                    <p>our mailling address is:</p>
+                                                    <p>Mr Repair it </p>
+                                                    <p>SS-Woodland, Lane Evanston Memphis, Tenesse 90130</p>
+                                                </div>
+                                                <div class="b">
+                                                    <p>Want to change how you receive these emails?</p>
+                                                    <p>You can update your presence or unsubscribe from the list.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="editDiscounts" id="stock-supplier">
+                            <div class="business-info-inner addDiscounts">
+                                <div class="top">
+                                    <div class="lt">
+                                        <a (click)="cancel('editDiscounts','existingDiscounts')" class="back-cust-list">Back</a>
+                                        <h2>{{editDiscountForm.controls.code.value}}</h2>
+                                    </div>
+                                    <div class="rt">
+                                        <div class="form-action-buttons">
+                                            <div class="cust-btns">
+                                                <button type="submit" (click)="updateDiscount()" class="btn btn-default">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="business-inner">
+                                <div class="col-lg-9">
+                                    <form autocomplete="off" [formGroup]="editDiscountForm">
+                                        <div class="customer-form-content">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one">
+                                                        <div class="label">
+                                                            <label for="disType">Create Discount Code</label>
+                                                        </div>
+                                                        <div class="label">
+                                                            <div class="col-lg-8">
+                                                                <label [ngClass]="{'is-invalid':editDiscountSubmitted && fEditDiscountForm.Campaign.errors}" class="lt"> Campaign name</label>
+                                                                <input type="text" [formControl]="campaignSearch" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Campaign">
+                                                                <img src="../../../../assets/images/add-icon-btn.png" (click)="createCampaing()" class="campaingn-adjust" width="30px" height="30px" />
+                                                                <button class="fa fa-search campaingn-adjust-search"></button>
+                                                            </div>
+                                                            <div class="col-lg-4 date-adjust">
+                                                                <label class="lt"> Date </label>
+                                                                <input value="{{campaignDate | date : 'short'}}" type="text" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="12/12/2019" readonly>
+                                                            </div>
+                                                            <ul *ngIf="!campaignsList" style="margin-left: 14px;  width: 50%;">
+                                                                <li *ngFor="let campaign of allCampaigns; let i = index;" class="pr-suggestion-list" (click)="selectCampaign(campaign)">{{campaign.name}}
+                                                                </li>
+                                                            </ul>
+                                                            <div class="col-lg-12">
+                                                                <label for="create-code" [ngClass]="{ 'is-invalid': editDiscountSubmitted && fEditDiscountForm.code.errors}">
+                                                                    Create Code
+                                                                </label>
+                                                                <input formControlName="code" type="text" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="BF25-OFF" readonly>
+                                                                <button class="campaingn-adjust-gen-code" (click)="generateCouponCode()"> Generate Code
+                                                                </button>
+                                                                <p>This is the code customers will write to make the discount valid.
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <label for="create-code"> Tags </label>
+                                                                <input [formControl]="searchDiscountTag" type="text" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Type a tag">
+                                                                <img (click)="createTag()" src="../../../../assets/images/add-icon-btn.png" class="campaingn-adjust" width="30px" height="30px" />
+                                                                <button class="fa fa-search campaingn-adjust-search"></button>
+                                                                <ul *ngIf="!discountTagsList">
+                                                                    <li class="pr-suggestion-list" (click)="selectDiscountTag(tag)" *ngFor="let tag of allDiscountTags; let i = index;">
+                                                                        {{tag.name}}</li>
+                                                                </ul>
+                                                                <div class="tag-setup">
+                                                                    <span *ngFor="let tag of selectedDicountTags; let i = index;" class="tags-con">#{{tag.name}} <a><i
+                                                                                class="fa fa-close"></i></a></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one two">
+                                                        <div class="label">
+                                                            <label for="disType">Discount Detail</label>
+                                                        </div>
+                                                        <div class="content">
+                                                            <label [ngClass]="{ 'is-invalid': editDiscountSubmitted && editDiscountForm.controls.discount_amount.value == ''}" for="disType" class="lt">
+                                                                Discount type & value:
+                                                            </label>
+                                                            <div class="input-group rt">
+                                                                <div id="discount-cat-btn" class="btn-group " role="group" aria-label="Basic example">
+                                                                    <a (click)="setDiscountProperties('editDiscountForm','is_percentage')" class="btn btn-primary btn-sm" data-toggle="dis-cat" data-title="$" [ngClass]="{'active':!editDiscountForm.controls.is_percentage.value , 'notActive' : editDiscountForm.controls.is_percentage.value }">$</a>
+                                                                    <a (click)="setDiscountProperties('editDiscountForm','is_percentage')" class="btn btn-primary btn-sm" data-toggle="dis-cat" data-title="%" [ngClass]="{'active': editDiscountForm.controls.is_percentage.value , 'notActive' : !editDiscountForm.controls.is_percentage.value }">%</a>
+                                                                    <input formControlName="discount_amount" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" type="text" placeholder="$00,00">
+                                                                    <input type="hidden" name="dis-cat" id="dis-cat">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="content">
+                                                            <label for="disType" class="checkbox-custom-label">
+                                                                Does it require a minimum purchase?</label>
+                                                            <div id="discount-cat-btn" class="btn-group " role="group" aria-label="Basic example">
+                                                                <a class="btn btn-primary btn-sm" (click)="setDiscountProperties('editDiscountForm','is_minimum_purchase')" [ngClass]="{'active':editDiscountForm.controls.is_minimum_purchase.value , 'notActive' : !editDiscountForm.controls.is_minimum_purchase.value }" data-toggle="dis-cat" data-title="$">Yes</a>
+                                                                <a class="btn btn-primary btn-sm" (click)="setDiscountProperties('editDiscountForm','is_minimum_purchase')" [ngClass]="{'active':!editDiscountForm.controls.is_minimum_purchase.value , 'notActive' : editDiscountForm.controls.is_minimum_purchase.value }" data-toggle="dis-cat" data-title="%"> No</a>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="editDiscountForm.controls.is_minimum_purchase.value" class="content pt20">
+                                                            <label [ngClass]="{ 'is-invalid': editDiscountSubmitted && editDiscountForm.controls.is_minimum_purchase.value && editDiscountForm.controls.how_much_amount.value == ''}" for="minReq" class="lt">Minimum requirements:</label>
+                                                            <div id="discount-cat-btn" class="btn-group wd70percent" role="group" aria-label="Basic example">
+                                                                <a class="btn btn-primary btn-sm increase-width" (click)="setDiscountProperties('editDiscountForm','is_minimum_amount')" [ngClass]="{'active':editDiscountForm.controls.is_minimum_amount.value , 'notActive' : !editDiscountForm.controls.is_minimum_amount.value }" data-toggle="dis-cat" data-title="$"> Purchase
+                                                                    Amount </a>
+                                                                <a class="btn btn-primary btn-sm increase-width" (click)="setDiscountProperties('editDiscountForm','is_minimum_amount')" [ngClass]="{'active':!editDiscountForm.controls.is_minimum_amount.value , 'notActive' : editDiscountForm.controls.is_minimum_amount.value }" data-toggle="dis-cat" data-title="%"> Quantity of
+                                                                    Items </a>
+                                                                <input class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" formControlName="how_much_amount" type="text" placeholder="# 3">
+                                                                <input type="hidden" name="dis-cat" id="dis-cat">
+                                                            </div>
+                                                        </div>
+                                                        <div class="content pt20">
+                                                            <label for="minReq" class="lt">Chosse one option:</label>
+                                                            <div id="discount-cat-btn" class="btn-group " role="group" aria-label="Basic example">
+                                                                <a class="btn btn-primary btn-sm increase-width" (click)="setDiscountProperties('editDiscountForm','is_entire_order')" [ngClass]="{'active':editDiscountForm.controls.is_entire_order.value , 'notActive' : !editDiscountForm.controls.is_entire_order.value }" data-toggle="dis-cat" data-title="$"> Entire Order
+                                                                </a>
+                                                                <a class="btn btn-primary btn-sm increase-width" (click)="setDiscountProperties('editDiscountForm','is_entire_order')" [ngClass]="{'active':!editDiscountForm.controls.is_entire_order.value , 'notActive' : editDiscountForm.controls.is_entire_order.value }" data-toggle="dis-cat" data-title="%"> Selected
+                                                                    Product </a>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!editDiscountForm.controls.is_entire_order.value" class="content pt20">
+                                                            <input [formControl]="searchProducts" type="text" list="codes" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 cust-field" placeholder="Search a products">
+                                                            <button class="fa fa-search campaingn-adjust-search"></button>
+                                                            <ul *ngIf="!closeList">
+                                                                <li class="pr-suggestion-list" (click)="selectProduct(product)" *ngFor="let product of allProducts; let i = index;">
+                                                                    {{product.product_name}}</li>
+                                                            </ul>
+                                                            <div class="tag-setup">
+                                                                <span *ngFor="let product of selectedProduct; let i = index;" class="tags-con">{{product.product_name}} <a><i
+                                                                            class="fa fa-close"></i></a></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one three">
+                                                        <div class="label">
+                                                            <label for="disType">Customer Segmentation</label>
+                                                            <label>Select all the option you need</label>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <input [checked]="editDiscountForm.controls.is_customer_since.value" (click)="setCustomerDiscountProperties('editDiscountForm','is_customer_since','is_new_customer_only')" type="radio" name="customer" value="Customer since" class="checkbox-custom">
+                                                                <label for="appliesto1" class="checkbox-custom-label">Customer since
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <input [ngClass]="{'is-invalid':editDiscountForm.controls.is_customer_since.value && editDiscountForm.controls.customer_since.value == ''}" *ngIf="editDiscountForm.controls.is_customer_since.value" formControlName="customer_since" class="form-control input-group-addon cust-seg-congigure" type="text" placeholder="12/12/2019" bsDatepicker>
+                                                                <input *ngIf="!editDiscountForm.controls.is_customer_since.value" disabled class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon cust-seg-congigure" type="text" placeholder="12/12/2019" bsDatepicker>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <input [checked]="editDiscountForm.controls.is_new_customer_only.value" (click)="setCustomerDiscountProperties('editDiscountForm','is_new_customer_only','is_customer_since')" type="radio" name="customer" value="Customer since" class="checkbox-custom">
+                                                                <label for="appliesto1" class="checkbox-custom-label">New customer only | Registered after:
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <input [ngClass]="{'is-invalid':editDiscountForm.controls.is_new_customer_only.value && editDiscountForm.controls.new_customer_register_after_date.value == ''}" *ngIf="editDiscountForm.controls.is_new_customer_only.value" formControlName="new_customer_register_after_date" class="form-control input-group-addon cust-seg-congigure" type="text" placeholder="12/12/2019" bsDatepicker>
+                                                                <input *ngIf="!editDiscountForm.controls.is_new_customer_only.value" disabled class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon cust-seg-congigure" type="text" placeholder="12/12/2019" bsDatepicker>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-8">
+                                                                <div>
+                                                                    <input [checked]="editDiscountForm.controls.is_customer_spent_amount.value" (click)="setDiscountProperties('editDiscountForm','is_customer_spent_amount')" class="checkbox-custom" type="checkbox">
+                                                                    <label for="appliesto1" class="checkbox-custom-label">Customer that have spent:
+                                                                    </label>
+                                                                </div>
+                                                                <div *ngIf="editDiscountForm.controls.is_customer_spent_amount.value" id="discount-cat-btn" class="btn-group " role="group" aria-label="min cash">
+                                                                    <a class="btn btn-primary btn-sm" (click)="setDiscountProperties('editDiscountForm','is_customer_more_then_said_amount')" [ngClass]="{'active':editDiscountForm.controls.is_customer_more_then_said_amount.value , 
+                                                                    'notActive' : !editDiscountForm.controls.is_customer_more_then_said_amount.value }" data-toggle="dis-cat" data-title="More">More</a>
+                                                                    <a class="btn btn-primary btn-sm" (click)="setDiscountProperties('editDiscountForm','is_customer_more_then_said_amount')" [ngClass]="{'active':!editDiscountForm.controls.is_customer_more_then_said_amount.value , 'notActive' : editDiscountForm.controls.is_customer_more_then_said_amount.value }" data-toggle="dis-cat" data-title="Less">
+                                                                        Less</a>
+                                                                </div>
+                                                                <div>
+                                                                    <label *ngIf="editDiscountForm.controls.is_customer_spent_amount.value" for="appliesto1" class="checkbox-custom-label">Amount:
+                                                                    </label>
+                                                                    <input [ngClass]="{'is-invalid' : editDiscountForm.controls.is_customer_spent_amount.value && editDiscountForm.controls.spent_amount.value == ''}" *ngIf="editDiscountForm.controls.is_customer_spent_amount.value" formControlName="spent_amount" class="form-control input-group-addon cust-seg-congigure" type="text" placeholder="$00,00">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <input type="text" [formControl]="searchCustomerTag" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 cust-field" placeholder="Search tags">
+                                                                <button class="fa fa-search campaingn-adjust-search"></button>
+                                                                <ul *ngIf="!customerTagsList">
+                                                                    <li class="pr-suggestion-list" (click)="selectCustomerTag(tag)" *ngFor="let tag of allCustomerTags; let i = index;">
+                                                                        {{tag.name}}</li>
+                                                                </ul>
+                                                                <div class="tag-setup">
+                                                                    <span *ngFor="let tag of selectedCustomerTags; let i = index;" class="tags-con">#{{tag.name}} <a><i
+                                                                                class="fa fa-close"></i></a></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one three">
+                                                        <div class="label">
+                                                            <label for="disType">Discount Code Limit</label>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <input [checked]="editDiscountForm.controls.is_customer_can_use_only_once.value" (click)="setDiscountProperties('editDiscountForm','is_customer_can_use_only_once')" class="checkbox-custom" type="radio" name="number-of-usage">
+                                                                <label for="appliesto1" class="checkbox-custom-label">One use per customer
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <input [checked]="!editDiscountForm.controls.is_customer_can_use_only_once.value" (click)="setDiscountProperties('editDiscountForm','is_customer_can_use_only_once')" class="checkbox-custom" type="radio" name="number-of-usage">
+                                                                <label for="appliesto1" class="checkbox-custom-label">Number of usage times per customer:
+                                                                </label>
+                                                                <input [ngClass]="{'is-invalid':!editDiscountForm.controls.is_customer_can_use_only_once.value && editDiscountForm.controls.number_of_usage_per_customer.value == ''}" *ngIf="!editDiscountForm.controls.is_customer_can_use_only_once.value" formControlName="number_of_usage_per_customer" class="form-control input-group-addon cust-seg-congigure" type="text" placeholder="$00,00">
+                                                                <input *ngIf="editDiscountForm.controls.is_customer_can_use_only_once.value" disabled class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon cust-seg-congigure" type="text" placeholder="$00,00">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-3">
+                                                                <input [checked]="editDiscountForm.controls.can_schedule.value" (click)="setDiscountProperties('editDiscountForm','can_schedule')" class="checkbox-custom" type="checkbox">
+                                                                <label for="appliesto1" class="checkbox-custom-label">Schedule | Form:
+                                                                </label>
+                                                                <input [ngClass]="{'disable-input-field':!editDiscountForm.controls.can_schedule.value , 
+                                                                'is-invalid': editDiscountForm.controls.can_schedule.value && editDiscountForm.controls.schedule_from_date.value == ''}" formControlName="schedule_from_date" placement="top" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" type="text" placeholder="12/12/2019" bsDatepicker>
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                <label for="appliesto1" class="checkbox-custom-label">To:
+                                                                </label>
+                                                                <input [ngClass]="{'disable-input-field':!editDiscountForm.controls.can_schedule.value , 
+                                                                'is-invalid': editDiscountForm.controls.can_schedule.value && editDiscountForm.controls.schedule_to_date.value == ''}" formControlName="schedule_to_date" placement="top" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" type="text" placeholder="12/12/2019" bsDatepicker>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <label for="appliesto1" class="checkbox-custom-label">Time:
+                                                                        </label>
+                                                                        <input [ngClass]="{'disable-input-field':!editDiscountForm.controls.can_schedule.value , 
+                                                                        'is-invalid': editDiscountForm.controls.can_schedule.value && editDiscountForm.controls.schedule_from_time.value == ''}" formControlName="schedule_from_time" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" type="time" placeholder="12:00">
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <label for="appliesto1" class="checkbox-custom-label">To:
+                                                                        </label>
+                                                                        <input [ngClass]="{'disable-input-field':!editDiscountForm.controls.can_schedule.value  , 
+                                                                        'is-invalid': editDiscountForm.controls.can_schedule.value && editDiscountForm.controls.schedule_to_time.value == ''}" formControlName="schedule_to_time" class="form-control cust-field font12 borderColorcbcbcb borderRadius5 input-group-addon" type="time" placeholder="15:30">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-lg-3 p0">
+                                    <div class="dis-ltwrapper">
+                                        <div class="dis-inner">
+                                            <div class="dis-top">
+                                                <div class="top">
+                                                    <h3>{{campaignSearch.value||"My Campaign"}}</h3>
+                                                </div>
+                                                <div class="mid">
+                                                    <p>Coupon</p>
+                                                    <h2>{{editDiscountForm.controls.code.value}}</h2>
+                                                    <p>{{editDiscountForm.controls.discount_amount.value||""}}
+                                                        <i *ngIf="editDiscountForm.controls.is_percentage.value">%</i>
+                                                        <i *ngIf="!editDiscountForm.controls.is_percentage.value">$</i> Discount
+                                                    </p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <p>Restrictions apply</p>
+                                                </div>
+                                            </div>
+                                            <div class="dis-mid">
+                                                <h2>Resumen</h2>
+                                                <div class="content">
+                                                    <p>One use only per customer</p>
+                                                    <p>${{editDiscountForm.controls.how_much_amount.value||""}}.00 minimum </p>
+                                                    <p>Applies to <span *ngIf="editDiscountForm.controls.is_entire_order.value">Entire
+                                                            Order</span>
+                                                        <span *ngIf="!editDiscountForm.controls.is_entire_order.value">Selectd
+                                                            Product</span>
+                                                    </p>
+                                                    <p>Applies to Customers that have spend: <span>Above $25.00</span>
+                                                    </p>
+                                                    <p>Valid through :
+                                                        <span><span>{{editDiscountForm.controls.schedule_from_date.value | date : 'short'||"6/1/2020"}}</span> to
+                                                        <span>{{editDiscountForm.controls.schedule_to_date.value | date : 'short' ||"6/12/2020"}}</span></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="dis-bottom">
+                                                <div class="t">
+                                                    <p>Copyright &copy; 2019 Mr. Repair it, All right reserved.</p>
+                                                    <p>Your are receving this email because you opted in via website.
+                                                    </p>
+                                                </div>
+                                                <div class="m">
+                                                    <p>our mailling address is:</p>
+                                                    <p>Mr Repair it </p>
+                                                    <p>SS-Woodland, Lane Evanston Memphis, Tenesse 90130</p>
+                                                </div>
+                                                <div class="b">
+                                                    <p>Want to change how you receive these emails?</p>
+                                                    <p>You can update your presence or unsubscribe from the list.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="gifts" class="tab-pane fade active show" id="tab-st-two" role="tabpanel" aria-labelledby="pills-tab-st-two">
+                        <div *ngIf="existingGifts" id="stock-supplier">
+                            <div class="top-info discounts-top">
+                                <div class="btn-group">
+                                    <div class="filterLinks newfilters">
+                                        <label>Filter by:</label>
+                                        <a [ngClass]="{'active':allGift , 'notActive' : !allGift }" (click)="changeAllGiftType()" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">All</a>
+                                        <a [ngClass]="{'active':usedGift , 'notActive' : !usedGift }"  (click)="changeUsedGiftType()" href="JavaScript:void(0)"class="color000 fontSemiBold fontPoppin">Used</a>
+                                        <a [ngClass]="{'active':notUsedGift , 'notActive' : !notUsedGift }" (click)="changeNotUsedGiftType()" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Not Used</a>
+                                    </div>
+                                </div>
+                                <div class="cut-search-area">
+                                    <div class="search-field input-group">
+                                        <input [formControl]="searchGift" type="text" class="form-control" placeholder="Search With Id...">
+                                        <a href="JavaScript:void(0)" class="input-group-addon">
+                                            <i *ngIf="searchGift.value" (click)="searchGift.reset()"
+                                                class="fas fa-times-circle"></i>
+                                            <i class="icon-search"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="po-wrapper" [ngClass]="{'empty':existingGifts && giftList.length == 0}">
+                                <div class="po-top-info">
+                                    <div class="inner"><span>Gift Cards</span></div>
+                                    <div class="inner"><span>Customers</span></div>
+                                    <div class="inner"><span>Amount</span></div>
+                                    <div class="inner"><span>Email</span></div>
+                                    <div class="inner"><span>Status</span></div>
+                                    <div class="inner"><span>Actions</span></div>
+                                </div>
+                                <div *ngIf='giftLoader==true' class="luna-loading"></div>
+                                <div *ngIf='emailSendLoader==true' class="luna-loader"></div>
+                                <div class="empty-text">
+                                    <h2><i class="fa fa-cogs" aria-hidden="true"></i>No Gifts Available</h2>
+                                </div>
+                                <div class="po-inner-list">
+                                    <accordion [isAnimated]="true" [closeOthers]="true">
+                                        <accordion-group *ngFor="let giftCard of giftList; let i = index;">
+                                            <ul accordion-heading>
+                                                <li class="">
+                                                    <span class="leftTop5px posRelative">
+                                                        <input [checked]="giftCard.checked" class="checkbox-custom"
+                                                            id="cust-check{{i}}" name="cust-check{{i}}"
+                                                            (click)="giftCheked($event,giftCard)" type="checkbox">
+                                                        <label class="checkbox-custom-label"
+                                                            for="cust-check{{i}}"></label>
+                                                    </span>
+                                                    <div (click)="checkBoxClick($event)" class="inner">
+                                                        <span>{{giftCard?.card_no}}</span></div>
+                                                    <div (click)="checkBoxClick($event)" class="inner">
+                                                        <span>{{giftCard?.Customer['first_name']+' '+giftCard?.Customer['last_name'] | titlecase}}</span>
+                                                    </div>
+                                                    <div (click)="checkBoxClick($event)" class="inner">
+                                                        <span>{{giftCard?.amount | currency}}</span> </div>
+                                                    <div (click)="checkBoxClick($event)" class="inner">
+                                                        <span>{{giftCard?.Customer['email']}}</span> </div>
+                                                    <div (click)="checkBoxClick($event)" class="inner" *ngIf='giftCard?.is_used'><span>Used</span> </div>
+                                                    <div (click)="checkBoxClick($event)" class="inner" *ngIf='!giftCard?.is_used'><span>Not Used</span> </div>
+                                                    <div (click)="checkBoxClick($event)" class="inner">
+                                                        <div (click)="sendEmailGiftCardFun(giftCard._id)" class="title-info">
+                                                            <div class="cust-edit">
+                                                                <a class="add-btn-cust" tooltip="Send Email" class="font16" style="vertical-align: text-bottom;">
+                                                                    <i class="icon-resent"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="inner">
+                                                        <span class="fa fa-angle-down" style="font-size: 16px;"></span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <ul>
+                                                <li class="">
+                                                    <div class="inner">
+                                                        <span><b>Sent Date:</b></span>
+                                                        <span>{{giftCard?.send_gift_card | date }}</span>
+                                                    </div>
+                                                    <div class="inner"><span>{{"  "}} </span></div>
+                                                    <div class="inner">
+                                                        <span><b>Sent To:</b></span>
+                                                        <span>{{giftCard?.to | titlecase}}</span>
+                                                    </div>
+                                                    <div class="inner"><span>{{giftCard?.email}}</span> </div>
+                                                    <div class="inner"><span>{{"  "}}</span> </div>
+                                                    <div class="inner">
+                                                        <div class="title-info">
+                                                            <div class="cust-edit">
+                                                                <a class="add-btn-cust">
+                                                                    <img src="http://3.227.161.233:5001/upload/{{giftCard?.qr_code}}" alt="" width="30">
+                                                                    <img src="http://3.227.161.233:5001/upload/{{giftCard?.qr_code}}" class="hoverimg" alt="" width="30">
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </accordion-group>
+                                    </accordion>
+                                </div>
+                            </div>
+                            <div class="stock-list-action">
+                                <div class="buttons-add">
+                                    <a (click)="exportGiftAsCSV()">Export</a>
+                                    <a (click)="open('existingGifts','addGifts')">Create Gift Card</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="addGifts" id="stock-supplier">
+                            <div class="business-info-inner addDiscounts">
+                                <div class="top">
+                                    <div class="lt">
+                                        <a (click)="cancel('addGifts','existingGifts')" class="back-cust-list">Back</a>
+                                    </div>
+                                    <div class="rt">
+                                        <div class="form-action-buttons">
+                                            <div class="cust-btns">
+                                                <button type="submit" class="btn btn-default" (click)="saveGiftCard()">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="business-inner">
+                                <div class="col-lg-9 pl0">
+                                    <form autocomplete="off" [formGroup]="addGiftForm">
+                                        <div class="customer-form-content">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one">
+                                                        <!-- <div class="label">
+                                                            <label for="title">Title</label>
+                                                        </div> -->
+                                                        <label for="create-code" [ngClass]="{ 'is-invalid': addGiftSubmitted && faddGiftForm.giftCardName.errors}">Enter your text</label>
+                                                        <input type="text" class="form-control cust-field" formControlName="giftCardName" placeholder="Enter your text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one two">
+                                                        <div class="label">
+                                                            <label for="amount">Amount</label>
+                                                        </div>
+                                                        <div class="content">
+                                                            <label for="appliesto">Choose the ammount</label>
+                                                            <div class="amount-selection">
+                                                                <div class="input-group rt">
+                                                                    <div id="discount-cat-btn" class="btn-group " role="group" aria-label="Basic example">
+                                                                        <a class="btn btn-primary btn-sm notActive" data-toggle="dis-cat" data-title="$10" (click)="setAmount('addGiftForm','10')" [ngClass]="{'active':addGiftForm.controls.choseAmount.value == '10' , 
+                                                                        'notActive' : !addGiftForm.controls.choseAmount.value != '10' }">$10</a>
+                                                                        <a class="btn btn-primary btn-sm notActive" data-toggle="dis-cat" data-title="$20" (click)="setAmount('addGiftForm','20')" [ngClass]="{'active':addGiftForm.controls.choseAmount.value == '20' , 
+                                                                            'notActive' : !addGiftForm.controls.choseAmount.value != '20'}">$20</a>
+                                                                        <a class="btn btn-primary btn-sm notActive" data-toggle="dis-cat" data-title="$10" (click)="setAmount('addGiftForm','50')" [ngClass]="{'active':addGiftForm.controls.choseAmount.value == '50' , 
+                                                                            'notActive' : !addGiftForm.controls.choseAmount.value != '50' }">$50</a>
+                                                                        <label>Other:</label>
+                                                                        <input class="form-control input-group-addon" formControlName="choseAmount" type="text" placeholder="$00,00">
+                                                                        <input type="hidden" name="dis-cat" id="dis-cat">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one three">
+                                                        <div class="label">
+                                                            <label for="appliesto">Customization</label>
+                                                        </div>
+                                                        <div class="content">
+                                                            <label for="appliesto">Themes</label>
+                                                            <div class="giftCards">
+                                                                <tabset>
+                                                                    <tab heading="Birthday" id="tab1">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/gift.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard2.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard3.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                    <tab heading="Christmas">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard4.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard5.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard6.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                    <tab heading="Valentines day">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard7.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/Giftcard9.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard10.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                    <tab heading="New Year">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard11.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard12.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard13.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                    <tab heading="Graduation">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard14.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard15.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/gift.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                    <tab heading="Thankyou">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard16.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard17.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard18.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                </tabset>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-lg-3 p0">
+                                    <div class="dis-ltwrapper">
+                                        <div class="dis-inner">
+                                            <div class="gift-top">
+                                                <p><span>Mail: </span>Dionel.Pol@mail.com</p>
+                                                <p><span>From: </span>Catherin Williams</p>
+                                                <p><span>Message: </span>I wish you a Merry Christmas and Happy New Year
+                                                </p>
+                                            </div>
+                                            <div class="dis-mid">
+                                                <div class="gift-img" style="background-image: url('../../../../assets/images/gift.png');">
+                                                </div>
+                                            </div>
+                                            <div class="dis-bottom">
+                                                <div class="t">
+                                                    <p>Copyright &copy; 2019 Mr. Repair it, All right reserved.</p>
+                                                    <p>Your are receving this email because you opted in via website.
+                                                    </p>
+                                                </div>
+                                                <div class="m">
+                                                    <p>our mailling address is:</p>
+                                                    <p>Mr Repair it </p>
+                                                    <p>SS-Woodland, Lane Evanston Memphis, Tenesse 90130</p>
+                                                </div>
+                                                <div class="b">
+                                                    <p>Want to change how you receive these emails?</p>
+                                                    <p>You can update your presence or unsubscribe from the list.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="editGifts" id="stock-supplier">
+                            <div class="business-info-inner addDiscounts">
+                                <div class="top">
+                                    <div class="lt">
+                                        <a (click)="cancel('editGifts','existingGifts')" class="back-cust-list">Back</a>
+                                        <h2>Christmas Gift</h2>
+                                    </div>
+                                    <div class="rt">
+                                        <div class="form-action-buttons">
+                                            <div class="cust-btns">
+                                                <button type="submit" class="btn btn-default">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="business-inner">
+                                <div class="col-lg-9 pl0">
+                                    <form autocomplete="off">
+                                        <div class="customer-form-content">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one">
+                                                        <div class="label">
+                                                            <label for="title">Title</label>
+                                                        </div>
+                                                        <label for="create-code">Enter your text</label>
+                                                        <input type="text" class="form-control cust-field" value="Christmas Gift">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one two">
+                                                        <div class="label">
+                                                            <label for="amount">Amount</label>
+                                                        </div>
+                                                        <div class="content">
+                                                            <label for="appliesto">Choose the ammount</label>
+                                                            <div class="amount-selection">
+                                                                <div class="input-group rt">
+                                                                    <div id="discount-cat-btn" class="btn-group " role="group" aria-label="Basic example">
+                                                                        <a class="btn btn-primary btn-sm active" data-toggle="dis-cat" data-title="$10">$10</a>
+                                                                        <a class="btn btn-primary btn-sm notActive" data-toggle="dis-cat" data-title="$20">$20</a>
+                                                                        <a class="btn btn-primary btn-sm notActive" data-toggle="dis-cat" data-title="$10">$50</a>
+                                                                        <label>Other:</label>
+                                                                        <input class="form-control input-group-addon" type="text" placeholder="$00,00">
+                                                                        <input type="hidden" name="dis-cat" id="dis-cat">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="one three">
+                                                        <div class="label">
+                                                            <label for="appliesto">Customization</label>
+                                                        </div>
+                                                        <div class="content">
+                                                            <label for="appliesto">Themes</label>
+                                                            <div class="giftCards">
+                                                                <tabset>
+                                                                    <tab heading="Birthday" id="tab1">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="active">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/gift.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard2.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard3.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                    <tab heading="Christmas">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard4.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard5.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard6.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                    <tab heading="Valentines day">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard7.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/Giftcard9.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard10.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                    <tab heading="New Year">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard11.jpg');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard12.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard13.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                    <tab heading="Graduation">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard14.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard15.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/gift.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                    <tab heading="Thankyou">
+                                                                        <div class="img-box">
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard16.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard17.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                            <a href="JavaScript:void(0)" class="">
+                                                                                <div class="cardbg" style="background-image: url('../../../../assets/images/giftcard18.png');">
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                    </tab>
+                                                                </tabset>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-lg-3 p0">
+                                    <div class="dis-ltwrapper">
+                                        <div class="dis-inner">
+                                            <div class="gift-top">
+                                                <p><span>Mail: </span>Dionel.Pol@mail.com</p>
+                                                <p><span>From: </span>Catherin Williams</p>
+                                                <p><span>Message: </span>I wish you a Merry Christmas and Happy New Year
+                                                </p>
+                                            </div>
+                                            <div class="dis-mid">
+                                                <div class="gift-img" style="background-image: url('../../../../assets/images/gift.png');">
+                                                </div>
+                                            </div>
+                                            <div class="dis-bottom">
+                                                <div class="t">
+                                                    <p>Copyright &copy; 2019 Mr. Repair it, All right reserved.</p>
+                                                    <p>Your are receving this email because you opted in via website.
+                                                    </p>
+                                                </div>
+                                                <div class="m">
+                                                    <p>our mailling address is:</p>
+                                                    <p>Mr Repair it </p>
+                                                    <p>SS-Woodland, Lane Evanston Memphis, Tenesse 90130</p>
+                                                </div>
+                                                <div class="b">
+                                                    <p>Want to change how you receive these emails?</p>
+                                                    <p>You can update your presence or unsubscribe from the list.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<ng-template #open_remove>
+    <div class="modal-header"></div>
+    <div class="modal-body">
+        <img src="../../../../assets/images/box-removecustomer.png" alt="" width="40">
+        <h2>Remove Discount</h2>
+        <p>Remove Discount from the list?</p>
+    </div>
+    <div class="modal-footer">
+        <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" (click)="removeDiscount()" class="btn btn-default" data-dismiss="modal">Yes</button>
+    </div>
+</ng-template>
+<ng-template #open_removeGiftCards>
+    <div class="modal-header"></div>
+    <div class="modal-body">
+        <img src="../../../../assets/images/box-removecustomer.png" alt="" width="40">
+        <h2>Remove Discount</h2>
+        <p>Remove Discount from the list?</p>
+    </div>
+    <div class="modal-footer">
+        <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" (click)="removeGiftCards()" class="btn btn-default" data-dismiss="modal">Yes</button>
+    </div>
+</ng-template>

@@ -1,0 +1,175 @@
+<!-- When a Product is added to the cart (it have one level)-->
+<accordion-group [ngClass]="product.productTypeClass" (isOpenChange)="product.isOpen =$event" [isOpen]="product.isOpen">
+    <ul accordion-heading (click)="noOpenAccordian($event)" [ngClass]="{'thirdLevel card':isDeviceProduct}">
+        <li [ngClass]="{'card-header':isDeviceProduct}">
+            <div class="outer">
+                <div class="inner wd33percentfull text-left pl10">
+                    <span class="font11 dtableCell valignMiddle text-left"><i [ngClass]="product.iconClass"></i></span>
+                    <!-- <span class="font11 fontPoppin dtableCell valignMiddle text-left">R1 - </span> -->
+                    <span tooltip="{{product.product_name}}" placement="bottom" class="textOverflow maxWidth160 font11 fontSemiBold Poppin dtableCell valignMiddle text-left  pl5 pr5">
+                        {{product.product_name}}
+                    </span>
+                </div>
+                <div class="inner wd15percent">
+                    <!-- <div class="serial-no dropdown custPos" *ngIf="product.is_product && product.is_serial_number">
+                        <a href="JavaScript:void(0);" class="dropbtn"
+                            (click)="product.is_add_serial_number = !product.is_add_serial_number">
+                            <i class="icon-code_bar pr5"></i> Add serial No.
+                        </a>
+                        <div class="dropdown-content" style="display: block;" *ngIf="product.is_add_serial_number">
+                            <a class="close-icon" href="JavaScript:void(0);" (click)="product.is_add_serial_number = false">
+                                <i class="icon-close"></i>
+                            </a>
+                            <div class="insert-serial-number">
+                                <p>Add Serial Number</p>
+                                <p class="font10 fontRegular color808080">New part serial number</p>
+                                <div class="input-group">
+                                    <input type="text" [(ngModel)]="product.serial_number"
+                                        class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                        placeholder="Enter Serial Number">
+                                    <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                            class="icon-scan1"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="inner wd11Percent">
+                    <input (click)="noOpenAccordianOnInput($event)" *ngIf="product.is_product" 
+                        class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                        [(ngModel)]="product.quantity" numeric (blur)="onChangeQuantity();" (change)="onCalculateTotalAmount()">
+                </div>
+                <div class="inner wd11Percent">
+                    <input (click)="noOpenAccordianOnInput($event)"
+                        class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                        [(ngModel)]="product.discount_value" numeric decimals="2" (change)="onCalculateTotalAmount()"
+                        placeholder="0" type="text">
+                    <span class="cartSideIcon dInlinetable font12">%</span>
+                </div>
+                <div class="inner wd11Percent">
+                    <input (click)="noOpenAccordianOnInput($event)" class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                        [(ngModel)]="product.sell_price_inc_tax" numeric decimals="2"
+                        (change)="onCalculateTotalAmount()" value="0">
+                </div>
+                <div class="inner wd11Percent">
+                    <span class="fontPoppin fontSemiBold">{{product.total_amount | currency}}</span>
+                </div>
+                <div class="inner wd5percent">
+                    <a (click)="onRemoveFromCart()" class="close-icon" href="JavaScript:void(0);">
+                        <i class="icon-close"></i>
+                    </a>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <accordion id="accSub" class="addingItemstoDevice" [isAnimated]="true" [closeOthers]="true" *ngIf="product.is_bundle_product && product.sell_line_product_type !== 'manufacturedProduct'">
+        <accordion-group *ngFor="let productInBundle of product.bundle_products.bundleProduct">
+            <ul  class="thirdLevel card" accordion-heading>
+                <li class="card-header">
+                    <div class="outer">
+                        <div class="inner wd3percent">
+                            <a href="JavaScript:void(0)" class="font16 arrowIcon"><i class="fas fa-caret-right"></i></a>
+                        </div>
+                        <div class="inner wd30percent text-left pl10">
+                            <span tooltip="{{productInBundle.bundleProductID.product_name}}" placement="bottom" class="textOverflow maxWidth160 font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                {{productInBundle.bundleProductID.product_name}}
+                            </span>
+                        </div>
+                        <div class="inner wd15percent">
+                            <!-- <div class="serial-no dropdown custPos"
+                                *ngIf="productInBundle.bundleProductID.is_product && productInBundle.bundleProductID.is_serial_number">
+                                <a href="JavaScript:void(0);" class="dropbtn"
+                                    (click)="productInBundle.is_add_serial_number = !productInBundle.is_add_serial_number">
+                                    <i class="icon-code_bar pr5"></i> Add serial No.
+                                </a>
+                                <div class="dropdown-content" style="display: block;" *ngIf="productInBundle.is_add_serial_number">
+                                    <a class="close-icon" href="JavaScript:void(0);"
+                                        (click)="productInBundle.is_add_serial_number = false">
+                                        <i class="icon-close"></i>
+                                    </a>
+                                    <div class="insert-serial-number">
+                                        <p>Add Serial Number</p>
+                                        <p class="font10 fontRegular color808080">New part serial number</p>
+                                        <div class="input-group">
+                                            <input type="text" [(ngModel)]="productInBundle.serial_number"
+                                                class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                                placeholder="Enter Serial Number">
+                                            <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                    class="icon-scan1"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="inner wd11Percent">
+                            <!-- <input class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                (keypress)="numberOnly($event)" (change)="calculateOrder()"> -->
+                            <span class="fontPoppin fontSemiBold">{{productInBundle.quantity}}</span>
+                        </div>
+                        <div class="inner wd11Percent">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <span
+                                class="fontPoppin fontSemiBold">{{productInBundle.bundleProductID.ProductStockPrice[0].sell_price_inc_tax | currency}}</span>
+                        </div>
+                        <div class="inner wd11Percent">
+                            {{productInBundle.quantity * productInBundle.bundleProductID.ProductStockPrice[0].sell_price_inc_tax | currency}}
+                        </div>
+                        <div class="inner wd5percent">
+                            <!-- <a class="close-icon" href="JavaScript:void(0);">
+                                <i class="icon-close"></i>
+                            </a> -->
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <!-- <ul class="thirdLevel card forthLevel">
+                <li class="card-header">
+                    <div class="outer">
+                        <div class="inner wd31percent text-left pl10">
+                            <span  placement="bottom"
+                                class="textOverflow maxWidth160 font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                iphone 6s
+                            </span>
+                        </div>
+                        <div class="inner wd15percent">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <span class="fontPoppin fontSemiBold">1</span>
+                        </div>
+                        <div class="inner wd11Percent">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <span class="fontPoppin fontSemiBold">--</span>
+                        </div>
+                        <div class="inner wd11Percent">
+                            --
+                        </div>
+                        <div class="inner wd5percent">
+                            <a class="close-icon" href="JavaScript:void(0);">
+                                <i (click)="onRemoveProductFromService(i)" class="icon-close"></i>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul> -->
+        </accordion-group>
+    </accordion>
+</accordion-group>
+<!-- <ng-template #modalTemplate>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center pt15">
+            <i class="{{modalInputObject.iconName}} font42 color000"></i>
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000"><br> {{modalInputObject.headerText}}</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button (click)="modalCallBackFunction(true)" type="button" 
+        class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite wd140px">
+            {{modalInputObject.yesButtonText}}
+        </button>
+        <button (click)="modalCallBackFunction(false)" type="button"
+            class="btn modalCancelBtn font10 fontLato fontSemiBold mx-auto p0">{{modalInputObject.noButtonText}}</button>
+    </div>
+</ng-template> -->
+<modal-with-yes-no-option #modalTemplate [modalInput]="modalInputObject" (callBackFunction)="modalCallBackFunction($event)"></modal-with-yes-no-option>

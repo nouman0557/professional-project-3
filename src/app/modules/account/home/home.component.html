@@ -1,0 +1,16 @@
+<div class="main-bg">
+<div class="homewrapper">
+    <div id="homeformContent">
+        <div style="color: #000;" class="logo">
+            <!-- <img src="../../../../../assets/images/logo-black.png" alt='luna-logo'>
+             -->
+             <h2 class="txt-center">Tech Bar <span>®</span></h2>
+        </div>
+        <form autocomplete="off">
+            <input autoFocus type="password" (keyup.enter)="verify()" [(ngModel)]="pwd" id="password" class="form-control" name="login" placeholder="password">
+            <span style="text-align: center;" *ngIf="error" class="field-error-msg" > Incorrect password</span>
+            <a  href="JavaScript:void(0);" class="" (click)="verify()">Authenticate</a>
+        </form>
+    </div>
+</div>
+</div>

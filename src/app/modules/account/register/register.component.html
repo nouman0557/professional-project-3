@@ -1,0 +1,850 @@
+<div class="main-bg">
+    <div *ngIf="section1 || section2 || section3 || section4 || userCreated " [ngClass]="{'registered':userCreated}"
+        id="registration-section">
+        <div class="wizard-v4-content">
+            <div *ngIf="loading" class="luna-loading">
+            </div>
+            <div class="wizard-form">
+                <div class="wizard-header">
+                    <h3 class="heading">Register</h3>
+                    <p>Enter your details below.</p>
+                </div>
+                <div id="form-total" role="application" class="wizard clearfix">
+                    <div class="content clearfix">
+                        <!-- Section 1 -->
+                        <section *ngIf="section1">
+                            <form autocomplete="off" class="form-register" [formGroup]="personalInfo"
+                                [ngClass]="{ 'is-invalid': submittedPersonalInfo && personalInfo.invalid}">
+                                <div class="inner">
+                                    <div class="top">
+                                        <h3>Step 1: User Information</h3>
+                                        <div class="steps">
+                                            <ul>
+                                                <li class="first current">
+                                                    <a href="javascript:void(0)">
+                                                        <div class="step-icon"><span>1</span></div>
+                                                    </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="javascript:void(0)">
+                                                        <div class="step-icon"><span>2</span></div>
+                                                    </a>
+                                                </li>
+                                                <li class="last">
+                                                    <a href="javascript:void(0)">
+                                                        <div class="step-icon"><span>3</span></div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row mb15">
+                                        <div class="col-lg-6">
+                                            <label
+                                                [ngClass]="{ 'is-invalid': submittedPersonalInfo && fPersonalInfoForm.first_name.errors }"
+                                                for="first-name">First Name<sup>*</sup></label>
+                                            <input type="text" class="form-control cust-field" placeholder=""
+                                                formControlName="first_name">
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label
+                                                [ngClass]="{ 'is-invalid': submittedPersonalInfo && fPersonalInfoForm.last_name.errors}"
+                                                for="last-name">Last Name<sup>*</sup></label>
+                                            <input type="text" name="last-name" id="last-name"
+                                                class="form-control cust-field" placeholder=""
+                                                formControlName="last_name" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb15">
+                                        <div class="col-lg-12">
+                                            <label
+                                                [ngClass]="{ 'is-invalid': submittedPersonalInfo && (fPersonalInfoForm.email.errors || !emailCodeVerified)}"
+                                                for="email-address">Email Address<sup>*</sup></label>
+                                            <div class="input-group">
+                                                <input (focusout)="verifySameEmail()" type="email" name="email-address"
+                                                    id="email-address" class="form-control roundBox cust-field"
+                                                    placeholder="" formControlName="email" required email>
+                                                <button (click)="openModal(open_saveorder,'custModal wd300','email')"
+                                                    class="btn btn-default btn-choose btn-verify input-group-addon"
+                                                    [ngClass]="{'btn-verified':emailCodeVerified}"
+                                                    type="button">{{emailText}}</button>
+                                            </div>
+                                            <span class="field-error-msg" *ngIf="!emailVerified">{{message}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb15">
+                                        <div class="col-lg-12">
+                                            <label
+                                                [ngClass]="{ 'is-invalid': submittedPersonalInfo && (fPersonalInfoForm.phone.errors || !smsCodeVerified)}"
+                                                for="phone-number">Phone Number<sup>*</sup></label>
+                                            <div class="input-group" [ngClass]="{'numVerified':smsCodeVerified}">
+                                                <ngx-intl-tel-input (focusout)="verifySameNumber()" [cssClass]="'form-control cust-field roundBox'" 
+                                                [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true" [enablePlaceholder]="true" 
+                                                [searchCountryFlag]="true" [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]" 
+                                                [selectFirstCountry]="true" [selectedCountryISO]="defaultCountry" [maxLength]="15" 
+                                                [phoneValidation]="false" [separateDialCode]="separateDialCode" name="phone" 
+                                                formControlName="phone">
+                                                </ngx-intl-tel-input>
+                                                <button (click)="sendSMSOTPCode(openSmsPopUp,'custModal wd300')"
+                                                    class="btn btn-default btn-choose btn-verify input-group-addon"
+                                                    [ngClass]="{'btn-verified':smsCodeVerified}"
+                                                    type="button">{{phoneText}}</button>
+                                            </div>
+                                            <span class="field-error-msg"
+                                                *ngIf="submittedPersonalInfo && phoneError">Invalid phone number</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb15">
+                                        <div class="col-lg-6">
+                                            <label
+                                                [ngClass]="{ 'is-invalid': submittedPersonalInfo && fPersonalInfoForm.password.errors}"
+                                                for="password">Password<sup>*</sup>
+                                                <span class="tool" tooltip="Your password should be 
+                                                at least six characters long.
+
+                                                To make it stronger, use upper 
+                                                and lower case letters, numbers
+                                                and symbols like ! “ ? $ % &)" placement="right">
+                                                    <p>?</p>
+                                                </span>
+                                            </label>
+                                            <input type="password" name="password" id="password"
+                                                class="form-control cust-field" placeholder=""
+                                                formControlName="password" required>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label
+                                                [ngClass]="{ 'is-invalid': submittedPersonalInfo && fPersonalInfoForm.confirm_password.errors}"
+                                                for="confirm-password">Confirm Password<sup>*</sup></label>
+                                            <input type="password" formControlName="confirm_password"
+                                                name="confirm-password" id="confirm-password"
+                                                class="form-control cust-field" placeholder="" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <span class="beforeErr"><sup>*</sup>Required Field</span>
+                                    <span class="afterErr"><sup>*</sup>Missing Required Fields</span>
+                                    <ul>
+                                        <li class="disabled"><a (click)="Previous()">Previous</a></li>
+                                        <li><a href="javascript:void(0)" (click)="verifyPersonalInfo()">Next</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </section>
+                        <!-- Section 3 -->
+                        <section *ngIf="section3">
+                            <form autocomplete="off" class="form-register">
+                                <div class="inner">
+                                    <div class="top">
+                                        <h3>Step 2: Business Information</h3>
+                                        <div class="steps">
+                                            <ul>
+                                                <li class="first done">
+                                                    <a href="javascript:void(0)">
+                                                        <div class="step-icon"><span>1</span></div>
+                                                    </a>
+                                                </li>
+                                                <li class="current">
+                                                    <a href="javascript:void(0)">
+                                                        <div class="step-icon"><span>2</span></div>
+                                                    </a>
+                                                </li>
+                                                <li class="last">
+                                                    <a href="javascript:void(0)">
+                                                        <div class="step-icon"><span>3</span></div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row mb15">
+                                        <div class="col-lg-6">
+                                            <label
+                                                [ngClass]="{'is-invalid': thirdSectionError && business_system_name == ''}"
+                                                for="legal-business-name">Choose a unique URL<sup>*</sup>
+                                                <span class="tool"
+                                                    tooltip="This URL will be your direct store URL. It will be required every time you log in."
+                                                    placement="right">
+                                                    <p>?</p>
+                                                </span>
+                                            </label>
+                                            <div class="text-field">
+                                                <input [(ngModel)]="business_system_name" (keypress)="UrlOnly($event)" name="system name" (focusout)="verifyBusinessURLAndCode('businessName')" type="text" class="form-control cust-field" placeholder="">
+                                                <label>.techbar.com</label>
+                                            </div>
+                                            <span style="color: red;" *ngIf="!businessLegalName"> Business URL already
+                                                exist! </span>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="addbusinessLogo">
+                                                <a *ngIf="photo == ''"
+                                                    (click)="model_ProfilePhoto(open_profilePhoto,'box-saveorder profilepopUp wd600')">
+                                                    <div class="profileImage"
+                                                        style="background-image: url('../../../assets/images/tb-icon.png')">
+                                                        <span>Add</span>
+                                                    </div>
+                                                </a>
+                                                <a *ngIf="photo != ''"
+                                                    (click)="model_ProfilePhoto(open_profilePhoto,'box-saveorder profilepopUp wd600')">
+                                                    <div class="profileImage">
+                                                        <img src="{{photo}}" />
+                                                        <span>Edit</span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb15 mt25">
+                                        <div class="col-lg-6">
+                                            <h4 class="registerText">Register your store(s) below</h4>
+                                        </div>
+                                        <div class="col-lg-6"></div>
+                                    </div>
+                                    <tabset [ngClass]="{'storeOne':finalStores.length==1 }">
+                                        <tab *ngFor="let tabz of finalStores; let i = index;"
+                                            [removable]="i > 0 ?true : false" heading="Store {{i+1}}" href="#i+1"
+                                            (removed)="deleteStore(tabz)">
+                                            <div id="{{i+1}}">
+                                                <div class="row mb15">
+                                                    <div class="col-lg-6">
+                                                        <label for="store-name"
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && finalStores[i].store_name == '' }">
+                                                            Type your store name as it appears on Google
+                                                            <sup>*</sup>
+                                                        </label>
+                                                        <input ngx-google-places-autocomplete #placesRef="ngx-places"
+                                                            (onAddressChange)="handleAddressChange($event,i)"
+                                                            type="text" [(ngModel)]="finalStores[i].store_name" 
+                                                            name="store-name{{i+1}}" id="store-name"
+                                                            class="form-control cust-field" placeholder="">
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <label
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && !finalStores[i].isStoreNickUnique }"
+                                                            for="store-nick-name">Store nick name
+                                                            <span class="tool"
+                                                                tooltip="It might be helpful when more than one store is named the same way. For example MR. Repair It location 1 and location 2 might be easier to identify Mr. Repair It Centreville, Mr. Repair It Fairfax."
+                                                                placement="right">
+                                                                <p>?</p>
+                                                            </span>
+                                                        </label>
+                                                        <input [(ngModel)]="finalStores[i].store_nick_name"
+                                                            (focusout)="verifyStoreNickName(i)"
+                                                            name="store-nick-name{{i+1}}" type="text"
+                                                            class="form-control cust-field" placeholder="">
+                                                            <span style="color: red;" *ngIf="thirdSectionError && !finalStores[i].isStoreNickUnique"> Business Unique Name already
+                                                                exist! </span>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb15">
+                                                    <div class="col-lg-6">
+                                                        <label for="store1-address-one"
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && finalStores[i].address_1 == '' }">Address
+                                                            1
+                                                            <sup>*</sup></label>
+                                                        <input type="text" [(ngModel)]="finalStores[i].address_1"
+                                                            name="store1-address-one{{i+1}}" id="store1-address-one"
+                                                            class="form-control cust-field" placeholder="">
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <label for="store1-address-two">Address 2</label>
+                                                        <input type="text" [(ngModel)]="finalStores[i].address_2"
+                                                            name="store1-address-two{{i+1}}" id="store1-address-two"
+                                                            class="form-control cust-field" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb15">
+                                                    <div class="col-lg-4">
+                                                        <label for="store1-zipcode"
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && finalStores[i].zip_code == ''}">Zip
+                                                            Code
+                                                            <sup>*</sup></label>
+                                                        <input type="text" (focusout)="makeNewData(i,finalStores[i])" (keypress)="numberOnly($event)" [(ngModel)]="finalStores[i].zip_code" name="store1-zipcode{{i+1}}" id="store1-zipcode" class="form-control cust-field" placeholder="">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="store1-city"
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && finalStores[i].city == '' }">City<sup>*</sup></label>
+                                                        <input type="text" [(ngModel)]="finalStores[i].city"
+                                                            name="store1-city{{i+1}}" id="store1-city"
+                                                            class="form-control cust-field" placeholder="">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="store1-state"
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && finalStores[i].state == '' }">State<sup>*</sup></label>
+                                                        <input type="text" [(ngModel)]="finalStores[i].state"
+                                                            name="store1-state{{i+1}}" id="store1-city2"
+                                                            class="form-control cust-field" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb15">
+                                                    <div class="col-lg-6">
+                                                        <label
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && finalStores[i].Country == null}"
+                                                            for="business-end-month">
+                                                            Country where you do business:
+                                                            <sup>*</sup>
+                                                            <span class="tool" tooltip="Our system will automatically
+                                                                assign the official currency of
+                                                                the selected program.
+
+                                                                This can be later changed in the
+                                                                System menu. " placement="right">
+                                                                <p>?</p>
+                                                            </span>
+                                                        </label>
+                                                        <div class="btn-group cust-group" dropdown>
+                                                            <div class="custSelect dark">
+                                                                <ng-select [items]="allCountries"
+                                                                   bindLabel="name"
+                                                                   bindValue="_id"
+                                                                   placeholder="Select Country"
+                                                                   (ngModelChange)="selectCountry($event,i)"
+                                                                   [(ngModel)]="finalStores[i].Country"
+                                                                   name='sdas'>
+                                                        </ng-select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 percentAge">
+                                                        <label for="store1-sales-tax" [ngClass]="{ 'is-invalid': thirdSectionError && finalStores[i].sales_tax == ''}">Sales Tax
+                                                            <sup>*</sup></label>
+                                                        <input type="text" maxlength="4" [(ngModel)]="finalStores[i].sales_tax" appTwoDigitDecimaNumber min="1" max="5" name="store1-sales-tax{{i+1}}" id="store1-sales-tax" class="form-control cust-field" placeholder="0.00">
+                                                        <span>%</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb15">
+                                                    <div class="col-lg-6">
+                                                        <label for="store1-business-email-address"
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && !finalStores[i].isEmailVerified}">Business
+                                                            Email Address
+                                                            <sup>*</sup>
+                                                            <span class="tool"
+                                                                tooltip="This is the store email, not your personal email necessarily. This might be appear in customer's receipts."
+                                                                placement="right">
+                                                                <p>?</p>
+                                                            </span>
+                                                        </label> 
+                                                        <div class="input-group">
+                                                            <input type="text" [(ngModel)]="finalStores[i].store_email"
+                                                                (focusout)="verifyStoreEmail(i)"
+                                                                name="store1-business-email-address{{i+1}}"
+                                                                id="store1-business-email-address"
+                                                                class="form-control roundBox cust-field" placeholder="">
+                                                            <button
+                                                                [ngClass]="{'btn-verified':finalStores[i].isEmailVerified  }"
+                                                                (click)="sendStorewiseEmailOTPCode(open_store_email,'custModal wd300',i)"
+                                                                class="btn btn-default btn-choose btn-verify input-group-addon"
+                                                                type="button">{{finalStores[i].emailText}}</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6" [ngClass]="{'selected':countrySelected}">
+                                                        <label for="phone-number{{i+1}}"
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && !finalStores[i].isNumberVerified }">Phone
+                                                            Number
+                                                            <sup>*</sup>
+                                                            <span class="tool"
+                                                                tooltip="This is the store phone number, not your personal phone number necessarily. This might be appear in customer's receipts."
+                                                                placement="right">
+                                                                <p>?</p>
+                                                            </span>
+                                                        </label>
+                                                        <div class="input-group innerPhone" [ngClass]="{'numVerified':finalStores[i].isNumberVerified}">
+                                                            <ngx-intl-tel-input (focusout)="verifyStoreNumber(i)" [cssClass]="'form-control roundBox cust-field'" [preferredCountries]="preferredCountries"  
+                                                            [enablePlaceholder]="true" [separateDialCode]="separateDialCode" [searchCountryFlag]="true" [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                                                             [selectedCountryISO]="UnitedStates" [maxLength]="15"
+                                                             name="phone{{i+1}}" [(ngModel)]="finalStores[i].store_phone">
+                                                            </ngx-intl-tel-input>
+                                                            <button
+                                                                [ngClass]="{'btn-verified':finalStores[i].isNumberVerified }"
+                                                                (click)="showSMSOTPOptions(i)"
+                                                                class="btn btn-default btn-choose btn-verify input-group-addon"
+                                                                type="button">{{finalStores[i].numberText}}</button>
+                                                        </div>
+                                                        <div *ngIf="finalStores[i].smsOtpOptions" class="contactOption">
+                                                            <label>Select your preffer verification form</label>
+                                                            <div class="selectCust">
+                                                                <input (click)="updateVerMethod(i,'Sms')"
+                                                                    [checked]="finalStores[i].type == 'sms'"
+                                                                    type="radio" id="ver{{i+1}}{{i+1}}"
+                                                                    name="radio-group-contact">
+                                                                <label for="ver{{i+1}}{{i+1}}">a text message
+                                                                    (SMS)</label>
+                                                                <input (click)="updateVerMethod(i,'Call')"
+                                                                    [checked]="finalStores[i].type == 'phone'"
+                                                                    type="radio" id="ver{{i+1}}{{i+2}}"
+                                                                    name="radio-group-contact">
+                                                                <label for="ver{{i+1}}{{i+2}}">an automated phone
+                                                                    call</label>
+                                                            </div>
+                                                            <a (click)="sendStorewiseSMSOTPCode(open_store_sms,'custModal wd300',i)"
+                                                                href="javascript:void(0);">Continue</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb40">
+                                                    <div class="col-lg-6">
+                                                        <label for="store-type">Store Type<sup>*</sup></label>
+                                                        <div class="btn-group cust-group" dropdown>
+                                                            <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle" 
+                                                            aria-controls="dropdown-animated">{{getStoreType(finalStores[i].store_type) | titlecase}}
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul id="dropdown-animated" *dropdownMenu
+                                                                class="dropdown-menu" role="menu"
+                                                                aria-labelledby="button-animated">
+                                                                <li (click)="changeStoreType(i,'IndependentRepairStore')"
+                                                                    role="menuitem"><a class="dropdown-item"
+                                                                        href="javascript:void(0);">Independent Repair
+                                                                        Store</a>
+                                                                </li>
+                                                                <li (click)="changeStoreType(i,'Franchise')"
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"
+                                                                        href="javascript:void(0);">Franchise</a>
+                                                                </li>
+                                                                <li (click)="changeStoreType(i,'FranchiseOem')"
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"
+                                                                        href="javascript:void(0);">Franchise OEM</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="i > 0" class="row">
+                                                    <div class="col-lg-6">
+                                                        <label for="bs">Is this store under a previous entered business
+                                                            legal name?
+                                                        </label>
+                                                        <div class="selectCust">
+                                                            <div class="scroll">
+                                                                <div *ngFor="let st of legalAndIdentificationList ; let k = index;">
+                                                                    <!-- <span style="color: black;">{{finalStores[i].prevStores + ' ' + st.check}}</span> -->
+                                                                    <input [checked]="finalStores[i].prevStores && st.check" (click)="usePreviousStoreInfo(i,k,st,true)" type="radio" 
+                                                                    id="bs{{i+1}}{{ k + 2}}" value="bs{{i+1}}{{ k + 2}}" name="radio-group-business{{i +1}}">
+                                                                    <label for="bs{{i+1}}{{ k + 2}}">{{st.name}}</label>
+                                                                </div>
+                                                            </div>
+                                                            <input (click)="usePreviousStoreInfo(i,'0','st',false)"
+                                                                [checked]="!finalStores[i].prevStores" type="radio"
+                                                                id="bs{{i+1}}{{ i + 3}}" value="bs{{i+1}}{{ i + 3}}" name="radio-group-business{{i +1}}">
+                                                            <label for="bs{{i+1}}{{ i + 3}}">Add a new legal business name</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6"></div>
+                                                </div>
+                                                <div *ngIf="!finalStores[i].prevStores" class="row mb15">
+                                                    <div class="col-lg-6">
+                                                        <label for="legal-business-name"
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && finalStores[i].store_legal_name == '' }">Legal
+                                                            Business Name
+                                                            <sup>*</sup>
+                                                            <span class="tool"
+                                                                tooltip="Your legal business name as registered with the IRS."
+                                                                placement="right">
+                                                                <p>?</p>
+                                                            </span>
+                                                        </label>
+                                                        <input type="text" [(ngModel)]="finalStores[i].store_legal_name" name="legal-business-name{{i+1}}" id="legal-business-name" class="form-control cust-field" placeholder="">
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <label for="identification-number"
+                                                            [ngClass]="{ 'is-invalid': thirdSectionError && finalStores[i].identification_number == '' }">Identification
+                                                            Number
+                                                            <sup>*</sup></label>
+                                                        <div class="input-group" [ngClass]="{'noBefore':finalStores[i]?.identificationTypeList?.length==0 }">
+                                                            <div *ngIf="finalStores[i]?.identificationTypeList?.length > 0"
+                                                                class="btn-group" dropdown>
+                                                                <button id="button-animated" dropdownToggle
+                                                                    type="button"
+                                                                    class="btn btn-primary dropdown-toggle"
+                                                                    name="btn{{i + 1}}"
+                                                                    aria-controls="dropdown-animated">{{finalStores[i].identification_type}}
+                                                                    <span class="caret"></span>
+                                                                </button>
+                                                                <ul id="dropdown-animated" *dropdownMenu
+                                                                    class="dropdown-menu" role="menu"
+                                                                    aria-labelledby="button-animated">
+                                                                    <li *ngFor="let ty of finalStores[i]?.identificationTypeList;"
+                                                                        (click)="changeEIN_SSN(i,ty)" role="menuitem">
+                                                                        <a class="dropdown-item"
+                                                                            href="javascript:void(0);">{{ty}}</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <input *ngIf="finalStores[i].identification_type == 'RFC'"
+                                                                [(ngModel)]="finalStores[i].identification_number"
+                                                                type="text" name="identification-numberRFC{{i+1}}"
+                                                                (keyup)="formatIdentificatinNumber(i,$event)"
+                                                                id="identification-numberRFC{{i+1}}"
+                                                                class="form-control cust-field"
+                                                                placeholder="XXXXXXXXXXXXX" maxlength="13">
+                                                            <input *ngIf="finalStores[i].identification_type == 'EIN'"
+                                                                [(ngModel)]="finalStores[i].identification_number"
+                                                                type="text" name="identification-numberEIN{{i+1}}"
+                                                                (keypress)="numberOnly($event)"
+                                                                (keyup)="formatIdentificatinNumber(i,$event)"
+                                                                id="identification-numberEIN{{i+1}}"
+                                                                class="form-control cust-field"
+                                                                placeholder="XX-XXXXXXX" maxlength="10">
+                                                            <input *ngIf="finalStores[i].identification_type == 'SSN'"
+                                                                [(ngModel)]="finalStores[i].identification_number"
+                                                                type="text" name="identification-numberSSN{{i+1}}"
+                                                                (keypress)="numberOnly($event)"
+                                                                (keyup)="formatIdentificatinNumber(i,$event)"
+                                                                id="identification-numberSSN{{i+1}}"
+                                                                class="form-control cust-field"
+                                                                placeholder="XXX-XX-XXXX" maxlength="11">
+                                                            <input *ngIf="finalStores[i].identification_type == ''"
+                                                                [(ngModel)]="finalStores[i].identification_number"
+                                                                type="text" name="identification-numberempty{{i+1}}"
+                                                                (keyup)="formatIdentificatinNumber(i,$event)"
+                                                                id="identification-numberempty{{i+1}}"
+                                                                class="form-control cust-field"
+                                                                placeholder="XXXXXXXXXXXXX" maxlength="13">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt25">
+                                                    <div class="col-lg-12">
+                                                        <button (click)="verifyCurrentStore(i)"
+                                                            class="btn btn-default btn-choose add-store"
+                                                            type="button"><i class="fa fa-plus-circle"
+                                                                aria-hidden="true"></i>ADD ANOTHER STORE</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </tab>
+                                    </tabset>
+                                </div>
+                                <div class="actions">
+                                    <span class="beforeErr"><sup>*</sup>Required Field</span>
+                                    <span class="afterErr"><sup>*</sup>Missing Required Fields</span>
+                                    <ul>
+                                        <li><a href="javascript:void(0)"
+                                                (click)="PreviousSection('section2')">Previous</a></li>
+                                        <li><a href="javascript:void(0)" (click)="verifySectionThreeData()">Next</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </section>
+                        <!-- Section 4 -->
+                        <section *ngIf="section4">
+                            <form autocomplete="off" class="form-register">
+                                <div class="inner">
+                                    <div class="top">
+                                        <h3>Step 3: Accounting Information</h3>
+                                        <div class="steps">
+                                            <ul>
+                                                <li class="first done">
+                                                    <a href="javascript:void(0)">
+                                                        <div class="step-icon"><span>1</span></div>
+                                                    </a>
+                                                </li>
+                                                <li class="done">
+                                                    <a href="javascript:void(0)">
+                                                        <div class="step-icon"><span>2</span></div>
+                                                    </a>
+                                                </li>
+                                                <li class="last current">
+                                                    <a href="javascript:void(0)">
+                                                        <div class="step-icon"><span>3</span></div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mb15">
+                                        <div class="col-lg-6">
+                                            <label for="business-end-month">Business End Month<sup>*</sup></label>
+                                            <div class="btn-group cust-group" dropdown>
+                                                <button id="button-animated" dropdownToggle type="button"
+                                                    class="btn btn-primary dropdown-toggle"
+                                                    aria-controls="dropdown-animated">{{fy_end_month}} <span
+                                                        class="caret"></span>
+                                                </button>
+                                                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu"
+                                                    role="menu" aria-labelledby="button-animated">
+                                                    <li (click)="changeEndMonth('Last day of January')" role="menuitem">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            January</a>
+                                                    </li>
+                                                    <li (click)="changeEndMonth('Last day of February')"
+                                                        role="menuitem">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            February</a>
+                                                    </li>
+                                                    <li (click)="changeEndMonth('Last day of March')" role="menuitem"><a
+                                                            class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            March</a>
+                                                    </li>
+                                                    <li (click)="changeEndMonth('Last day of April')" role="menuitem"><a
+                                                            class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            April</a>
+                                                    </li>
+                                                    <li (click)="changeEndMonth('Last day of May')" role="menuitem">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            May</a>
+                                                    </li>
+                                                    <li (click)="changeEndMonth('Last day of June')" role="menuitem"><a
+                                                            class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            June</a>
+                                                    </li>
+                                                    <li (click)="changeEndMonth('Last day of July')" role="menuitem"><a
+                                                            class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            July</a>
+                                                    </li>
+                                                    <li (click)="changeEndMonth('Last day of August')" role="menuitem">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            August</a>
+                                                    </li>
+                                                    <li (click)="changeEndMonth('Last day of September')"
+                                                        role="menuitem"><a class="dropdown-item"
+                                                            href="javascript:void(0);">Last day of September</a></li>
+                                                    <li (click)="changeEndMonth('Last day of October')" role="menuitem">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            October</a>
+                                                    </li>
+                                                    <li (click)="changeEndMonth('Last day of November')"
+                                                        role="menuitem">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            November</a>
+                                                    </li>
+                                                    <li (click)="changeEndMonth('Last day of December')"
+                                                        role="menuitem">
+                                                        <a class="dropdown-item" href="javascript:void(0);">Last day of
+                                                            December</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="accounting-method">Accounting Method
+                                                <sup>*</sup>
+                                                <span class="tool"
+                                                    tooltip="Please use the switch to select either option and lear more about each method."
+                                                    placement="right">
+                                                    <p>?</p>
+                                                </span>
+                                            </label>
+                                            <div *ngIf="accounting_method == 'accrual'" id="accounting-method"
+                                                class="btn-group " role="group" aria-label="Basic example">
+                                                <a class="btn btn-primary btn-sm active"
+                                                    (click)="setACCMethod('accrual')" data-toggle="acc-method"
+                                                    data-title="accrual">Accrual</a>
+                                                <a class="btn btn-primary btn-sm notActive"
+                                                    (click)="setACCMethod('cash')" data-toggle="acc-method"
+                                                    data-title="cash">Cash</a>
+                                                <input type="hidden" name="acc-method" id="acc-method">
+                                            </div>
+                                            <div *ngIf="accounting_method == 'cash'" id="accounting-method"
+                                                class="btn-group " role="group" aria-label="Basic example">
+                                                <a class="btn btn-primary btn-sm notActive"
+                                                    (click)="setACCMethod('accrual')" data-toggle="acc-method"
+                                                    data-title="accrual">Accrual</a>
+                                                <a class="btn btn-primary btn-sm active" (click)="setACCMethod('cash')"
+                                                    data-toggle="acc-method" data-title="cash">Cash</a>
+                                                <input type="hidden" name="acc-method" id="acc-method">
+                                            </div>
+                                            <div class="methodInfo">
+                                                <div *ngIf="accounting_method == 'accrual'">
+                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                    <span>Income and expenses are recorderd as they occur, reguardless
+                                                        of weather or not cash has actually changed hands.</span>
+                                                </div>
+                                                <div *ngIf="accounting_method == 'cash'">
+                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                    <span>Recoginzes revenues when cash is received, and expenses when
+                                                        they are paid.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <ul>
+                                        <li><a href="javascript:void(0)"
+                                                (click)="PreviousSection('section3')">Previous</a></li>
+                                        <li><a href="javascript:void(0)" (click)="submit()">Submit</a></li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </section>
+                        <section *ngIf="userCreated">
+                            <div class="inner-content">
+                                <div class="error-field">
+                                    <label><img src="../../../../assets/images/status-icon-after.png" alt='luna-logo'
+                                            width='42'>
+                                        <span>Congratulations!</span> Your Business has been registered successfully.
+                                    </label>
+                                </div>
+                                <div class="login-buttons mt10 click-wrap">
+                                    <a href="JavaScript:void(0);" class="parallelogram" routerLink="/Login"><span
+                                            class="skew-fix">Login</span></a>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <!-- </form> -->
+            </div>
+        </div>
+    </div>
+    <div id="setting-icon" class="settings-icon">
+        <a (click)="backToLastSection();">
+            <img src="../../../assets/images/back.png" alt="setting" width="60" />
+        </a>
+    </div>
+</div>
+
+<ng-template #open_saveorder>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font22 fontSemiBold color000 mb5">Enter code</h2>
+            <p class="fontPoppin font12 mb0 color808080">We have sent a verification code<br>to your email</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <input [ngClass]="{'bounce':!otpEmailValid}" [(ngModel)]="OTPCode" type="text" class="text-center form-control cust-field font12 borderColorcbcbcb borderRadius5"
+            placeholder="Please enter the code" required autoFocus>
+        <span *ngIf="!otpEmailValid" class="bounce field-error-msg text-center">
+            Incorrect Code
+        </span>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="verifyCode()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Verify</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #openSmsPopUp>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font22 fontSemiBold color000 mb5">Enter code</h2>
+            <p class="fontPoppin font12 mb0 color808080">We have sent a verification code<br>to your phone number</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <input [ngClass]="{'bounce':!otpSMSValid}" [(ngModel)]="OTPCode" type="text" class="text-center form-control cust-field font12 borderColorcbcbcb borderRadius5"
+            placeholder="Please enter the code" required autoFocus>
+        <span *ngIf="!otpSMSValid" class="bounce field-error-msg text-center">
+            Incorrect Code
+        </span>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="verifySMSOTP()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Verify</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_profilePhoto>
+    <div class="modal-header">
+        <h4 *ngIf="photo == ''">Add your photo </h4>
+        <h4 *ngIf="photo != ''">Edit your photo</h4>
+        <div (click)="closePopup()" class="closePopup"><i class="fa fa-times"> </i></div>
+    </div>
+    <div class="modal-body">
+        <div class="uploadLogo">
+            <div class="profile">
+                <div class="photo">
+                    <input type="file" accept="image/*">
+                    <div class="photo__helper">
+                        <div class="photo__frame photo__frame--circle">
+                            <canvas class="photo__canvas"></canvas>
+                            <div class="message is-empty">
+                                <p class="message--desktop">Drop your photo here or browse your computer.</p>
+                                <p class="message--mobile">Tap here to select your picture.</p>
+                            </div>
+                            <div class="message is-loading">
+                                <i class="fa fa-2x fa-spin fa-spinner"></i>
+                            </div>
+                            <div class="message is-dragover">
+                                <i class="fa fa-2x fa-cloud-upload"></i>
+                                <p>Drop your photo</p>
+                            </div>
+                            <div class="message is-wrong-file-type">
+                                <p>Only images allowed.</p>
+                                <p class="message--desktop">Drop your photo here or browse your computer.</p>
+                                <p class="message--mobile">Tap here to select your picture.</p>
+                            </div>
+                            <div class="message is-wrong-image-size">
+                                <p>Your photo must be larger than 350px.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo__options hide">
+                        <div class="photo__zoom">
+                            <input type="range" class="zoom-handler">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="left">
+            <button (click)="deleteImage()" type="button" class="btn btn-default" data-dismiss="modal">Delete Photo
+            </button>
+        </div>
+        <div class="right">
+            <div *ngIf="photo != ''" class="changeImage">
+                <label for="add-logo" class="custom-file-upload">Change Photo</label>
+                <input type="file" #imageInput name="add-logo" id="add-logo" accept="image/png, image/jpeg"
+                    (change)="onFileChanged($event)">
+            </div>
+            <button (click)="savePhoto()" id="previewBtn" type="button" class="btn btn-default"
+                data-dismiss="modal">Save Photo</button>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Duplicates-->
+<ng-template #open_store_email>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font22 fontSemiBold color000 mb5">Enter code</h2>
+            <p class="fontPoppin font12 mb0 color808080">We have sent a verification code<br>to your email</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <input [ngClass]="{'bounce':storewiseEmailOTPError}" [(ngModel)]="storeEmailOTP" type="text" class="text-center form-control cust-field font12 borderColorcbcbcb borderRadius5"
+            placeholder="Please enter the code" required autoFocus>
+        <span *ngIf="storewiseEmailOTPError" class="bounce field-error-msg text-center">
+            Incorrect Code
+        </span>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="verifyStorewiseEmailOTPCode()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Verify</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_store_sms>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font22 fontSemiBold color000 mb5">Enter code</h2>
+            <p class="fontPoppin font12 mb0 color808080">We have sent a verification code<br>to your phone number</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <input [ngClass]="{'bounce':storewiseNumberOTPError}" [(ngModel)]="storeSMSOTP" type="text" class="text-center form-control cust-field font12 borderColorcbcbcb borderRadius5"
+            placeholder="Please enter the code" required autoFocus>
+        <span *ngIf="storewiseNumberOTPError" class="bounce field-error-msg text-center">
+            Incorrect Code
+        </span>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="verifyStorewiseSMSOTP()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Verify</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<!-- End -->

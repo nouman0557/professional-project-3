@@ -1,0 +1,554 @@
+<div class="wrappRepairDetails">
+    <div *ngIf="isLoading" class="luna-loading zIndex9999"></div>
+    <div class="cut-search-area posRelative zIndex100 dtable wd100Percent">
+
+        <div class="dtableCell wd70percent text-left">
+            <a href="JavaScript:void(0)" (click)="onBackButtonClick()" class="back-cust-list dInlineBlock">Back</a>
+            <h2 class="valignMiddle color000 mb0 font16 fontBold fontPoppin dInlineBlock ml5">
+                #{{taskDetail?.Transaction?.transaction_keeping_unit}}- {{taskDetail?.Transaction?.Customer.first_name}}
+                {{taskDetail?.Transaction?.Customer.last_name}} <i
+                    *ngIf="taskDetail?.Transaction?.is_repair_room_customer_alert"
+                    (click)="openModal(open_RepairAlerts, 'custModal wd500')" class="repairAlertIcon fas fa-bell pl5">
+                    <p class="tool">2</p>
+                </i></h2>
+        </div>
+        <div class="dtableCell wd30percent text-right valignMiddle">
+            <p class="font14 fontSemiBold fontPoppin color000 dInlineBlock">
+                {{taskDetail?.Transaction?.total_repair_time_string}}</p>
+            <p class="font14 fontSemiBold fontPoppin color000 dInlineBlock ml30">{{taskDetail?.Transaction?.device_count}}
+                    Device(s)</p>
+        </div>
+    </div>
+    <div class="current-order-table-wrapper table-responsive">
+        <div class="cart-list">
+            <div class="cart-bottom">
+                <accordion [isAnimated]="true" [closeOthers]="true">
+                    <div class="giftList addingProduct addingBundleProduct">
+                        <accordion-group [ngClass]="currentClass" *ngFor="let deviceDetail of taskDetail?.Devices;let d = index"
+                            (click)="openExtraItemSession(d)" >
+                            <ul  accordion-heading (click)="noOpenAccordianOnInput($event)">
+                                <li>
+                                    <div class="outer">
+                                        <div class="inner wd30percent text-left pl5">
+                                            <span tooltip="{{deviceDetail.device.device_keeping_unit}}
+                                            - {{deviceDetail?.device?.deviceBrand?.brand_name}} Repair"
+                                                placement="bottom"
+                                                class="textOverflow maxWidth160 dBlock font12 fontSemiBold fontPoppin pr5">{{deviceDetail.device.device_keeping_unit}}
+                                                - {{deviceDetail?.device?.deviceBrand?.brand_name}} Repair</span>
+                                        </div>
+                                        <div class="inner wd10percent">
+                                            <a (click)="selectedDeviceDetail = deviceDetail;  _repairRoom.openModal(open_FinishDeviceTasks, 'custModal wd300')"
+                                                class="orderPart fontPoppin" href="JavaScript:void(0)">Done</a>
+                                        </div>
+                                        <div class="inner wd10percent">
+                                            <a (click)="selectedDeviceDetail = deviceDetail;_repairRoom.openModal(open_SelectTechnician, 'custModal wd500')"
+                                                class="selectTectionBtn" href="JavaScript:void(0)"
+                                                [ngStyle]="deviceDetail.technicion && {'background-image':'url('+ [imageBasePath + deviceDetail.technicion.avatar_location] +')'}"></a>
+                                        </div>
+                                        <div class="inner wd20percent">
+                                            <ul class="status-info">
+                                                <li *ngFor="let deviceColor of deviceDetail.device_color_pallet"
+                                                    [ngStyle]="{'background-color': deviceColor}">S</li>
+                                            </ul>
+                                        </div>
+                                        <div class="inner wd15percent">
+                                            <span
+                                                class="fontPoppin fontSemiBold500">{{deviceDetail.device_total_repair_time_string}}</span>
+                                        </div>
+                                        <div class="inner wd12percent">
+                                            <span class="fontPoppin fontSemiBold500">{{deviceDetail.repair_count}}
+                                                Repairs</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <accordion [isAnimated]="true" [closeOthers]="true">
+                                <accordion-group  (click)="openExtraItemSessionNew(d,deviceItem)" [ngClass]="{'zIndex9999' : selectedTaskItem == deviceItem}" 
+                                    *ngFor="let deviceItem of deviceDetail.deviceItems | taskDetailStatusFilter : statusFilter ; let i = index ">
+                                    <ul class="thirdLevel card" accordion-heading>
+                                        <li class="card-header " [ngClass]="deviceItem.class_name_detail_parent">
+                                            <div class="outer">
+                                                <div class="inner wd3percent">
+                                                    <a href="JavaScript:void(0)" class="color000 font16 arrowIcon"><i class="fas fa-caret-right"></i></a>
+                                                </div>
+                                                <div class="inner wd35percent text-left"  (click)="noOpenAccordianOnInput($event)"
+                                                    [ngClass]="{'cursorPointer' : deviceItem?.Product?.is_bundle_product}">
+                                                    <span tooltip="R{{i + 1}} - {{deviceItem?.Product?.product_name}}"
+                                                        placement="bottom"
+                                                        class="textOverflow maxWidth160 dBlock font12 fontSemiBold500 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                                        R{{i + 1}} - {{deviceItem?.Product?.product_name}}
+                                                    </span>
+                                                </div>
+                                                <div class="inner wd10percent text-center">
+                                                    <div class="labelFilter typeFilter alertFilter dInlineBlock"
+                                                        click-stop-propagation>
+                                                        <div class="btn-group" dropdown
+                                                            [isOpen]="deviceItem.isAlertOpen"
+                                                            (isOpenChange)="deviceItem.isAlertOpen = $event">
+                                                            <button (click)="selectedTaskItem = deviceItem"
+                                                                id="button-animated" dropdownToggle type="button"
+                                                                class="btn dropdown-toggle font20 doneReparbtn"
+                                                                aria-controls="dropdown-animated"><i
+                                                                    class="far fa-bell"></i>
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul id="dropdown-animated" *dropdownMenu
+                                                                class="dropdown-menu">
+                                                                <li role="menuitem">
+                                                                    <div class="alertMessage">
+                                                                        <textarea [(ngModel)]="purchaseAlertMessage"
+                                                                            class="form-control cust-field font11 borderColorcbcbcb borderRadius5"
+                                                                            rows="5"
+                                                                            placeholder="Type your purchase alert..."></textarea>
+                                                                    </div>
+                                                                    <div class="btnBox">
+                                                                        <a (click)="onPurchaseAlert(taskDetail?.Transaction,deviceDetail,deviceItem,purchaseAlertMessage); deviceItem.isAlertOpen = false"
+                                                                            class="saveBtnAlert fontPoppin"
+                                                                            href="JavaScript:void(0)">Send</a>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="deviceItem?.Product?.is_product" class="labelFilter typeFilter dInlineBlock ml15"
+                                                        click-stop-propagation>
+                                                        <div  class="btn-group"
+                                                            dropdown [isOpen]="deviceItem.isTypeOpen"
+                                                            (isOpenChange)="deviceItem.isTypeOpen = $event">
+                                                            <button (click)="selectedTaskItem = deviceItem"
+                                                                id="button-animated" dropdownToggle type="button"
+                                                                class="btn dropdown-toggle font20 doneReparbtn"
+                                                                aria-controls="dropdown-animated"><i
+                                                                    [ngClass]="deviceItem.item_type_icon"></i>
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul id="dropdown-animated" *dropdownMenu
+                                                                class="dropdown-menu">
+                                                                <li (click)="onChangeItemType(deviceItem, ServiceItemEnum.Damaged); deviceItem.isTypeOpen = false"
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"><i
+                                                                            class="icon-delete pr5"></i>Damaged</a>
+                                                                </li>
+                                                                <li (click)="onChangeItemType(deviceItem,ServiceItemEnum.Exchange); deviceItem.isTypeOpen = false"
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"><i
+                                                                            class="fas fa-exchange-alt pr5"></i>Exchange</a>
+                                                                </li>
+                                                                <li (click)="onChangeItemType(deviceItem, ServiceItemEnum.Defective); deviceItem.isTypeOpen = false"
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"><i
+                                                                            class="icon-verify_supplier pr5"></i>Defective</a>
+                                                                </li>
+
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="inner wd20percent labelFilter repairFilter"
+                                                    click-stop-propagation>
+                                                    <div class="btn-group" dropdown [isOpen]="deviceItem.isStatusOpen"
+                                                        (isOpenChange)="deviceItem.isStatusOpen = $event">
+                                                        <button (click)="selectedTaskItem = deviceItem"
+                                                            id="button-animated" dropdownToggle type="button"
+                                                            class="btn dropdown-toggle statusFilter mainPOStatusFilter"
+                                                            aria-controls="dropdown-animated">
+                                                            <span
+                                                                class="caret"></span>{{deviceItem?.service_status?.status_name}}
+                                                        </button>
+                                                        <ul id="dropdown-animated" *dropdownMenu
+                                                            class="dropdown-menu supplierFilterUl">
+                                                            <li (click)="changeStatusValue(deviceDetail, deviceItem, status.status_name); deviceItem.isStatusOpen = false"
+                                                                role="menuitem"
+                                                                *ngFor="let status of taskStatus; let i = index">
+                                                                <a class="dropdown-item" href="javascript:void(0)"
+                                                                    tabindex="{{i+1}}"
+                                                                    [ngClass]="status.class_name_detail"><i
+                                                                        class="fas fa-square pr5"></i>{{status.status_name}}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="inner wd15percent" (click)="noOpenAccordianOnInput($event)">
+                                                    <a (click)="serviceTimer(deviceItem,deviceDetail,taskDetail?.Transaction);"
+                                                        href="JavaScript:void(0)" class="font14">
+                                                        <i [ngClass]="{'fa fa-play-circle-o' : !deviceItem.isStartTimer, 'colortheme fas fa-pause-circle': deviceItem.isStartTimer}"
+                                                            class="fa fa-play-circle-o"></i>
+                                                    </a>
+                    
+                                                    <span
+                                                        class="fontPoppin fontSemiBold500 pl5">{{_repairRoom.time_convert(deviceItem.time_log)}}</span>
+                                                </div>
+                                                <div class="inner wd12percent" (click)="noOpenAccordianOnInput($event)">
+                                                    <a *ngIf="!deviceItem?.Product?.is_bundle_product && deviceItem?.Product?.is_product"
+                                                        (click)="getOrderPartSupplier(deviceItem.Product._id);
+                                                    initOrderPart();
+                                                    selectedTaskItem = deviceItem; 
+                                                    orderPart.product = deviceItem.Product; 
+                                                    _repairRoom.openModal(open_OrderPart, 'custModal wd500')"
+                                                        class="orderPart fontPoppin" href="JavaScript:void(0)">Order
+                                                        Part</a>
+                                                    <a *ngIf="!deviceItem?.Product?.is_bundle_product && !deviceItem?.Product?.is_product"
+                                                    (click)="selectedDeviceDetail = deviceDetail;  _repairRoom.openModal(open_RemoveService, 'custModal wd300')" class="orderPart fontPoppin" href="JavaScript:void(0)">Remove</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="thirdLevel card innerleftLine"
+                                        [ngClass]="deviceDetail.deviceItems.length > i + 1 ? deviceDetail.deviceItems[i+1].class_name_detail_parent : deviceDetail.deviceItems[i].class_name_detail_parent  "
+                                        *ngIf="deviceItem?.Product?.is_bundle_product">
+                                        <li class="card-header" [ngClass]="deviceItem.class_name_detail_parent"
+                                            *ngFor="let product of deviceItem.Product?.bundle_products.bundleProduct; let j = index ">
+                                            <div class="outer">
+                                                <div class="inner wd30percent text-left pl5">
+                                                    <span
+                                                        tooltip="R {{i+1}}.{{j+1}} - {{product.bundleProductID?.product_name}}"
+                                                        placement="bottom"
+                                                        class="textOverflow maxWidth160 font12 fontSemiBold500 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                                        R {{i+1}}.{{j+1}} - {{product.bundleProductID?.product_name}}
+                                                    </span>
+                                                </div>
+                                                <div class="inner wd10percent text-left">
+                                                </div>
+                                                <div class="inner wd10percent">
+                                                </div>
+                                                <div class="inner wd20percent labelFilter repairFilter">
+                                                </div>
+                                                <div class="inner wd12percent">
+                                                    <a *ngIf=" product.bundleProductID.is_product" (click)="getOrderPartSupplier(product.bundleProductID._id);
+                                                    initOrderPart();
+                                                    selectedTaskItem = deviceItem; 
+                                                    orderPart.product = product.bundleProductID; 
+                                                    _repairRoom.openModal(open_OrderPart, 'custModal wd500')"
+                                                        class="orderPart fontPoppin" href="JavaScript:void(0)">Order
+                                                        Part</a>
+                                                </div>
+                                                <div class="inner wd15percent">
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="thirdLevel card innerleftLine" [ngClass]=""
+                                        *ngIf="deviceItem?.Product?.serviceProduct && deviceItem?.Product?.serviceProduct.length > 0">
+                                        <li class="card-header" [ngClass]="{'trashItem': product?.service_repair_room_item_type != null && product?.serviceReason != 'Not Required' && (product?.serviceReason != 'N/A' && product?.serviceReason != null)}" [ngClass]="deviceItem.class_name_detail_parent"
+                                            *ngFor="let product of deviceItem.Product.serviceProduct; let j = index ">
+                                            <!-- Normal Products -->
+                                            <div *ngIf="product.serviceProductType == 'product'" class="outer">
+                                                <div class="inner wd35percent text-left">
+                                                    <span
+                                                        tooltip="R {{i+1}}.{{j+1}} - {{product.serviceProductId?.product_name}}"
+                                                        placement="bottom"
+                                                        class="textOverflow maxWidth160 dBlock font12 fontSemiBold500 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                                        R {{i+1}}.{{j+1}} - {{product.serviceProductId.product_name}}
+                                                    </span>
+                                                </div>
+                                                <div class="inner wd10percent text-center">
+                                                    <div class="labelFilter typeFilter dInlineBlock"
+                                                        click-stop-propagation>
+                                                        <div class="btn-group" dropdown
+                                                            [isOpen]="product.serviceProductId.isTypeOpen"
+                                                            (isOpenChange)="product.serviceProductId.isTypeOpen = $event">
+                                                            <button (click)="selectedTaskItem = deviceItem"
+                                                                id="button-animated" dropdownToggle type="button"
+                                                                class="btn dropdown-toggle font20 doneReparbtn"
+                                                                aria-controls="dropdown-animated"><i
+                                                                    [ngClass]="product.service_product_item_type_icon || 'fas fa-th-large'"></i>
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul id="dropdown-animated" *dropdownMenu
+                                                                class="dropdown-menu">
+                                                                
+                                                                <li (click)="getReasons(product,ServiceItemEnum.Damaged); product.serviceProductId.isTypeOpen = false" 
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"><i
+                                                                            class="icon-delete pr5"></i>Damaged</a>
+                                                                </li>
+                                                                <li (click)="getReasons(product,ServiceItemEnum.Exchange); product.serviceProductId.isTypeOpen = false"
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"><i
+                                                                            class="fas fa-exchange-alt pr5"></i>Exchange</a>
+                                                                </li>
+                                                                <li (click)="getReasons(product,ServiceItemEnum.Defective); product.serviceProductId.isTypeOpen = false"
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"><i
+                                                                            class="icon-verify_supplier pr5"></i>Defective</a>
+                                                                </li>
+
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="inner wd35percent text-left">
+                                                    <div *ngIf="product?.typeSelected" class="custSelect dark ngDropSelect inputDropSelect h25 wd90Percent">
+                                                        <ng-select [(ngModel)]="selectedReason" (change)="selectReason(selectedReason,product,deviceItem?._id)" placeholder="Select a reason">
+                                                            <ng-option *ngFor="let reason of reasons" [value]="reason.reason_name">{{reason.reason_name}}</ng-option>
+                                                         </ng-select>
+                                                   </div>
+                                                </div>
+                                                <div class="inner wd12percent">
+                                                    <!-- && product?.serviceProductId?.ProductStockPrice[0]?.shelf_qty == 0 && product?.serviceProductId?.incoming_item -->
+                                                    <a *ngIf=" product.serviceProductId.is_product" (click)="getOrderPartSupplier(product.serviceProductId._id);
+                                                    initOrderPart();
+                                                    selectedTaskItem = deviceItem; 
+                                                    orderPart.product = product.serviceProductId; 
+                                                    _repairRoom.openModal(open_OrderPart, 'custModal wd500')"
+                                                        class="orderPart fontPoppin" href="JavaScript:void(0)">Order
+                                                        Part</a>
+                                                </div>
+                                            </div>
+                                            <!-- Custom Products -->
+                                            <div *ngIf="product.serviceProductType == 'custom'" class="outer">
+                                                <div class="inner wd35percent text-left">
+                                                    <span
+                                                        tooltip="R {{i+1}}.{{j+1}} - {{product.serviceCustomProductId?.name}}"
+                                                        placement="bottom"
+                                                        class="textOverflow maxWidth160 dBlock font12 fontSemiBold500 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                                        R {{i+1}}.{{j+1}} - {{product.serviceCustomProductId.name}}
+                                                    </span>
+                                                </div>
+                                                <div class="inner wd10percent text-center">
+                                                    <div class="labelFilter typeFilter dInlineBlock"
+                                                        click-stop-propagation>
+                                                        <div class="btn-group" dropdown
+                                                            [isOpen]="product.serviceCustomProductId.isTypeOpen"
+                                                            (isOpenChange)="product.serviceCustomProductId.isTypeOpen = $event">
+                                                            <button (click)="selectedTaskItem = deviceItem"
+                                                                id="button-animated" dropdownToggle type="button"
+                                                                class="btn dropdown-toggle font20 doneReparbtn"
+                                                                aria-controls="dropdown-animated"><i
+                                                                    [ngClass]="product.service_product_item_type_icon"></i>
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul id="dropdown-animated" *dropdownMenu
+                                                                class="dropdown-menu">
+                                                
+                                                                <li (click)="getReasons(product,ServiceItemEnum.Damaged); product.serviceCustomProductId.isTypeOpen = false" 
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"><i
+                                                                            class="icon-delete pr5"></i>Damaged</a>
+                                                                </li>
+                                                                <li (click)="getReasons(product,ServiceItemEnum.Exchange); product.serviceCustomProductId.isTypeOpen = false"
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"><i
+                                                                            class="fas fa-exchange-alt pr5"></i>Exchange</a>
+                                                                </li>
+                                                                <li (click)="getReasons(product,ServiceItemEnum.Defective); product.serviceCustomProductId.isTypeOpen = false"
+                                                                    role="menuitem">
+                                                                    <a class="dropdown-item"><i
+                                                                            class="icon-verify_supplier pr5"></i>Defective</a>
+                                                                </li>
+
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="inner wd35percent text-left">
+                                                    <div *ngIf="product?.typeSelected" class="custSelect dark ngDropSelect inputDropSelect h25 wd90Percent">
+                                                        <!-- ,deviceItem?.Product?.serviceProduct -->
+                                                        <ng-select [(ngModel)]="selectedReason" (change)="selectReason(selectedReason,product,deviceItem?._id)" placeholder="Select a reason">
+                                                            <ng-option *ngFor="let reason of reasons" [value]="reason.reason_name">{{reason.reason_name}}</ng-option>
+                                                         </ng-select>
+                                                   </div>
+                                                </div>
+                                                <div class="inner wd12percent">
+                                                    <!-- && product?.serviceProductId?.ProductStockPrice[0]?.shelf_qty == 0 && product?.serviceProductId?.incoming_item -->
+                                                    <!-- <a *ngIf=" product.serviceProductId.is_product" (click)="getOrderPartSupplier(product.serviceProductId._id);
+                                                    initOrderPart();
+                                                    selectedTaskItem = deviceItem; 
+                                                    orderPart.product = product.serviceProductId; 
+                                                    _repairRoom.openModal(open_OrderPart, 'custModal wd500')"
+                                                        class="orderPart fontPoppin" href="JavaScript:void(0)">Order
+                                                        Part</a> -->
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="thirdLevel card innerleftLine" [ngClass]=""
+                                    *ngIf="deviceItem?.Product?.serviceProduct && deviceItem?.Product?.serviceProduct.length <= 0">
+                                    <li class="card-header" [ngClass]="deviceItem.class_name_detail_parent">
+                                        <div class="outer">
+                                            <div class="inner wd100percent text-left">
+                                                <span class="textOverflow maxWidth160 dBlock font12 fontSemiBold500 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                                   Please attach an item from the item list
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                </accordion-group>
+                            </accordion>
+                        </accordion-group>
+                    </div>
+                </accordion>
+            </div>
+        </div>
+    </div>
+    <div class="listCount">
+        <span>Total repairs: <b>{{taskDetail.Total}}</b></span>
+    </div>
+    <div class="bottomActionBar">
+        <div class="dtableCell wd60percent valignMiddle">
+            <div class="orderBottomFilters noposRelative">
+                <label class="color808080 fontPoppin fontSemiBold500 pr10 dInlineBlock m0">Quick filter:</label>
+                <div class="labelFilter dInlineBlock">
+                    <div class="btn-group" dropdown>
+                        <button id="button-animated" dropdownToggle type="button"
+                            class="btn dropdown-toggle statusFilter mainPOStatusFilter"
+                            aria-controls="dropdown-animated">All status(s)
+                            <span class="caret"></span>
+                        </button>
+                        <div class="filterDrop">
+                            <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu supplierFilterUl" role="menu"
+                                aria-labelledby="button-animated">
+                                <li *ngFor="let status of taskStatus" (click)="$event.stopPropagation()"
+                                    [ngClass]="status.class_name">
+                                    <input id="status{{status.status_name}}" (change)="setRepairRoomStatusFilter();"
+                                        value="{{status.status_name}}" [(ngModel)]="status.checked"
+                                        class="checkbox-custom" name="{{status.status_name}}" type="checkbox">
+                                    <label for="status{{status.status_name}}" class="checkbox-custom-label"
+                                        [ngClass]="{'active':status.checked}">{{status.status_name}}</label>
+                                </li>
+                            </ul>
+                            <a href="JavaScript:void(0)"
+                                class="dBlock fontPoppin fontBold font11 padding5 borderRadius5 doneFilter text-center">Done</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #open_FinishDeviceTasks>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font18 fontSemiBold color000">
+                Do you want to finish<br>the task of selected device?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button type="button" (click)="_repairRoom.closeModel(); onMarkDeviceAsDone(selectedDeviceDetail)"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Yes</button>
+        <button (click)="_repairRoom.closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_SelectTechnician>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font18 fontSemiBold color000">Select your technician</h2>
+        </div>
+    </div>
+    <div class="modal-body pl40 pb40 pt0 pr40">
+        <div class="technicianList">
+            <ul>
+                <li *ngFor="let technician of technicianList">
+                    <a (click)="_repairRoom.closeModel(); assignTechnicialToDevice(selectedDeviceDetail,technician)"
+                        href="JavaScript:void(0)">
+                        <div class="techImage dInlineBlock valignMiddle"
+                            [ngStyle]="{'background-image':'url('+ [imageBasePath + technician.avatar_location] +')'}">
+                            <!-- <img src="{{imageBasePath + technician.avatar_location}}" /> -->
+                        </div>
+                        <div class="techName dInlineBlock pl10">
+                            <h2 class="fontPoppin font12 fontSemiBold500 color000">{{technician.first_name}}
+                                {{technician.last_name}}</h2>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="_repairRoom.closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_OrderPart>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold color000">Order Part</h2>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <div class="items-form-content popupList OrdrPartList">
+            <div id="po-wrapper">
+                <div class="po-top-info">
+                    <div class="inner wd40percent"><span class="text-center">Supplier SKU</span></div>
+                    <div class="inner wd11percent text-center"><span class="text-center">Qty.</span></div>
+                </div>
+                <div class="po-inner-list">
+                    <div class="ifBundleProduct">
+                        <ul>
+                            <li class="">
+                                <div class="inner wd40percent text-left">
+                                    <input (click)="orderPart.showSupplierToOrderPart = true" type="text"
+                                        class="form-control additionalItemsinput text-left"
+                                        placeholder="Select Supplier's SKU"
+                                        [(ngModel)]="orderPart.supplierCompanyName" />
+                                    <div class="ulWrapper addExtraitemslist" *ngIf="orderPart.showSupplierToOrderPart">
+                                        <ul>
+                                            <li (click)="orderPart.supplier = supplierInfo; 
+                                            orderPart.supplierCompanyName = supplierInfo.Supplier.supplier_company; 
+                                            orderPart.showSupplierToOrderPart = false"
+                                                *ngFor="let supplierInfo of productSuppliersInfo | orderPartSupplierFilter:orderPart.supplierCompanyName; let i= index;">
+                                                <a>
+                                                    <span> {{supplierInfo.Supplier.supplier_company}} - SKU:
+                                                        {{supplierInfo.sku_number}} </span>
+
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                                <div class="inner wd11percent">
+                                    <span class="text-center ml15 mr15">
+                                        <div
+                                            class="input-group borderWidth1pxSolid borderColorcbcbcb borderRadius5 bgWhite">
+                                            <span class="input-group-btn m0"
+                                                (click)="orderPart.productQunatity > 0 && orderPart.productQunatity = orderPart.productQunatity - 1">
+                                                <button type="button"
+                                                    class="btn btn-default btn-number borderBRR0 borderTRR0"
+                                                    disabled="disabled" data-type="minus" data-field="quant[1]">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </span>
+                                            <span class="form-control input-number"
+                                                style="line-height:2.5">{{orderPart.productQunatity}}</span>
+                                            <span class="input-group-btn m0"
+                                                (click)="orderPart.productQunatity = orderPart.productQunatity + 1">
+                                                <button type="button"
+                                                    class="btn btn-default btn-number borderBLR0 borderTLR0"
+                                                    data-type="plus" data-field="quant[1]">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button type="button" (click)="onOrderPart(orderPart.product, orderPart.supplier, orderPart.productQunatity)"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Order</button>
+        <button (click)="_repairRoom.closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_RemoveService>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font18 fontSemiBold color000">
+                Do you want to remove<br>this service?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button type="button" (click)="_repairRoom.closeModel()"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Yes</button>
+        <button (click)="_repairRoom.closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>

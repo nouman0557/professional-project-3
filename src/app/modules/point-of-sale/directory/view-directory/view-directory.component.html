@@ -1,0 +1,450 @@
+<div
+  class="tab-pane fade active show"
+  id="tab-s-one"
+  role="tabpanel"
+  aria-labelledby="pills-tab-s-two"
+>
+  <div class="container-fluid container-view-directory">
+    <div class="row">
+      <div class="col-md-12">
+        <h2 class="title-view">General Information</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 container-options">
+        <div class="options-button">
+          <a (click)="emitState.emit('edit')">Edit Information</a>
+        </div>
+      </div>
+    </div>
+    <div class="row sub-container">
+      <div class="col-md-3">
+        <div class="slideshow-container">
+          <div class="mySlides">
+            <!--<div class="numbertext">1 / 3</div>-->
+            <img
+              src="../../../../../assets/images/upload-image-test/upload-image.png"
+              style="width:100%"
+            />
+            <!--<div class="text">Caption Text</div>-->
+          </div>
+
+          <div class="mySlides">
+            <!-- <div class="numbertext">2 / 3</div>-->
+            <img
+              src="../../../../../assets/images/upload-image-test/upload-image2.png"
+              style="width:100%"
+            />
+            <!--<div class="text">Caption Two</div>-->
+          </div>
+
+          <div class="mySlides">
+            <!-- <div class="numbertext">3 / 3</div>-->
+            <img
+              src="../../../../../assets/images/upload-image-test/upload-image3.png"
+              style="width:100%"
+            />
+            <!--<div class="text">Caption Three</div>-->
+          </div>
+
+          <!--<a class="prev" (click)="plusSlides(-1)">&#10094;</a>
+              <a class="next" (click)="plusSlides(1)">&#10095;</a>-->
+        </div>
+        <br />
+
+        <div style="text-align:center">
+          <span class="dot" (click)="currentSlide(1)"></span>
+          <span class="dot" (click)="currentSlide(2)"></span>
+          <span class="dot" (click)="currentSlide(3)"></span>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <form autocomplete="off">
+          <div class="row">
+            <div class="col">
+              <label class="store-label">Store name:</label>
+              <h1 class="store-name">{{ storeData.name }}</h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label class="store-label">Phone number:</label>
+              <h4 class="store-name">{{ storeData.phone }}</h4>
+            </div>
+            <div class="col">
+              <label class="store-label">Email:</label>
+              <h4 class="store-name">{{ storeData.email }}</h4>
+              <span
+                >(This information is only for us to contact you. This email
+                will not be shown in the directory public website.)
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label class="store-label">About us:</label>
+              <h4 class="store-name">{{ storeData.aboutUs }}</h4>
+            </div>
+          </div>
+        </form>
+        <!--<form autocomplete="off" [formGroup]="angForm" novalidate>
+              <div class="form-group">
+                  <label>Name:</label>
+                  <input class="form-control" formControlName="name" type="text">
+              </div>
+              <div *ngIf="angForm.controls['name'].invalid && (angForm.controls['name'].dirty || angForm.controls['name'].touched)" class="alert alert-danger">
+                  <div *ngIf="angForm.controls['name'].errors.required">
+                    Name is required.
+                  </div>
+              </div>
+               <div class="form-group">
+                  <label>Address:</label>
+                  <input class="form-control" formControlName="address" type="text">
+              </div>
+              <div *ngIf="angForm.controls['address'].invalid && (angForm.controls['address'].dirty || angForm.controls['address'].touched)" class="alert alert-danger">
+                  <div *ngIf="angForm.controls['address'].errors.required">
+                    email is required.
+                  </div>
+              </div>
+              <button type="submit"
+                  [disabled]="angForm.pristine || angForm.invalid" class="btn btn-success">
+                  Save
+              </button>
+        </form>
+        <br />
+        <p>Form value: {{ angForm.value | json }}</p>
+        <p>Form status: {{ angForm.status | json }}</p>-->
+      </div>
+    </div>
+    <div class="row sub-container">
+      <div class="col-md-4">
+        <label class="store-label">Addres:</label>
+        <h5 class="store-name">{{ storeData.address }}</h5>
+      </div>
+      <div class="col-md-8">
+        <h2 class="title-view">Google Maps</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="divider custom-divider"></div>
+      <div class="col-md-12">
+        <h2 class="title-view">Schedule</h2>
+      </div>
+    </div>
+    <div class="row sub-container schedule-content">
+      <div class="col-md-12">
+        <form autocomplete="off">
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.monday.active"
+                />
+                <span>Monday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.monday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="storeData.schedule.monday.active" class="col">
+              <label
+                >{{ storeData.schedule.monday.open }}
+                {{ storeData.schedule.monday.meridiemOpen == 0 ? "AM" : "PM" }}
+                - {{ storeData.schedule.monday.close }}
+                {{
+                  storeData.schedule.monday.meridiemClose == 0 ? "AM" : "PM"
+                }}</label
+              >
+            </div>
+            <div *ngIf="!storeData.schedule.monday.active" class="col">
+              <label>Close</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.tuesday.active"
+                />
+                <span>Tuesday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.tuesday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="storeData.schedule.tuesday.active" class="col">
+              <label
+                >{{ storeData.schedule.tuesday.open }}
+                {{ storeData.schedule.tuesday.meridiemOpen == 0 ? "AM" : "PM" }}
+                - {{ storeData.schedule.tuesday.close }}
+                {{
+                  storeData.schedule.tuesday.meridiemClose == 0 ? "AM" : "PM"
+                }}</label
+              >
+            </div>
+            <div *ngIf="!storeData.schedule.tuesday.active" class="col">
+              <label>Close</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.wednesday.active"
+                />
+                <span>Wednesday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.wednesday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="storeData.schedule.wednesday.active" class="col">
+              <label
+                >{{ storeData.schedule.wednesday.open }}
+                {{
+                  storeData.schedule.wednesday.meridiemOpen == 0 ? "AM" : "PM"
+                }}
+                - {{ storeData.schedule.wednesday.close }}
+                {{
+                  storeData.schedule.wednesday.meridiemClose == 0 ? "AM" : "PM"
+                }}</label
+              >
+            </div>
+            <div *ngIf="!storeData.schedule.wednesday.active" class="col">
+              <label>Close</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.thursday.active"
+                />
+                <span>Thursday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.thursday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="storeData.schedule.thursday.active" class="col">
+              <label
+                >{{ storeData.schedule.thursday.open }}
+                {{
+                  storeData.schedule.thursday.meridiemOpen == 0 ? "AM" : "PM"
+                }}
+                - {{ storeData.schedule.thursday.close }}
+                {{
+                  storeData.schedule.thursday.meridiemClose == 0 ? "AM" : "PM"
+                }}</label
+              >
+            </div>
+            <div *ngIf="!storeData.schedule.thursday.active" class="col">
+              <label>Close</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.friday.active"
+                />
+                <span>Friday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.friday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="storeData.schedule.friday.active" class="col">
+              <label
+                >{{ storeData.schedule.friday.open }}
+                {{ storeData.schedule.friday.meridiemOpen == 0 ? "AM" : "PM" }}
+                - {{ storeData.schedule.friday.close }}
+                {{
+                  storeData.schedule.friday.meridiemClose == 0 ? "AM" : "PM"
+                }}</label
+              >
+            </div>
+            <div *ngIf="!storeData.schedule.friday.active" class="col">
+              <label>Close</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.saturday.active"
+                />
+                <span>Saturday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.saturday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="storeData.schedule.saturday.active" class="col">
+              <label
+                >{{ storeData.schedule.saturday.open }}
+                {{
+                  storeData.schedule.saturday.meridiemOpen == 0 ? "AM" : "PM"
+                }}
+                - {{ storeData.schedule.saturday.close }}
+                {{
+                  storeData.schedule.saturday.meridiemClose == 0 ? "AM" : "PM"
+                }}</label
+              >
+            </div>
+            <div *ngIf="!storeData.schedule.saturday.active" class="col">
+              <label>Close</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.sunday.active"
+                />
+                <span>Sunday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  disabled
+                  [checked]="storeData.schedule.sunday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="storeData.schedule.sunday.active" class="col">
+              <label>
+                {{ storeData.schedule.sunday.open }}
+                {{ storeData.schedule.sunday.meridiemOpen == 0 ? "AM" : "PM" }}
+                - {{ storeData.schedule.sunday.close }}
+                {{ storeData.schedule.sunday.meridiemClose == 0 ? "AM" : "PM" }}
+              </label>
+            </div>
+            <div *ngIf="!storeData.schedule.sunday.active" class="col">
+              <label>Close</label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="divider custom-divider"></div>
+      <div class="col-md-12">
+        <h2 class="title-view">Social links</h2>
+      </div>
+    </div>
+    <div class="row sub-container social-link-content">
+      <div class="col-md-12">
+        <form autocomplete="off">
+          <div class="row">
+            <div class="col">
+              <label class="store-label">Website:</label>
+              <h4 class="store-name ml-2">
+                {{ storeData.socialLinks.website }}
+              </h4>
+            </div>
+            <div class="col">
+              <label class="store-label">Twitter:</label>
+              <h4 class="store-name ml-2">
+                {{ storeData.socialLinks.twitter }}
+              </h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label class="store-label">Facebook:</label>
+              <h4 class="store-name ml-2">
+                {{ storeData.socialLinks.facebook }}
+              </h4>
+            </div>
+            <div class="col">
+              <label class="store-label">Instagram:</label>
+              <h4 class="store-name ml-2">
+                {{ storeData.socialLinks.instagram }}
+              </h4>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

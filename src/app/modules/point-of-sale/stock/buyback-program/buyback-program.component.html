@@ -1,0 +1,492 @@
+<div *ngIf="showSupplierScreen" id="stock-supplier" (click)="selectedSupplier = {}"
+    [ngClass]="{'empty':noSupplierOnSearch, emptySupplier :isObjectEmpty(supplierRestockData) && !noSupplierOnSearch }">
+    <div class="cut-search-area">
+        <div class="top-info">
+            <h2 class="color000 mb0 font14 pt7 pb7 fontSemiBold fontPoppin dInlinetable text-left wd50percent">
+                <a class="back-cust-list" href="JavaScript:void(0)"
+                    (click)="cancelOrderProcess('selectRSupplier','selectRType')">Back</a>
+                Select a supplier
+            </h2>
+            <div class="search-field input-group wd50percent fr">
+                <input [(ngModel)]="searchSupplier" type="text" class="form-control" placeholder="Search...">
+                <a href="JavaScript:void(0)" class="input-group-addon">
+                    <i *ngIf="searchSupplier" (click)="searchSupplier = ''"
+                    class="fas fa-times-circle"></i>
+                    <i class="fa fa-search"></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <div id="po-wrapper">
+        <div *ngIf='supplierRestockLoader' class="luna-loading"></div>
+        <div *ngIf="noSupplierOnSearch" class="empty-text">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2 class="fontPoppin fontSemiBold color000 font22">
+                No Supplier found
+            </h2>
+        </div>
+        <div *ngIf="!noSupplierOnSearch" class="empty-text text-center">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2 class="fontPoppin fontSemiBold color000 font22  text-center">
+                Use Buyback program
+            </h2>
+            <p class="text-center fontPoppin color808080 font14 wd60percent mx-auto">
+                To use a Buyback program, you will need to create a supplier and associate one of
+                their SKUs to a product.
+            </p>
+        </div>
+        <div class="catWrapper">
+            <!-- Tayyab Changes -->
+            <span *ngIf='!isObjectEmpty(supplierRestockData) || toogleList'
+                class="dInlineBlock wd100Percent color000 font14 fontSemiBold fontPoppin mt10 posRelative pl15 pr15">Active</span>
+            <ul [ngClass]="{'manufecture-Only':isObjectEmpty(supplierRestockData) }"
+                class="dtable wd100Percent text-left">
+                <li [ngClass]="{'active': supplier._id==selectedSupplier._id }"
+                    (dblclick)="isSupplierSelectedDblClick(supplier)" (click)="selectSupplier(supplier)"
+                    *ngFor="let supplier of supplierRestockData | listFilterByFieldName: searchSupplier : searchString| supplierBuyBackFilter : 'true'; let i= index;"
+                    class="dInlinetable wd209px m10">
+                    <div class="catOuter" *ngIf="supplier !== -1">
+                        <div class="catInner supInner suppRestock suppbuyBack">
+                            <div class="catTop dtable wd100Percent">
+                            </div>
+                            <div class="catMid text-center">
+                                <span tooltip="{{supplier.supplier_company}}" placement="bottom"
+                                    class="dotedOverflow color000 dBlock fontPoppin fontSemiBold">{{supplier.supplier_company}}</span>
+                                <span
+                                    class="color808080 dBlock mb15">ID:{{supplier.supplier_keeping_unit || 'US#0000'}}</span>
+                                <div class="supDetail mt10 mb10">
+                                    <a class="color808080 dBlock"
+                                        href="tel:{{supplier.supplier_company_phone}}">{{supplier.supplier_company_phone}}</a>
+                                    <a class="color808080 dBlock" target="_blank"
+                                        href="{{supplier.website}}">{{supplier.website}}</a>
+                                    <a class="color808080 dBlock textUndeline" href="mailto:{{supplier.supplier_email}}"
+                                        target="_blank">{{supplier.supplier_email}}</a>
+                                </div>
+                            </div>
+                            <!-- Tayyab Changes -->
+                            <div class="catBottom text-center">
+                                <div id="discount-cat-btn" class="btn-group dInlineBlock">
+                                    <a class="btn  notActive"
+                                        (click)="changeSupplierIsBuyBack(supplier,false)">Inactive</a>
+                                    <a class="btn  active" (click)="changeSupplierIsBuyBack(supplier,true)">Active</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span *ngIf="supplier === -1 && !isObjectEmpty(supplierRestockData)"
+                        class="dInlineBlock wd100Percent color000 font14 fontSemiBold fontPoppin mt10 posRelative pl15 pr15">
+                        No Active Supplier
+                    </span>
+                </li>
+
+
+            </ul>
+            <!-- Tayyab Changes -->
+            <span *ngIf='!isObjectEmpty(supplierRestockData)'
+                class="dInlineBlock wd100Percent color000 font14 fontSemiBold fontPoppin mt10 posRelative pl15 pr15">Inactive</span>
+            <ul [ngClass]="{'manufecture-Only':isObjectEmpty(supplierRestockData) }"
+                class="dtable wd100Percent text-left">
+                <li [ngClass]="{'active': supplier._id==selectedSupplier._id }"
+                    (dblclick)="isSupplierSelectedDblClick(supplier)" (click)="selectSupplier(supplier)"
+                    *ngFor="let supplier of supplierRestockData  | listFilterByFieldName: searchSupplier : searchString | supplierBuyBackFilter : 'false' ; let i= index;"
+                    class="dInlinetable wd209px m10">
+                    <div class="catOuter" *ngIf="supplier !== -1">
+                        <div class="catInner supInner suppRestock suppbuyBack">
+                            <div class="catTop dtable wd100Percent">
+                            </div>
+                            <div class="catMid text-center">
+                                <span tooltip="{{supplier.supplier_company}}" placement="bottom"
+                                    class="dotedOverflow color000 dBlock fontPoppin fontSemiBold">{{supplier.supplier_company}}</span>
+                                <span
+                                    class="color808080 dBlock mb15">ID:{{supplier.supplier_keeping_unit || 'US#0000'}}</span>
+                                <div class="supDetail mt10 mb10">
+                                    <a class="color808080 dBlock"
+                                        href="tel:{{supplier.supplier_company_phone}}">{{supplier.supplier_company_phone}}</a>
+                                    <a class="color808080 dBlock" target="_blank"
+                                        href="{{supplier.website}}">{{supplier.website}}</a>
+                                    <a class="color808080 dBlock textUndeline" href="mailto:{{supplier.supplier_email}}"
+                                        target="_blank">{{supplier.supplier_email}}</a>
+                                </div>
+                            </div>
+                            <!-- Tayyab Changes -->
+                            <div class="catBottom text-center">
+                                <div id="discount-cat-btn" class="btn-group dInlineBlock">
+
+                                    <a class="btn active" (click)="changeSupplierIsBuyBack(supplier,false)">Inactive</a>
+                                    <a class="btn notActive "
+                                        (click)="changeSupplierIsBuyBack(supplier,true)">Active</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <span *ngIf="supplier === -1 && !isObjectEmpty(supplierRestockData)"
+                        class="dInlineBlock wd100Percent color000 font14 fontSemiBold fontPoppin mt10 posRelative pl15 pr15">No
+                        Inactive Supplier</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="stock-list-action">
+        <a *ngIf="isObjectEmpty(supplierRestockData)" href="JavaScript:void(0)"
+            (click)="cancelOrderProcess('selectRSupplier', 'selectRType')" class="wd100px">Back</a>
+        <a *ngIf="!isObjectEmpty(supplierRestockData)" href="JavaScript:void(0)" class="wd100px"
+            (click)="isSupplierSelected()">Next</a>
+
+        <!-- <a href="JavaScript:void(0)" *ngIf="!isObjectEmpty(supplierRestockData)" class="wd100px" (click)="isSupplierSelected()">Next</a>
+        <a href="JavaScript:void(0)" *ngIf="isObjectEmpty(addSupplierToList)" class="wd100px" (click)="cancelOrderProcess('selectRSupplier', 'selectRType')">Back</a> -->
+    </div>
+</div>
+<div *ngIf="showFormScreen" class="outer-wrapper">
+    <div id="stock-supplier" [ngClass]="{'down-list':isScrollable}"
+        class="selectItems inner-wrapper createPO createBuyBack ">
+        <div class="cut-search-area">
+            <div class="top-info dtable wd100Percent">
+                <h2 class="color000 mb0 font14 pt7 pb7 fontSemiBold fontPoppin dInlinetable text-left wd50percent">
+                    <a *ngIf="!isStatusDraft" href="JavaScript:void(0)"
+                        (click)="displayLayoutChange('showSupplierScreen')" class="back-cust-list">Back</a>
+                    <span>Add all the items you want to sell </span>
+                </h2>
+                <div class="wd50percent dInlinetable text-right">
+                    <div class="dInlinetable wd80percent">
+                        <div class="search-field input-group wd100Percent">
+                            <input [(ngModel)]="searchBrandDevices" type="text" class="form-control"
+                                placeholder="Search product by name... ">
+                            <a href="JavaScript:void(0)" class="input-group-addon">
+                                <i *ngIf="searchBrandDevices" (click)="searchBrandDevices = ''"
+                                    class="fas fa-times-circle"></i>
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="po-wrapper">
+            <div *ngIf='supplierRestockLoader' class="luna-loading"></div>
+            <div class="po-top-info">
+                <div class="inner wd40percent text-left"><span class="text-left">Product name</span></div>
+                <div class="inner wd11percent text-center"><span>Price</span></div>
+                <div class="inner wd11percent text-center"><span>Quantity</span></div>
+                <div class="inner wd11percent text-center"><span>Total</span></div>
+                <div class="inner wd11percent text-center"><span>Action</span></div>
+            </div>
+            <div [ngClass]="{'empty':isObjectEmpty(brandDevices)}" class="po-inner-list">
+                <div *ngIf='supplierRestockLoader' class="luna-loading"></div>
+                <div class="empty-text">
+                    <h2><i class="fas fa-exclamation-triangle"></i>No Items Available
+                    </h2>
+                </div>
+                <accordion [isAnimated]="true" [closeOthers]="false">
+                    <accordion-group *ngFor="let brand of brandDevices; let i = index; trackBy:trackByFunction">
+                        <ul accordion-heading [hidden]="(brand.system_devices | listFilter:searchBrandDevices).length === 0">
+                            <li class="">
+                                <div class="inner text-left">
+                                    <span
+                                        class="dInlineBlock wd98Percent pl5 m0 fontPoppin font12 fontSemiBold">{{brand.brand_name}}</span>
+                                    <i class="fas fa-angle-right dInlineBlock font14"></i>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul *ngIf="brand.isShow" [hidden]="(brand.system_devices | listFilter:searchBrandDevices).length === 0">
+                            <li class="lineHeight1point6">
+                                <div *ngIf="addBuybackdeviceBtn" class="text-left">
+                                    <a (click)="displayLayoutChange('showAddNewDevice')"
+                                        class="fontPoppin fontSemiBold color000 padding5px">
+                                        <i aria-hidden="true" class="pr5 fa fa-plus"></i>
+                                        Add new device
+                                    </a>
+                                </div>
+                                <div *ngIf="addBuybackdeviceField" class="dtable wd100Percent">
+                                    <div class="inner wd40percent text-left dtableCell">
+                                        <input type="text"
+                                            class="form-control text-left additionalItemsinput padding13px"
+                                            [ngClass]="{ 'bounce inputError': addDeviceInputError}"
+                                            placeholder="Type model" [(ngModel)]='newDeviceName'>
+                                    </div>
+                                    <div class="inner wd11percent dtableCell">
+                                        <input numeric decimals="2" negative="0" type="text"
+                                            class="form-control additionalItemsinput padding13px" placeholder="$00.00"
+                                            [ngClass]="{ 'bounce inputError': addDeviceInputError}"
+                                            [(ngModel)]='newDevicePrice'>
+
+                                    </div>
+                                    <div class="inner wd11percent dtableCell">
+                                        <span class="text-center">
+                                            <div
+                                                class="input-group borderWidth1pxSolid borderColorcbcbcb borderRadius5 bgWhite">
+                                                <span class="input-group-btn m0"
+                                                    (click)="newDeviceQuantity = toNumber(newDeviceQuantity) > 0 ? toNumber(newDeviceQuantity) - 1 : toNumber(newDeviceQuantity)">
+                                                    <button type="button"
+                                                        class="btn btn-default btn-number borderBRR0 borderTRR0" data-type="minus" data-field="quant[1]">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                </span>
+                                                <input numeric negative="0" type="text" [(ngModel)]="newDeviceQuantity"
+                                                    class="form-control input-number" min="1" max="10">
+                                                <span class="input-group-btn m0"
+                                                    (click)='newDeviceQuantity = toNumber(newDeviceQuantity) + 1'>
+                                                    <button type="button"
+                                                        class="btn btn-default btn-number borderBLR0 borderTLR0"
+                                                        data-type="plus" data-field="quant[1]">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="inner wd11percent dtableCell">
+                                        {{0 || newDevicePrice * newDeviceQuantity | currency}}
+                                    </div>
+                                    <div class="inner wd11percent dtableCell">
+                                        <a href="JavaScript:void(0)" (click)="addSystemDevice(brand)"
+                                            class="addAdditionalItemsBtn dBlock">Add</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li *ngFor="let device of brand.system_devices | listFilter:searchBrandDevices; let j = index; 
+                            trackBy:trackByFunction">
+                                <div class='listing-display-fix dtable wd100Percent' *ngIf='!device.isEdit'>
+                                    <div class="inner wd40percent text-left dtableCell">
+                                        <span class="color000">{{device.product_name}}</span>
+                                    </div>
+                                    <div class="inner wd11percent dtableCell">
+                                        <!-- <span class="text-center colorOrange">08</span> -->
+                                        <span class="text-center">${{device.product_price}}/pc</span>
+                                    </div>
+                                    <div class="inner wd11percent dtableCell">
+                                        <span class="text-center">
+                                            <div
+                                                class="input-group borderWidth1pxSolid borderColorcbcbcb borderRadius5 bgWhite">
+                                                <span class="input-group-btn m0"
+                                                    (click)="estimatedPriceCalculation(device,'subtract')">
+                                                    <button type="button"
+                                                        class="btn btn-default btn-number borderBRR0 borderTRR0"
+                                                        disabled="disabled" data-type="minus" data-field="quant[1]">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                </span>
+                                                <input numeric negative="0" type="text"
+                                                    (click)='estimatedPriceCalculation(device,"textChangeOnClick")'
+                                                    [(ngModel)]="device.quantity"
+                                                    (blur)="estimatedPriceCalculation(device,'textChangeOnBlurr')"
+                                                    class="form-control input-number" min="1" max="10">
+                                                <span class="input-group-btn m0"
+                                                    (click)='estimatedPriceCalculation(device,"add")'>
+                                                    <button type="button"
+                                                        class="btn btn-default btn-number borderBLR0 borderTLR0"
+                                                        data-type="plus" data-field="quant[1]">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="inner wd11percent dtableCell">
+                                        <span
+                                            class="text-center">{{device.product_price * device.quantity| currency}}</span>
+                                    </div>
+                                    <div class="inner wd11percent dtableCell">
+                                        <a *ngIf="!device.is_system_created" (click)="device.isEdit = true; selectedBrand = brand"
+                                            href="JavaScript:void(0)" class="color808080 font12 dInlineBlock">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        <a *ngIf="!device.is_system_created" (click)="openModal(open_removeproduct,'custModal wd250');
+                                        selectedDevice = device; selectedBrand = brand; indexOfSelectedItem = j"
+                                            href="JavaScript:void(0)" class="color808080 font12 dInlineBlock pl10">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div *ngIf="device.isEdit" class="dtable wd100Percent">
+                                    <div class="inner wd40percent text-left dtableCell">
+                                        <input type="text"
+                                            class="form-control text-left additionalItemsinput padding13px"
+                                            placeholder="Type your product name" [(ngModel)]='device.product_name'>
+                                    </div>
+                                    <div class="inner wd11percent dtableCell">
+                                        <input numeric negative="1" type="text"
+                                            class="form-control additionalItemsinput padding13px" placeholder="$00.00"
+                                            [(ngModel)]='device.product_price'>
+
+                                    </div>
+                                    <div class="inner wd11percent dtableCell">
+                                        <!-- <input type="text" class="form-control additionalItemsinput padding13px"
+                                            placeholder="0" [(ngModel)]='device.quantity'> -->
+                                        <span class="text-center">
+                                            <div
+                                                class="input-group borderWidth1pxSolid borderColorcbcbcb borderRadius5 bgWhite">
+                                                <span class="input-group-btn m0"
+                                                    (click)="device.quantity = device.quantity > 0 ? device.quantity - 1 : device.quantity">
+                                                    <button type="button"
+                                                        class="btn btn-default btn-number borderBRR0 borderTRR0"
+                                                        disabled="disabled" data-type="minus" data-field="quant[1]">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                </span>
+                                                <input numeric negative="0" type="text" [(ngModel)]="device.quantity"
+                                                    class="form-control input-number" min="1" max="10">
+                                                <span class="input-group-btn m0"
+                                                    (click)='device.quantity = device.quantity + 1'>
+                                                    <button type="button"
+                                                        class="btn btn-default btn-number borderBLR0 borderTLR0"
+                                                        data-type="plus" data-field="quant[1]">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </span>
+                                    </div>
+
+                                    <div class="inner wd11percent dtableCell">
+                                        {{ 0 || device.quantity * device.product_price | currency}}
+                                    </div>
+                                    <div class="inner wd11percent dtableCell">
+                                        <a *ngIf="!device.is_system_created" (click)="editSystemDevice(device)" href="JavaScript:void(0)"
+                                            class="color808080 font12 dInlineBlock">
+                                            <i class="far fa-save"></i>
+                                        </a>
+                                        <a *ngIf="!device.is_system_created" (click)="openModal(open_removeproduct,'custModal wd250');
+                                        selectedDevice = device; selectedBrand = brand; indexOfSelectedItem = j"
+                                            href="JavaScript:void(0)" class="color808080 font12 dInlineBlock pl10">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </accordion-group>
+                </accordion>
+            </div>
+        </div>
+        <div class="order-cash-details po-info box-shadow">
+            <div class="down">
+                <div class="center">
+                    <a (click)="downcart()"><i class="fas fa-caret-up"></i></a>
+                </div>
+            </div>
+            <div class="up">
+                <div class="center">
+                    <a (click)="downcart()"><i class="fas fa-caret-down"></i></a>
+                </div>
+            </div>
+            <div class="rightText"><span>Buyback Details</span></div>
+            <div class="inner-top">
+                <div class="cash-field">
+                    <div class="top-sub">
+                        <div class="scroll-content">
+                            <table class="table" style="width:100%">
+                                <tbody>
+                                    <tr colspan="4">
+                                        <td>Supplier:</td>
+                                        <td>{{supplierCompanyName}}</td>
+                                        <td>Supplier's buyback no.:</td>
+                                        <td>N/A</td>
+                                    </tr>
+                                    <tr colspan="4">
+                                        <td>Date:</td>
+                                        <td>
+                                            <input type="text" [ngClass]="{ 'bounce': orderDateError}" bsDatepicker
+                                                [(ngModel)]="orderDate" placeholder="Jan/01/2020"
+                                                class="form-control font12 text-left borderColorcbcbcb fl" [bsConfig]="{showWeekNumbers: false, 
+                                                maxDate: todayDate,isAnimated: true,
+                                                 dateInputFormat: 'MMM/D/YYYY'}" placement="top"
+                                                [isOpen]="isOpenorderDate">
+                                            <span (click)="isOpenorderDate = !isOpenorderDate"
+                                                class="datePickerIcon"></span>
+                                            <span style="padding-top: 6px;" class="field-error-msg"
+                                                *ngIf="orderDateError">
+                                                Date is required</span>
+                                        </td>
+                                        <td>Tracking number:</td>
+                                        <td>N/A</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="cash-field">
+                    <div class="top-sub noborder p0">
+                        <table class="table notes-table" style="width:100%">
+                            <tbody>
+                                <tr colspan="2">
+                                    <td>Estimated payOut:</td>
+                                    <td>{{estimatedPayout | currency}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="stock-list-action">
+            <div class="caution-stock dtableCell wd40percent">
+            </div>
+            <div class="caution-stock dtableCell text-right wd60percent">
+                <a *ngIf="!isStatusDraft" href="JavaScript:void(0)" class="wd100px"
+                    (click)="openModal(orderCancel,'custModal wd250')">Cancel</a>
+                <a href="JavaScript:void(0)" class="wd100px ml5 noFloat"
+                    (click)="openModal(finishLater,'custModal wd250')">Finish Later</a>
+                <a href="JavaScript:void(0)" (click)="saveBuyBack('submitted')" class="wd140px ml5 noFloat">Submit</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #orderCancel>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30">
+            <i class="icon-invoice font42 color000"></i>
+            <h2 class="fontPoppin font18 fontSemiBold mt15 color000"> Are you sure you want<br> to cancel this buyback?
+            </h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button (click)="cancelOrderProcess('selectRSupplier','selectRType'); closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite wd140px">Yes,
+            I'm sure</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 wd140px">No,
+            keep it</button>
+    </div>
+</ng-template>
+<ng-template #finishLater>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30">
+            <i class="icon-invoice font42 color000"></i>
+            <h2 class="fontPoppin font18 fontSemiBold mt15 color000">
+                Do you want to finish<br> the Buyback later?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button (click)="saveBuyBack('draft')" (click)="closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite wd140px">Yes,
+            finish later</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 wd140px">No,
+            go back</button>
+    </div>
+</ng-template>
+
+<ng-template #open_removeproduct>
+    <div class="modal-body">
+        <div *ngIf='deleteSuppLoader' class="luna-loading"></div>
+        <div class="modalTitle mx-auto text-center pt40">
+            <img src="../../../../assets/images/box-removecustomer.png" alt="" width="40">
+            <h2 class="fontPoppin font18 fontSemiBold mt10 color000 pl35 pr35">
+                Do you want to delete this product?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb30">
+        <button (click)="deleteSystemDevice()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Yes, delete it</button>
+        <button (click)="closeModel()" type="button" class="btn modalSaveBtnReceive fontPoppin borderRadius20">No, go
+            back</button>
+    </div>
+</ng-template>

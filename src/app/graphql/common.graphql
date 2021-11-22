@@ -1,0 +1,13 @@
+query getTimeZones{
+  getTimeZones{
+    _id
+    title
+} }
+
+query getReasons($reason_type: reasonType){
+ getReasons(reason_type: $reason_type){
+   _id
+  reason_name
+  reason_type
+}
+}

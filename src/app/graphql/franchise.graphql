@@ -1,0 +1,173 @@
+mutation createClient($input: clientInput) {
+    createClient(input: $input) {
+        _id
+        first_name
+        last_name
+        email
+        address_1
+        address_2
+        city
+        state
+        zip_code
+        phone
+        can_email
+        can_sms
+        status
+        classification
+        is_check
+    }
+}
+
+mutation updateClient($_id: ID! , $input: clientInput) {
+    updateClient(_id: $_id , input: $input)
+}
+
+query getClient($_id: ID!) {
+    getClient(_id: $_id) {
+        _id
+        first_name
+        last_name
+        email
+        address_1
+        address_2
+        city
+        state
+        zip_code
+        phone
+        can_email
+        can_sms
+        status
+        classification
+        is_check
+    }
+}
+
+query getAllClients($input: clientSearchInput) {
+    getAllClients(input: $input) {
+        _id
+        first_name
+        last_name
+        email
+        address_1
+        address_2
+        city
+        state
+        zip_code
+        phone
+        can_email
+        can_sms
+        status
+        classification
+        is_check
+    }
+}
+
+mutation bulkDeleteClient($_id: [ID!]) {
+    bulkDeleteClient(_id: $_id) {
+        _id
+        first_name
+        last_name
+        email
+        address_1
+        address_2
+        city
+        state
+        zip_code
+        phone
+        can_email
+        can_sms
+        status
+        classification
+        is_check
+    }
+}
+
+mutation deleteClient($_id: ID!) {
+    deleteClient(_id: $_id)
+}
+
+mutation createDocument($input: documentInput,$file: Upload){
+createDocument(input: $input,file: $file ){
+      _id
+      document_name
+      file_path
+      addressed_to
+      status
+      updated_at
+}
+}
+
+mutation updateDocument($_id: ID!,$input: documentInput,$file: Upload){
+updateDocument(_id: $_id,input: $input,file: $file )
+}
+
+query getAllDocuments($input: documentSearchInput){
+    getAllDocuments(input: $input){
+       _id
+       document_name
+       file_path
+       addressed_to
+       status
+       updated_at
+    }
+}
+
+mutation deleteDocument($_id: ID!){
+    deleteDocument(_id: $_id)
+}
+
+mutation clientDocumentFileUpload($client_id: ID!,$document_id: ID!,$file: Upload){
+    clientDocumentFileUpload(client_id: $client_id,document_id: $document_id,file: $file)
+}
+
+mutation clientDocumentStatus($client_id: ID!,$document_id: ID!,$input: statusInput){
+    clientDocumentStatus(client_id: $client_id, document_id: $document_id,input: $input)
+}
+
+query getDocumentsByClassification($client_id: ID! ,$classification: classificationType!){
+getDocumentsByClassification(client_id: $client_id,classification: $classification){
+    document_id
+    document_name
+    file_path
+    document_status{
+       
+         status_name
+         status_background_color
+         status_font_color
+         status_icon
+         status_type
+    }}
+}
+
+query shareDocuments($input: shareDocumentInput){
+    shareDocuments(input: $input)
+}
+
+mutation createStatus($input: statusInput){
+    createStatus(input: $input){
+  _id
+ status_name
+ status_background_color
+    }
+}
+
+ query getStatus($businessLocation: ID, $status_type: AllowedType!){
+    getStatus(businessLocation: $businessLocation, status_type: $status_type ){
+        _id
+        status_name
+        status_background_color
+        status_font_color
+        status_icon
+        status_type
+ }}
+
+ query getStatusById($statusId: ID!){
+     getStatusById(statusId: $statusId){
+        _id
+        status_name
+        status_background_color
+        status_font_color
+        status_icon
+        status_type
+     }
+ }

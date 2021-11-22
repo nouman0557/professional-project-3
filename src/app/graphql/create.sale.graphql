@@ -1,0 +1,1224 @@
+query getAllProducts($locationId: ID!) {
+  products(locationId: $locationId) {
+    _id
+    product_name
+    description
+  }
+}
+
+query verifyCustomerEmail($email: String!) {
+  checkCustomerEmail(email: $email)
+}
+
+mutation createCustomProduct($customProductInput: customProductInput!) {
+  createCustomProduct(input: $customProductInput) {
+    _id
+    name
+    quantity
+    cost_price
+    selling_price
+    note
+    is_taxable
+    location_id {
+      _id
+      email
+      sales_tax
+      phone
+      zip_code
+      city
+      state
+      address_1
+      address_2
+    }
+  }
+}
+
+query searchProduct($search: String!, $locationId: ID!) {
+  searchProduct(search: $search, locationId: $locationId) {
+    _id
+    product_name
+    description
+  }
+}
+
+query getAllTags {
+  tags {
+    _id
+    name
+    slug
+    type
+    order_column
+  }
+}
+
+mutation saveFile($file: Upload!, $input: fileInput!) {
+  saveFile(file: $file, input: $input)
+}
+
+query getDirectoryWithFiles(
+  $location_id: ID!
+  $model_type: String!
+  $model_id: String!
+) {
+  getDirectoryWithFiles(
+    location_id: $location_id
+    model_id: $model_id
+    model_type: $model_type
+  ) {
+    _id
+    name
+    model_type
+    model_id
+    SourceFile {
+      _id
+      name
+      path
+    }
+  }
+}
+
+mutation deleteFile($file_id: ID!) {
+  deleteFile(file_id: $file_id)
+}
+
+query searchProductByTags($search: [ID!], $locationId: ID!) {
+  searchProductByTags(search: $search, locationId: $locationId) {
+    _id
+    product_name
+    description
+  }
+}
+
+query deviceIssues($issueType: DeviceIssuesType!) {
+  deviceIssues(issueType: $issueType) {
+    _id
+    name
+    type
+  }
+}
+
+mutation createSale($orderID:ID $input: createSaleInput) {
+  createSale(orderID:$orderID, input: $input) {
+    _id
+  }
+}
+
+# mutation createSaleV2($input: createSaleInputV2 , $orderID : ID) {
+#   createSaleV2(input: $input , orderID : $orderID) {
+#     _id
+#   }
+# }
+
+query taxs {
+  taxs {
+    _id
+    name
+    amount
+    is_tax_group
+    is_percentage
+  }
+}
+
+query DeviceCheckInbyDeviceId($ID: ID!) {
+  DeviceCheckInbyDeviceId(deviceID: $ID) {
+    carrier
+    _id
+  }
+}
+
+# query getdeviceCheckIn($ID: ID!) {
+#   getdeviceCheckIn(id: $ID) {
+#     carrier
+#     password
+#     problem_in_device
+#     is_repaired
+#     what_was_issue
+#     from_where_issue_resolved
+#     is_water_damage
+#     is_warranty
+#     can_test
+#     reason_for_not_testing
+#     battery
+#     cosmetic_note
+#     can_restore
+#     miscellaneous_issues
+#     note
+#     DeviceIssues {
+#       _id
+#       name
+#       type
+#     }
+#   }
+# }
+
+query createOrderPDF($orderID: ID!, $isEmail: Boolean!) {
+  createOrderPDF(orderID: $orderID, isEmail: $isEmail) {
+    _id
+  }
+}
+
+query getCustomerHistory($customerID: ID!) {
+  getCustomerPurchaseHistory(customerID: $customerID) {
+    totalAmount
+    avgPurchase
+    avgItemPerVisit
+    totalVisiter
+  }
+}
+
+query sendOrderSummaryBySMS($orderID: ID!) {
+  sendOrderSummaryBySMS(orderID: $orderID)
+}
+
+query getBrainTreeToken {
+  getBrainTreeToken {
+    token
+  }
+}
+
+query validateDiscountByCode($code: ID!, $customerId: ID) {
+  validateDiscountByCode(code: $code, customerId: $customerId) {
+    is_eligible
+    message
+  }
+}
+
+mutation createGiftCard($input: giftCardInput) {
+  createGiftCard(input: $input) {
+    _id
+    card_no
+    gift_card_keeping_unit
+    name
+    to
+    subject
+    send_gift_card
+    email
+    message
+    amount
+    is_used
+    is_email_send
+    is_active
+    created_at
+  }
+}
+
+query getCartData($orderID: ID,$businessLocation: ID){
+  getCartData(orderID: $orderID, businessLocation: $businessLocation){
+    _id
+    transaction_type
+    transaction_status
+    order_status
+    transaction_keeping_unit
+    transaction_date
+    sub_total_amount
+    tax_amount
+    tax_value
+    is_apply_sale_tax
+    is_tax_percentage
+    discount_amount
+    discount_value
+    is_discount_percentage
+    total_amount
+    remaining_amount
+    Tax{
+      _id
+      name
+      amount
+      tax_type
+      is_percentage
+      is_tax_group
+    }
+    is_private
+    additional_notes
+    TransactionCartLine{
+      is_device
+      product_type
+      sell_line_product_type
+      Device{
+        _id
+        deviceBrand{
+          _id
+          brand_name
+          description
+        }
+        deviceModel{
+          _id
+          name
+        }
+        device_color
+        imei_ssn
+        Customer{
+          _id
+          email
+          first_name
+          last_name
+          phone
+          address_1
+          address_2
+          city
+          state
+          zip_code
+          can_email
+          is_net_term
+          is_store_credit
+          is_devices
+          can_sms
+          deleted_at
+          marketing_question
+          is_linked
+        }
+          device_image
+          device_keeping_unit
+      }
+      DeviceCheckIns{
+        _id
+        client_name
+        client_phone_number
+        client_device_id
+        check_in_date
+        carrier
+        password
+        device_issue
+        step_to_reproduce
+        cosmetic_condition
+        device_canbe_tested
+        reason_for_canbe_tested
+        device_previously_repaired
+        device_type_previous_repair
+        place_repair_done
+        is_water_damage
+        is_warranty
+        battery_life
+        approved_to_device_restored
+        note
+        DeviceIssues{
+          _id
+          name
+          type
+        }
+        DeviceItems{
+          _id
+          name
+          type
+        }
+        Customer{
+          _id
+          email
+          first_name
+          last_name
+          phone
+          address_1
+          address_2
+          city
+          state
+          zip_code
+          can_email
+          is_net_term
+          is_store_credit
+          is_devices
+          can_sms
+          deleted_at
+          marketing_question
+          tags
+          is_over_due
+          is_linked
+          is_deleted
+        }
+        SourceFile {
+          _id
+          name
+          path
+          model_type
+          model_id
+        } 
+        is_pattern
+        pattern_code
+      }
+      serial_number
+      products{
+        product_type
+        sell_line_product_type
+        _id
+        product_name
+        is_bundle_product
+        bundle_products{
+          total_selling_price
+          total_avg_cost
+          is_manufactured_qty
+          bundleProduct{
+            bundleProductID{
+              _id
+              product_name
+              description
+              image
+              is_bundle_product
+              is_product
+              is_track_stock
+              alert_qty
+              ideal_qty
+              sell_price
+              openingStock
+              sell_price_inc_tax
+              average_cost
+              last_cost
+              Brand {
+                _id
+                brand_name
+              }
+              DeviceModel {
+                _id
+                name
+              }
+              barcode
+              sku
+              compatilable_devices
+              Suppliers {
+                supplier_id{
+                  _id
+                  supplier_company
+                  supplier_company_phone
+                  supplier_company_email
+                  website
+                  address_1
+                  address_2
+                  city
+                  state
+                  zip_code
+                  supplier_keeping_unit
+                  supplier_first_name
+                  supplier_last_name
+                  supplier_phone
+                  supplier_mobile
+                  supplier_email
+                  is_verify_supplier
+                  is_buyback
+                  Order
+                }
+                sku_number
+                current_stock
+                incoming_item
+                instock
+                ordered_qty
+              }
+              ProductStockPrice{
+                _id
+                ideal_quantity
+                opening_stock
+                qty_available
+                alert_quantity
+                shelf_qty
+                order_qty
+                bundle_order_qty
+                is_profit_percentage
+                profit_value
+                profit_amount
+                default_sell_price
+                is_sell_tax_percentage
+                sell_tax_value
+                sell_tax_amount
+                sell_price_inc_tax
+                last_cost
+                average_cost
+                discount_amount
+                price_without_bundle
+                percentage_discount
+              }
+              tags
+              is_serial_number
+              sale_item
+              total_sale
+              incoming_item
+              max_bundle
+              is_completed_product
+              is_add_product_with_device
+            }
+            avg_cost
+            quantity
+            selling_price
+          }
+        }
+        is_product
+        is_track_stock
+        alert_qty
+        ideal_qty
+        sell_price
+        sell_price_inc_tax
+        average_cost
+        last_cost
+        Brand{
+          _id
+          brand_name
+          description
+        }
+        DeviceModel{
+          _id
+          name
+        }
+        sku
+        compatilable_devices
+        Suppliers{
+          supplier_id{
+            _id
+            supplier_company
+            supplier_company_phone
+            supplier_company_email
+            website
+            address_1
+            address_2
+            city
+            state
+            zip_code
+            supplier_keeping_unit
+            supplier_first_name
+            supplier_last_name
+            supplier_phone
+            supplier_mobile
+            supplier_email
+            is_verify_supplier
+            is_buyback
+            Order
+          }
+          sku_number
+          current_stock
+          quantity
+          product_sale_price
+          is_discount_percentage
+          discount_amount
+          discount_value
+          sub_total_amount
+          total_amount
+          supplier_sku
+        }
+        is_serial_number
+    
+        total_quantity
+        discount_amount
+        discount_value
+        total_amount
+        sell_line_serial_number
+        is_discount_percentage
+        product_sale_price
+        CustomProduct{
+          _id
+          name
+          quantity
+          cost_price
+          selling_price
+          selling_price_include_tax
+          note
+          is_taxable
+        }
+        quantity
+        serviceProduct{
+          serviceProductType
+          serviceProductId {
+            _id
+            product_name
+            is_bundle_product
+            bundle_products{
+              total_selling_price
+              total_avg_cost
+              is_manufactured_qty
+              bundleProduct{
+                bundleProductID{
+                  _id
+                  product_name
+                  description
+                  image
+                  is_bundle_product
+                  is_product
+                  is_track_stock
+                  alert_qty
+                  ideal_qty
+                  sell_price
+                  openingStock
+                  sell_price_inc_tax
+                  average_cost
+                  last_cost
+                  Brand {
+                    _id
+                    brand_name
+                  }
+                  DeviceModel {
+                    _id
+                    name
+                  }
+                  barcode
+                  sku
+                  compatilable_devices
+                  Suppliers {
+                    supplier_id{
+                      _id
+                      supplier_company
+                      supplier_company_phone
+                      supplier_company_email
+                      website
+                      address_1
+                      address_2
+                      city
+                      state
+                      zip_code
+                      supplier_keeping_unit
+                      supplier_first_name
+                      supplier_last_name
+                      supplier_phone
+                      supplier_mobile
+                      supplier_email
+                      is_verify_supplier
+                      is_buyback
+                      Order
+                    }
+                    sku_number
+                    current_stock
+                    incoming_item
+                    instock
+                    ordered_qty
+                  }
+                  ProductStockPrice{
+                    _id
+                    ideal_quantity
+                    opening_stock
+                    qty_available
+                    alert_quantity
+                    shelf_qty
+                    order_qty
+                    bundle_order_qty
+                    is_profit_percentage
+                    profit_value
+                    profit_amount
+                    default_sell_price
+                    is_sell_tax_percentage
+                    sell_tax_value
+                    sell_tax_amount
+                    sell_price_inc_tax
+                    last_cost
+                    average_cost
+                    discount_amount
+                    price_without_bundle
+                    percentage_discount
+                  }
+                  tags
+                  is_serial_number
+                  sale_item
+                  total_sale
+                  incoming_item
+                  max_bundle
+                  is_completed_product
+                  is_add_product_with_device
+                }
+                avg_cost
+                quantity
+                selling_price
+              }
+            }
+            is_product
+            is_track_stock
+            alert_qty
+            ideal_qty
+            sell_price
+            sell_price_inc_tax
+            average_cost
+            last_cost
+            Brand{
+              _id
+              brand_name
+              description
+            }
+            DeviceModel{
+              _id
+              name
+            }
+            sku
+            compatilable_devices
+            Suppliers{
+              supplier_id{
+                _id
+                supplier_company
+                supplier_company_phone
+                supplier_company_email
+                website
+                address_1
+                address_2
+                city
+                state
+                zip_code
+                supplier_keeping_unit
+                supplier_first_name
+                supplier_last_name
+                supplier_phone
+                supplier_mobile
+                supplier_email
+                is_verify_supplier
+                is_buyback
+                Order
+              }
+              sku_number
+              current_stock
+              incoming_item
+              instock
+              ordered_qty
+              price_purchase
+            }
+            is_serial_number
+          }
+          serviceProductSKU
+          serviceProductSupplier
+          serviceProductQuantity
+          serviceCustomProductId {
+            _id
+            name
+            quantity
+            cost_price
+            selling_price
+            selling_price_include_tax
+            note
+            is_taxable
+          }
+          serviceReason
+          serviceSerialNo
+        }
+      }
+      _id
+      product_name
+      is_bundle_product
+      bundle_products{
+        total_selling_price
+        total_avg_cost
+        is_manufactured_qty
+        bundleProduct{
+          bundleProductID{
+            _id
+            product_name
+            description
+            image
+            is_bundle_product
+            is_product
+            is_track_stock
+            alert_qty
+            ideal_qty
+            sell_price
+            openingStock
+            sell_price_inc_tax
+            average_cost
+            last_cost
+            Brand {
+              _id
+              brand_name
+            }
+            DeviceModel {
+              _id
+              name
+            }
+            barcode
+            sku
+            compatilable_devices
+            Suppliers {
+              supplier_id{
+                _id
+                supplier_company
+                supplier_company_phone
+                supplier_company_email
+                website
+                address_1
+                address_2
+                city
+                state
+                zip_code
+                supplier_keeping_unit
+                supplier_first_name
+                supplier_last_name
+                supplier_phone
+                supplier_mobile
+                supplier_email
+                is_verify_supplier
+                is_buyback
+                Order
+              }
+              sku_number
+              current_stock
+              incoming_item
+              instock
+              ordered_qty
+            }
+            tags
+            is_serial_number
+            sale_item
+            total_sale
+            incoming_item
+            max_bundle
+            is_completed_product
+            is_add_product_with_device
+            ProductStockPrice{
+              _id
+              ideal_quantity
+              opening_stock
+              qty_available
+              alert_quantity
+              shelf_qty
+              order_qty
+              bundle_order_qty
+              is_profit_percentage
+              profit_value
+              profit_amount
+              default_sell_price
+              is_sell_tax_percentage
+              sell_tax_value
+              sell_tax_amount
+              sell_price_inc_tax
+              last_cost
+              average_cost
+              discount_amount
+              price_without_bundle
+              percentage_discount
+            }
+          }
+          avg_cost
+          quantity
+          selling_price
+        }
+      }
+      ProductStockPrice{
+        qty_available
+      }
+      is_product
+      is_track_stock
+      alert_qty
+      ideal_qty
+      sell_price
+      sell_price_inc_tax
+      average_cost
+      last_cost
+      Brand{
+        _id
+        brand_name
+        description
+      }
+      DeviceModel{
+        _id
+        name
+      }
+      sku
+      compatilable_devices
+      Suppliers{
+        supplier_id{
+          _id
+          supplier_company
+          supplier_company_phone
+          supplier_company_email
+          website
+          address_1
+          address_2
+          city
+          state
+          zip_code
+          supplier_keeping_unit
+          supplier_first_name
+          supplier_last_name
+          supplier_phone
+          supplier_mobile
+          supplier_email
+          is_verify_supplier
+          is_buyback
+          Order
+        }
+        sku_number
+        current_stock
+        quantity
+        product_sale_price
+        is_discount_percentage
+        discount_amount
+        discount_value
+        sub_total_amount
+        total_amount
+        supplier_sku
+      }
+      is_serial_number
+      total_quantity
+      discount_amount
+      discount_value
+      total_amount
+      sell_line_serial_number
+      is_discount_percentage
+      product_sale_price
+      giftCard{
+        _id
+        card_no
+        gift_card_keeping_unit
+        name
+        Customer{
+          _id
+          email
+          first_name
+          last_name
+          phone
+          address_1
+          address_2
+          city
+          state
+          zip_code
+          can_email
+          is_net_term
+          is_store_credit
+          is_devices
+          can_sms
+          deleted_at
+          marketing_question
+          tags
+          is_over_due
+          is_linked
+          is_deleted
+        }
+        to
+        subject
+        send_gift_card
+        email
+        message
+        amount
+        is_used
+        is_email_send
+        is_active
+        created_at
+        qr_code
+      }
+      CustomProduct{
+        _id
+        name
+        quantity
+        cost_price
+        selling_price
+        selling_price_include_tax
+        note
+        is_taxable
+      }
+      quantity
+
+    }
+    Customer{
+      _id
+      email
+      first_name
+      last_name
+      phone
+      address_1
+      address_2
+      city
+      state
+      zip_code
+      can_email
+      is_net_term
+      is_store_credit
+      is_devices
+      can_sms
+      deleted_at
+      marketing_question
+      tags
+      is_over_due
+      is_linked
+      is_deleted
+    }
+    is_additional_cost
+    is_extra_items
+  }
+}
+
+# query getCartOrderData($orderID: ID!) {
+#   getCartOrderData(orderID: $orderID) {
+#     transaction_type
+#     transaction_status
+#     transaction_payment_status
+#     is_private
+#     ref_no
+#     transaction_date
+#     total_amount
+#     Tax
+#     tax_type
+#     tax_value
+#     tax_amount
+#     discount_type
+#     discount_amount
+#     discount_value
+#     shipping_details
+#     shipping_charges
+#     staff_note
+#     unpaid_amount
+#     payment_term
+#     payment_term_no
+#     Customer {
+#       _id
+#       email
+#       first_name
+#       last_name
+#       phone
+#       address_1
+#       address_2
+#       city
+#       state
+#       zip_code
+#     }
+#     TransactionSellLine {
+#       is_product
+#       products {
+#         Product {
+#           _id
+#           product_name
+#           description
+#         }
+#         quantity
+#         product_price
+#         discount_type
+#         discount_amount
+#         discount_value
+#         tax_amount
+#         tax_value
+#         tax_type
+#         Tax
+#         product_final_price
+#         total_amount
+#         is_custom
+#         Custom
+#       }
+#       Product {
+#         _id
+#         product_name
+#         description
+#       }
+#       quantity
+#       product_price
+#       discount_type
+#       discount_amount
+#       discount_value
+#       tax_amount
+#       tax_value
+#       tax_type
+#       Tax
+#       product_final_price
+#       total_amount
+#       is_custom
+#       Custom
+#       Device {
+#          _id
+#     device_color
+#     imei_ssn
+#     Customer{
+#       _id
+#     }
+#     device_image
+#     device_keeping_unit
+#     business_id{
+#       _id
+#     }
+#     location_id{
+#       _id
+#     }
+#       }
+#       DeviceCheckIns
+#       serial_number
+#     }
+#     TransactionPayment {
+#       _id
+#       amount
+#       method
+#       paid_on
+#       gift_card_meta {
+#         gift_card_id
+#         amount
+#       }
+#       coupon_meta {
+#         coupon_code
+#         coupon_amount
+#       }
+#     }
+#     giftCard {
+#       _id
+#       Customer {
+#         _id
+#       }
+#       card_no
+#       gift_card_keeping_unit
+#       name
+#       to
+#       subject
+#       send_gift_card
+#       email
+#       message
+#       amount
+#     }
+#   }
+# }
+
+query GetGiftCardBycardNo($card_no: String!, $BusinessLocation: ID) {
+  GetGiftCardBycardNo(card_no: $card_no, BusinessLocation: $BusinessLocation) {
+    _id
+    amount
+    is_used
+  }
+}
+
+mutation createPaymentProcess($input: PaymentProcessInput) {
+  createPaymentProcess(input: $input) {
+    amount
+    method
+    paid_on
+    card_used_no
+  }
+}
+
+query getProductsbyDevicewithSearch($input: InputProductsWithDevice){
+  getProductsbyDevicewithSearch(input: $input){
+    _id
+    product_name
+    incoming_item
+    max_bundle
+    is_bundle_product
+    is_product
+    is_track_stock
+    is_serial_number
+    sell_price_inc_tax
+    sku
+    alert_qty
+    ProductStockPrice {
+      _id
+      qty_available
+      alert_quantity
+      shelf_qty
+      sell_price_inc_tax
+      shelf_qty
+      order_qty
+    }
+    bundle_products {
+      total_selling_price
+      total_avg_cost
+      is_manufactured_qty
+      bundleProduct {
+        bundleProductID {
+          _id
+          product_name
+          incoming_item
+          max_bundle
+          is_bundle_product
+          is_product
+          is_track_stock
+          is_serial_number
+          ProductStockPrice {
+            _id
+            qty_available
+            alert_quantity
+            shelf_qty
+            sell_price_inc_tax
+            shelf_qty
+            order_qty
+          }
+        }
+        avg_cost
+        quantity
+        selling_price
+      }
+    }
+    Suppliers {
+      supplier_id{
+        _id
+        supplier_company
+        supplier_company_phone
+        supplier_company_email
+      }
+      sku_number
+      current_stock
+      incoming_item
+      instock
+      ordered_qty
+    }
+    servicesBrandModel{
+      ServiceBrand{
+        _id
+        brand_name
+        description
+        
+      }
+      ServiceDeviceModel{
+        _id
+        name
+        brand {
+          _id
+          brand_name
+          description
+         
+        }
+      }
+      service_max_price
+      service_min_price
+      ServiceItem{
+        _id
+        product_name
+        incoming_item
+        max_bundle
+        is_bundle_product
+        is_product
+        is_track_stock
+        is_serial_number
+        sell_price_inc_tax
+        sku
+        alert_qty
+        ProductStockPrice {
+          _id
+          qty_available
+          alert_quantity
+          shelf_qty
+          sell_price_inc_tax
+          shelf_qty
+          order_qty
+        }
+        bundle_products {
+          total_selling_price
+          total_avg_cost
+          is_manufactured_qty
+          bundleProduct {
+            bundleProductID {
+              _id
+              product_name
+              incoming_item
+              max_bundle
+              is_bundle_product
+              is_product
+              is_track_stock
+              is_serial_number
+              ProductStockPrice {
+                _id
+                qty_available
+                alert_quantity
+                shelf_qty
+                sell_price_inc_tax
+                shelf_qty
+                order_qty
+              }
+            }
+            avg_cost
+            quantity
+            selling_price
+          }
+        }
+        Suppliers {
+          supplier_id{
+            _id
+            supplier_company
+            supplier_company_phone
+            supplier_company_email
+          }
+          sku_number
+          current_stock
+          incoming_item
+          instock
+          ordered_qty
+        }
+      }
+    }
+    Brand{
+      _id
+      brand_name
+      description
+    }
+    DeviceModel{
+      _id
+      name
+    }
+  }
+}

@@ -1,0 +1,9 @@
+query getAllDeviceDiagnose{
+  getAllDeviceDiagnose{
+    _id
+    deviceID
+    deviceModel
+    deviceVersion
+    deviceImei
+  }
+}

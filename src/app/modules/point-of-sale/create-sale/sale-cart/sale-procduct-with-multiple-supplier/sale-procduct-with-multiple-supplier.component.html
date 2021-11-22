@@ -1,0 +1,96 @@
+<accordion-group (isOpenChange)="product.isOpen = $event" [isOpen]="product.isOpen">
+    <ul accordion-heading (click)="noOpenAccordian($event);" [ngClass]="{'thirdLevel card':isDeviceProduct}">
+        <li [ngClass]="{'card-header':isDeviceProduct}">
+            <div class="outer">
+                <div class="inner wd33percentfull text-left pl10">
+                    <span class="font11 dtableCell valignMiddle text-left"><i class="icon-product"></i></span>
+                    <span tooltip="{{product.product_name}}" placement="bottom" class="textOverflow maxWidth160 font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left pl5 pr5">
+                        {{product.product_name}}
+                    </span>
+                </div>
+                <div class="inner wd15percent">
+                    <!-- <div class="serial-no dropdown custPos" *ngIf="product.is_product && product.is_serial_number">
+                        <a href="JavaScript:void(0);" class="dropbtn"
+                            (click)="noOpenAccordianOnInput($event); product.is_add_serial_number = !product.is_add_serial_number">
+                            <i class="icon-code_bar pr5"></i> Add serial No.
+                        </a>
+                        <div class="dropdown-content" style="display: block;" *ngIf="product.is_add_serial_number">
+                            <a class="close-icon" href="JavaScript:void(0);" (click)="noOpenAccordianOnInput($event); product.is_add_serial_number = false">
+                                <i class="icon-close"></i>
+                            </a>
+                            <div class="insert-serial-number">
+                                <p>Add Serial Number</p>
+                                <p class="font10 fontRegular color808080">New part serial number</p>
+                                <div class="input-group">
+                                    <input type="text" (click)="noOpenAccordianOnInput($event)" [(ngModel)]="product.serial_number"
+                                        class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                        placeholder="Enter Serial Number">
+                                    <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                            class="icon-scan1"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="inner wd11Percent">
+                    <span class="fontPoppin fontSemiBold">{{product.quantity}}</span>
+                </div>
+                <div class="inner wd11Percent">
+                    <input (click)="noOpenAccordianOnInput($event)"
+                        class="dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                        numeric decimals='2' placeholder="0" type="text" [(ngModel)]="product.discount_value"
+                        (change)="onCalculateTotalAmount()">
+                    <span class="cartSideIcon dInlinetable font12">%</span>
+                </div>
+                <div class="inner wd11Percent">
+                    <input (click)="noOpenAccordianOnInput($event)"
+                        class="dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                        numeric decimals='2' placeholder="$0.00" type="text" [(ngModel)]="product.sell_price_inc_tax"
+                        (change)="onCalculateTotalAmount()">
+                </div>
+                <div class="inner wd11Percent">
+                    <span class="fontPoppin fontSemiBold">{{product.total_amount | currency}}</span>
+                </div>
+                <div class="inner wd5percent">
+                    <a (click)="onRemoveFromCart()" class="close-icon" href="JavaScript:void(0);">
+                        <i class="icon-close"></i>
+                    </a>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <ul class="thirdLevel card zIndex100">
+        <li class="card-header" *ngFor="let item of product.supplier_item">
+            <div class="outer">
+                <div class="inner wd31percent text-left pl10 pr10">
+                    <span tooltip="{{item.supplier_company}} - {{item.supplier_sku}}" placement="bottom" class="textOverflow maxWidth160 font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left pl5 pr5">
+                        {{item.supplier_company}} - {{item.supplier_sku}}
+                    </span>
+                </div>
+                <div class="inner wd15percent">
+                    <span [ngClass]="{'colorOrange':item.current_stock <= product.alert_qty && item.current_stock > 1, 'colorRed': item.current_stock < 1,'colorGreen': item.current_stock > product.alert_qty}" class="cartSideIcon pl5 dInlinetable font12 fontPoppin fontSemiBold500">{{item.current_stock}} in stock</span>
+                </div>
+                <div class="inner wd11Percent">
+                    <input class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                        numeric [(ngModel)]="item.quantity" placeholder="0" (blur)="onChangeQuantity(item)" (change)="onCalculateTotalAmount()">
+                </div>
+                <div class="inner wd11Percent">
+                    <span class="cartSideIcon dInlinetable font12">{{item.discount_value}}%</span>
+                </div>
+                <div class="inner wd11Percent">
+                    <span class="cartSideIcon dInlinetable font12">{{item.sell_price_inc_tax | currency}}</span>
+                </div>
+                <div class="inner wd11Percent">
+                    <span class="fontPoppin fontSemiBold">{{item.total_amount | currency}}</span>
+                </div>
+                <div class="inner wd5percent">
+                    <!-- <a class="close-icon" href="JavaScript:void(0);">
+                        <i class="icon-close"></i>
+                    </a> -->
+                </div>
+            </div>
+        </li>
+    </ul>
+</accordion-group>
+
+<modal-with-yes-no-option #modalTemplate [modalInput]="modalInputObject"  (callBackFunction)="modalCallBackFunction($event)"></modal-with-yes-no-option>

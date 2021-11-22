@@ -1,0 +1,14 @@
+
+mutation openAndCloseCashRegister($openCashRegisterId:ID,$locationId: ID,$closeCashRegister:ID ){
+ openAndCloseCashRegister(openCashRegisterId:$openCashRegisterId,locationId:$locationId ,closeCashRegister: $closeCashRegister)
+}
+
+query getCurrencyWithUnit($location_id: ID , $cashRegisterId: ID) {
+    getCurrencyWithUnit(location_id: $location_id , cashRegisterId: $cashRegisterId) {
+        currency {
+            unit
+        }
+        currency_code
+        expected_amount
+    }
+}

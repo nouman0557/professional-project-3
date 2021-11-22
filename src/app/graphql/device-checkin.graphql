@@ -1,0 +1,186 @@
+mutation createDeviceCheckIns($device_id : ID , $input: deviceCheckInsInput, $file: [Upload]) {
+  createDeviceCheckIns(device_id : $device_id , input: $input, file:$file) {
+    _id
+        Device {
+            _id
+            device_keeping_unit
+        }
+        client_name
+        client_phone_number
+        client_device_id
+        check_in_date
+        carrier
+        password
+        device_issue
+        step_to_reproduce
+        cosmetic_condition
+        device_canbe_tested
+        reason_for_canbe_tested
+        device_previously_repaired
+        device_type_previous_repair
+        place_repair_done
+        is_water_damage
+        is_warranty
+        battery_life
+        approved_to_device_restored
+        note
+        is_pattern
+        pattern_code
+        DeviceIssues {
+            _id
+            name
+            type
+        }
+        DeviceItems {
+            _id
+            name
+            type
+        }
+        Customer {
+            _id
+            email
+            first_name
+            last_name
+            phone
+        }
+        SourceFile {
+          _id
+          name
+          path
+          model_type
+          model_id
+        }
+  }
+}
+
+query getPreviousDeviceCheckIn($customerID: ID! , $checkINDate: DateTime!) {
+    getPreviousDeviceCheckIn(customerID: $customerID , checkINDate: $checkINDate) {
+        _id
+        Device {
+            _id
+            device_keeping_unit
+        }
+        client_name
+        client_phone_number
+        client_device_id
+        check_in_date
+        carrier
+        password
+        device_issue
+        step_to_reproduce
+        cosmetic_condition
+        device_canbe_tested
+        reason_for_canbe_tested
+        device_previously_repaired
+        device_type_previous_repair
+        place_repair_done
+        is_water_damage
+        is_warranty
+        battery_life
+        approved_to_device_restored
+        note
+        is_pattern
+        pattern_code
+        DeviceIssues {
+            _id
+            name
+            type
+        }
+        DeviceItems {
+            _id
+            name
+            type
+        }
+        Customer {
+            _id
+            email
+            first_name
+            last_name
+            phone
+        }
+        SourceFile {
+          _id
+          name
+          path
+          model_type
+          model_id
+        }
+    }
+}
+
+mutation uploadFileWithoutfolderID($file: [Upload!] , $input: folderInput!) {
+  uploadFileWithoutfolderID(file: $file , input: $input) {
+    _id
+    name
+    model_type
+    model_id
+    SourceFile {
+      _id
+      name
+      path
+    }
+  }
+}
+
+query getdeviceCheckIn($id: ID!) {
+  getdeviceCheckIn(id: $id) {
+      _id
+        Device {
+            _id
+            device_keeping_unit
+        }
+        client_name
+        client_phone_number
+        client_device_id
+        check_in_date
+        carrier
+        password
+        device_issue
+        step_to_reproduce
+        cosmetic_condition
+        device_canbe_tested
+        reason_for_canbe_tested
+        device_previously_repaired
+        device_type_previous_repair
+        place_repair_done
+        is_water_damage
+        is_warranty
+        battery_life
+        approved_to_device_restored
+        note
+        is_pattern
+        pattern_code
+        DeviceIssues {
+            _id
+            name
+            type
+        }
+        DeviceItems {
+            _id
+            name
+            type
+        }
+        Customer {
+            _id
+            email
+            first_name
+            last_name
+            phone
+        }
+        SourceFile {
+          _id
+          name
+          path
+          model_type
+          model_id
+        }
+  }
+}
+
+mutation createDeviceIssues($input: deviceIssuesInput) {
+  createDeviceIssues(input: $input) {
+    _id
+    name
+    type
+  }
+}

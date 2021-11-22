@@ -1,0 +1,85 @@
+mutation createNetTermOfCustomer($customerNetTermInput: customerNetTermInput) {
+  createNetTermOfCustomer(input: $customerNetTermInput) {
+    User {
+      id
+      email
+      first_name
+      last_name
+      phone
+    }
+    created_at
+    balance
+    is_increase
+    pay_term_number
+    pay_term_type
+    credit_amount
+    interest_rate
+    note
+    transactionNo
+    debit_amount
+    date
+  }
+}
+
+query getNetTermsLogs(
+  $customerId: ID!
+  $locationId: ID
+  $limit: Int
+  $skip: Int
+) {
+  getNetTermsLogs(
+    customerId: $customerId
+    locationId: $locationId
+    limit: $limit
+    skip: $skip
+  ) {
+    User {
+      id
+      email
+      first_name
+      last_name
+      phone
+    }
+    created_at
+    balance
+    is_increase
+    pay_term_number
+    pay_term_type
+    credit_amount
+    interest_rate
+    note
+    is_overdue
+    transactionNo
+    debit_amount
+    date
+  }
+}
+
+query customerNetTerm($customerId: ID!) {
+  customerNetTerm(customerId: $customerId) {
+    credit_limit
+    used_credit
+    available_credit
+    over_dues
+  }
+}
+
+query getOrderByCustomerID($customerID: ID!,$limit: Int,$skip: Int) {
+  getOrderByCustomerID(customerID: $customerID,limit: $limit,skip: $skip) {
+    _id
+  }
+}
+
+query getNettermOrdersByCustomerID($customerID: ID!, $limit: Int ,$skip: Int ,$locationId: ID){
+getNettermOrdersByCustomerID(customerID: $customerID ,limit: $limit ,skip: $skip ,locationId: $locationId){
+invoice_no
+transactionId
+total_amount
+owen_amount
+is_over_date
+days
+status
+date
+amountToPay
+remBalance
+}}

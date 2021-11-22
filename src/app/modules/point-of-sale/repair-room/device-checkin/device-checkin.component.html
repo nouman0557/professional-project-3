@@ -1,0 +1,51 @@
+<div class="tab-pane fade active show empty" id="tab-s-two">
+    <!-- <div class="empty-text">
+        <h2><i class="fa fa-cogs" aria-hidden="true"></i>Device Checkin</h2>
+    </div> -->
+    <!-- <div id="new-customer">
+        <div *ngIf="loading" class="luna-loading"></div>
+        <div id="stock-supplier">
+            <div class="cut-search-area posRelative zIndex3">
+                <div class="top-info dtable wd100Percent">
+                    <h2
+                        class="color000 mb0 font14 pt7 pb7 fontSemiBold fontPoppin dtableCell text-left wd90percent">
+                       Fill the following information to complete your device check in 
+                    </h2>
+                    <div class="dtableCell valignMiddle wd3percent ml10 pt5 posRelative text-right">
+                        <a class="clearAllfilter dotMainbox m0" href="JavaScript:void(0)"
+                            (click)="openSelectAllDevices();$event.stopPropagation()">
+                            <span class="dotMenu"></span>
+                            <span class="dotMenu"></span>
+                            <span class="dotMenu"></span>
+                        </a>
+                        <div class="dropdown-content importBox selectAllitemsBox"
+                            *ngIf="SelectAllDropDevices" style="display: block;">
+                            <div class='dotBoxitems'>
+                                <ul>
+                                    <li *ngIf="!allDevicesSelected()"><a (click)="selectedAllDevices(true)"
+                                            href="javascript:void(0);">Select all</a></li>
+                                    <li *ngIf="allDevicesSelected()"><a (click)="selectedAllDevices(false)"
+                                            href="javascript:void(0);">Unselect all</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form autocomplete="off">
+            <div class="cust-inner bgWhite">
+                <div class="customer-form-content checkinFrom pt15">
+                   
+                </div>
+            </div>
+            <div class="form-action-buttons">
+                <div class="cust-btns text-right">
+                    <a (click) = "goToComponent('')" class="cncl-btn-cust valignMiddle">Cancel</a>
+                    <button type="submit" class="btn btn-default noFloat ml10">Save</button>
+                </div>
+            </div>
+        </form>
+    </div> -->
+    <app-device-checkin [devData]="devData" [cusData]="cusData" ></app-device-checkin>
+</div>

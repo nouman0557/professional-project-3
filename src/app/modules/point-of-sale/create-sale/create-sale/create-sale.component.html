@@ -1,0 +1,44 @@
+<section id="create-order-section">
+    <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+        [hideToster]="hideToaster"></app-toaster>
+    <div class="row">
+        <div class="col-lg-6 p0">
+            <div class="outer-wrapper" [ngClass]="{'empty':saleCartService.createSaleInput.saleCart.length==0 && !addGift }">
+                <div class="summary-title">
+                    <!-- <h2>{{leftSectionHeadingText}}</h2> -->
+                    <h2>{{sectionTitles.leftSectionTitle}}</h2>
+                </div>
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+        <div class="col-lg-6 p0">
+            <!-- Minimizer Actions -->
+            <div class="iconActions">
+                <a (click)="minOrder()"><i class="icon-minimized font16"></i></a>
+                <a><i class="icon-close font16"></i></a>
+            </div>
+            <div class="switchable-wrapper">
+                <div class="summary-title">
+                    <ul class="nav nav-pills" id="pills-s-tab">
+                        <li [ngClass]="{'nav-item':true, 'active':activeSection.rightSection1}">
+                            <a (click)="loadComponet('productList')" class="nav-link" id="pills-tab-s-one">{{sectionTitles.rightSectionTitle1}}</a>
+                        </li>
+                        <li [ngClass]="{'nav-item':true, 'active':activeSection.rightSection2}">
+                            <a (click)="loadComponet('customerList')" class="nav-link" id="pills-tab-s-two">
+                                <span>{{sectionTitles.rightSectionTitle2}}</span>
+                                <!-- <span>Device List</span> -->
+                            </a>
+                        </li>
+                        <li [ngClass]="{'nav-item':true, 'active':activeSection.rightSection3}" class="nav-item">
+                            <a (click)="loadComponet('N')" class="nav-link" id="pills-tab-s-three">{{sectionTitles.rightSectionTitle3}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content" id="pills-s-tabContent">
+                    <router-outlet name="right-panel"></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<router-outlet name="Modal"></router-outlet>

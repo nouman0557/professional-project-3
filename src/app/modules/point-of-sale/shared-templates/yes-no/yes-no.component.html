@@ -1,0 +1,16 @@
+<ng-template #yesNoModal>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center pt15">
+            <i class="icon-{{iconName}} font42 color000"></i>
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000">Do you want to <br> {{headerText}}</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button (click)="workDone(true)" type="button" 
+        class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite wd140px">
+            {{yesButtonText}}
+        </button>
+        <button (click)="workDone(false)" type="button"
+            class="btn modalCancelBtn font10 fontLato fontSemiBold mx-auto p0">Cancel</button>
+    </div>
+</ng-template>

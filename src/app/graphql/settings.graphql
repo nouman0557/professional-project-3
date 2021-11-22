@@ -1,0 +1,676 @@
+query getAllUsers {
+  getUsers {
+    id
+    email
+    first_name
+    last_name
+    phone
+    avatar_location
+    status
+    business_id {
+      _id
+    }
+    address_1
+    address_2
+    city
+    state
+    Country {
+      _id
+      name
+    }
+    zipcode
+    user_keeping_unit
+  }
+}
+query getAllTechnician($location_id:ID!){
+  TechnicianList(location_id: $location_id){
+    id
+    email
+    first_name
+    last_name
+    phone
+    avatar_location
+    status
+    business_id {
+      _id
+    }
+    address_1
+    address_2
+    city
+    state
+    Country {
+      _id
+      name
+    }
+    zipcode
+    user_keeping_unit
+  }
+}
+
+
+mutation createUser($file: Upload, $input: UserInput) {
+  createUser(file: $file, input: $input) {
+    id
+    email
+    first_name
+    last_name
+    phone
+    avatar_location
+    status
+    business_id {
+      _id
+    }
+    address_1
+    address_2
+    city
+    state
+    Country {
+      _id
+    }
+    zipcode
+    user_keeping_unit
+  }
+}
+
+mutation UpdateUser($id: ID!, $input: UserUpdateInput) {
+  UpdateUser(id: $id, input: $input) {
+    id
+    email
+    first_name
+    last_name
+    phone
+    avatar_location
+    status
+    business_id {
+      _id
+    }
+    address_1
+    address_2
+    city
+    state
+    Country {
+      _id
+    }
+    zipcode
+    user_keeping_unit
+  }
+}
+
+query removeUser($userId: ID!) {
+  removeUser(userId: $userId)
+}
+
+query getAllStores {
+  userBusinessLocations {
+    _id
+    business_id {
+      _id
+    }
+    store_type
+    email
+    sales_tax
+    ein_ssn
+    phone
+    zip_code
+    city
+    state
+    address_1
+    address_2
+    store_name
+    store_legal_name
+    location_keeping_unit
+    store_nick_name
+    provider_name
+    identification_number
+    identification_type
+    logo
+    status
+    created_at
+    Country {
+      _id
+      name
+    }
+  }
+}
+
+mutation createBusinessLocation($input: BusinessLocationInput!) {
+  createBusinessLocation(input: $input) {
+    _id
+    business_id {
+      _id
+    }
+    email
+    sales_tax
+    ein_ssn
+    phone
+    zip_code
+    city
+    state
+    address_1
+    address_2
+    store_name
+    store_legal_name
+    location_keeping_unit
+  }
+}
+
+mutation updateBusinessLocation($id: ID!, $input: BusinessLocationInput!) {
+  updateBusinessLocation(id: $id, input: $input)
+}
+
+query getBusinessInfoForUpdate {
+  GetBusinessByID {
+    _id
+    business_system_name
+    store_type
+    number_of_stores
+    unique_code
+    fy_end_month
+    accounting_method
+    currency_id
+    logo
+    created_at
+    Country {
+      name
+      _id
+    }
+    owner_id {
+      id
+      email
+      first_name
+      last_name
+      phone
+      user_keeping_unit
+    }
+  }
+}
+
+mutation udateBusiness($input: udateBusinessInput) {
+  udateBusiness(input: $input) {
+    _id
+  }
+}
+
+query getTodayCLockOfUsers {
+  getTodayCLockOfUsers {
+    status
+    totaltime
+    User {
+      id
+      first_name
+      last_name
+      user_keeping_unit
+      last_name
+      email
+      user_keeping_unit
+    }
+  }
+}
+
+query getCLockOfUserById(
+  $userId: ID!
+  $toDate: String
+  $fromDate: String
+  $location_id: ID!
+) {
+  getUserClockInOutHistoryLogs(
+    userId: $userId
+    toDate: $toDate
+    fromDate: $fromDate
+    location_id: $location_id
+  ) {
+    User {
+      first_name
+      last_name
+    }
+    endDate
+    startDate
+    history {
+      day
+      date
+      clocked_in_time
+      clocked_out_time
+      status
+      totaltime
+    }
+    totalHours
+  }
+}
+
+query GetAllChartOfAccounts {
+  GetAllChartOfAccounts {
+    _id
+    account_code
+    account_name
+    account_type_Id {
+      title
+    }
+    parent_account_Id {
+      account_name
+    }
+    account_balance
+    Opening_balance
+  }
+}
+
+query GetAllAccountTypes {
+  GetAllAccountTypes {
+    _id
+    title
+    parent_account_type_id {
+      _id
+      title
+    }
+  }
+}
+
+mutation createChartOfAccount($input: ChartOfAccountInput) {
+  createChartOfAccount(input: $input) {
+    _id
+    account_code
+    account_name
+    account_type_Id {
+      _id
+    }
+  }
+}
+
+mutation updateChartOfAccount($_id: ID!, $input: ChartOfAccountInput) {
+  updateChartOfAccount(_id: $_id, input: $input)
+}
+
+query GetAllAccountsByType($_id: ID!) {
+  GetAllAccountsByType(_id: $_id) {
+    _id
+    account_code
+    account_name
+  }
+}
+
+mutation businessLocationSettings($_id: ID!, $input: AccountSettingInput) {
+  businessLocationSettings(_id: $_id, input: $input)
+}
+
+mutation updateBusinessAdmin($_id: ID!, $input: BusinessInput) {
+  updateBusinessAdmin(_id: $_id, input: $input)
+}
+
+mutation ownerPasswordUpdate($input: PasswordUpdateInput!) {
+  OwnerPasswordUpdate(input: $input)
+}
+
+mutation businessLogoUpload($business_id: ID!, $logo: String!) {
+  businessLogoUpload(business_id: $business_id, logo: $logo)
+}
+
+query getAllBusinessUsers($store_id: ID!, $filter: String!) {
+  getAllBusinessUsers(store_id: $store_id, filter: $filter) {
+    id
+    is_clocked_in
+    email
+    created_at
+    first_name
+    last_name
+    phone
+    avatar_location
+    status
+    business_id {
+      _id
+    }
+    address_1
+    address_2
+    city
+    state
+    Country {
+      _id
+      name
+    }
+    zipcode
+    user_keeping_unit
+    roles
+    salaryHour
+    is_deleted
+    BusinessLocation {
+      _id
+      store_name
+    }
+  }
+}
+
+mutation createBusinessUser($input: UserInput!, $logo: String) {
+  createBusinessUser(input: $input, logo: $logo) {
+    id
+    email
+    first_name
+    created_at
+    last_name
+    phone
+    avatar_location
+    status
+    business_id {
+      _id
+    }
+    address_1
+    address_2
+    city
+    state
+    Country {
+      _id
+      name
+    }
+    zipcode
+    is_deleted
+    user_keeping_unit
+    roles
+    salaryHour
+    BusinessLocation {
+      _id
+      store_name
+      store_nick_name
+    }
+  }
+}
+
+mutation statusBusinessUser($_id: ID!, $status: businessStatus!) {
+  statusBusinessUser(_id: $_id, status: $status)
+}
+
+mutation deleteBusinessUser($_id: ID!) {
+  deleteBusinessUser(_id: $_id)
+}
+
+mutation updateBusinessUser($_id: ID!, $input: UserInput!) {
+  updateBusinessUser(_id: $_id, input: $input)
+}
+
+query getAllBusinessStoreAdmin($business_id: ID!, $filter: String!) {
+  getAllBusinessStoreAdmin(business_id: $business_id, filter: $filter) {
+    _id
+    store_name
+    store_nick_name
+    location_keeping_unit
+    address_1
+    address_2
+    state
+    city
+    zip_code
+    Country {
+      _id
+      name
+    }
+    sales_tax
+    email
+    phone
+    store_type
+    store_legal_name
+    identification_type
+    identification_number
+    provider_name
+    business_id {
+      _id
+    }
+    ein_ssn
+    logo
+    status
+    created_at
+  }
+}
+
+mutation createBusinessStoreAdmin(
+  $business_id: ID!
+  $input: store!
+  $logo: String
+) {
+  createBusinessStoreAdmin(
+    business_id: $business_id
+    input: $input
+    logo: $logo
+  ) {
+    _id
+    store_name
+    store_nick_name
+    location_keeping_unit
+    address_1
+    address_2
+    state
+    city
+    zip_code
+    Country {
+      _id
+      name
+    }
+    sales_tax
+    email
+    phone
+    store_type
+    store_legal_name
+    identification_type
+    identification_number
+    provider_name
+    business_id {
+      _id
+    }
+    ein_ssn
+    logo
+    status
+    created_at
+  }
+}
+
+mutation updateBusinessStoreAdmin(
+  $_id: ID!
+  $business_id: ID!
+  $input: store!
+) {
+  updateBusinessStoreAdmin(_id: $_id, business_id: $business_id, input: $input)
+}
+
+mutation deleteBusinessStoreAdmin($_id: ID!) {
+  deleteBusinessStoreAdmin(_id: $_id)
+}
+
+mutation statusBusinessStoreAdmin($_id: ID!, $status: businessStatus!) {
+  statusBusinessStoreAdmin(_id: $_id, status: $status)
+}
+
+mutation userLogoUpload($user_id: ID!, $logo: String!) {
+  userLogoUpload(user_id: $user_id, logo: $logo)
+}
+
+query uniqueUserEmail($user_id: ID, $email: String!) {
+  uniqueUserEmail(user_id: $user_id, email: $email) {
+    id
+  }
+}
+
+mutation storeLogoUpload($store_id: ID!, $logo: String!) {
+  storeLogoUpload(store_id: $store_id, logo: $logo)
+}
+
+query getBusinessAdmin($_id: ID!) {
+  getBusinessAdmin(_id: $_id) {
+    _id
+    business_keeping_unit
+    business_system_name
+    fy_end_month
+    accounting_method
+    logo
+    date_format
+    location_id {
+      _id
+    }
+    owner_id {
+      id
+      email
+      first_name
+      last_name
+      phone
+      user_keeping_unit
+    }
+    status
+    created_at
+    unique_code
+    store_type
+    Country {
+      _id
+      name
+    }
+    number_of_stores
+    currency_id
+    store_types {
+      independent_repair_store
+      franchise
+      franchise_OEM
+    }
+  }
+}
+
+query getUserDetail{ 
+ me {
+       id
+    is_clocked_in
+    email
+    created_at
+    first_name
+    last_name
+    phone
+    avatar_location
+    status
+    business_id{
+       _id
+    }
+    address_1
+    address_2
+    city
+    state
+    Country{
+      _id
+      name
+    }
+    zipcode
+    user_keeping_unit
+    roles
+    salaryHour
+    is_deleted
+    BusinessLocation{
+      _id
+      store_name
+    }
+  }
+}
+
+query getUsersLogsActivity($input: searchUserActivityLog) {
+  getUsersLogsActivity(input: $input) {
+    logs {
+      User {
+        id
+        email
+        first_name
+        last_name
+      }
+      ip_address
+      location
+      access_type
+      application
+      date
+      day
+      time
+    }
+    last_login
+  }
+}
+
+mutation businessLogoDelete($business_id: ID!) {
+  businessLogoDelete(business_id: $business_id)
+}
+
+mutation userLogoDelete($user_id: ID!) {
+  userLogoDelete(user_id: $user_id)
+}
+
+mutation storeLogoDelete($store_id: ID!) {
+  storeLogoDelete(store_id: $store_id)
+}
+
+query generatePinCode {
+  generatePinCode
+}
+
+mutation createPinCode($input: createPincodeInput!) {
+  createPinCode(input: $input)
+}
+
+query getUserPinCodeById($userId: ID!) {
+  getUserPinCodeById(userId: $userId) {
+    _id
+    pincode
+  }
+}
+
+mutation userPinCodeResend(
+  $userID: ID!
+  $method: AllowMethodPhoneVerify
+  $password: String
+) {
+  userPinCodeResend(userID: $userID, method: $method, password: $password)
+}
+
+query getCashRegisterById($id: ID) {
+  getCashRegisterById(id: $id) {
+    name
+    _id
+    cash_register_keeping_unit
+    opening_amount
+    closing_amount
+    closed_at
+    status
+    location_id
+  }
+}
+
+query getCashDrawerLogs($businessLocation: ID, $cashRegisterID: ID) {
+  getCashDrawerLogs(
+    businessLocation: $businessLocation
+    cashRegisterID: $cashRegisterID
+  ) {
+    CashRegisters {
+      opening_amount
+      closing_amount
+      closed_at
+    }
+    User {
+      first_name
+      last_name
+    }
+    openCashDrawerType
+    remarks
+    amount
+    created_at
+  }
+}
+
+query uniquePinCodeVerify($pincode: Int!){
+  uniquePinCodeVerify(pincode: $pincode)
+}
+
+mutation createCashRegister($input: cashRegisterInput){
+  createCashRegister(input: $input){
+    _id
+    name
+    cash_register_keeping_unit
+    status
+    opening_amount
+    closing_amount
+    closed_at
+    business_id
+    location_id
+  }
+}
+
+mutation updateCashRegister($id: ID!,$input: cashRegisterInput){
+  updateCashRegister(id: $id,input: $input)
+}
+
+mutation deleteCashRegister($id: ID!){
+  deleteCashRegister(id: $id)
+}

@@ -1,0 +1,346 @@
+<div class="tab-pane fade active show" id="tab-s-two">
+    <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+    [hideToster]="showToaster"></app-toaster>
+    <div id="new-customer">
+        <div *ngIf="loading" class="luna-loading"></div>
+        <div id="stock-supplier">
+            <div class="cut-search-area posRelative zIndex3">
+                <div class="top-info dtable wd100Percent">
+                    <h2
+                        class="color000 mb0 font14 pt7 pb7 fontSemiBold fontPoppin dtableCell text-left wd90percent">
+                       Fill the following information to complete your device check in 
+                    </h2>
+                    <div class="dtableCell valignMiddle wd3percent ml10 pt5 posRelative text-right">
+                        <a class="clearAllfilter dotMainbox m0" href="JavaScript:void(0)"
+                            (click)="openSelectAllDevices();$event.stopPropagation()">
+                            <span class="dotMenu"></span>
+                            <span class="dotMenu"></span>
+                            <span class="dotMenu"></span>
+                        </a>
+                        <div class="dropdown-content importBox selectAllitemsBox"
+                            *ngIf="SelectAllDropDevices" style="display: block;">
+                            <div class='dotBoxitems'>
+                                <ul>
+                                    <li *ngIf="!allDevicesSelected()"><a (click)="selectedAllDevices(true)"
+                                            href="javascript:void(0);">Select all</a></li>
+                                    <li *ngIf="allDevicesSelected()"><a (click)="selectedAllDevices(false)"
+                                            href="javascript:void(0);">Unselect all</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form autocomplete="off" [formGroup]="deviceCheckInForm" (keydown.enter)="$event.preventDefault()">
+            <div class="cust-inner bgWhite">
+                <div class="customer-form-content checkinFrom pt15">
+                    <div class="col-lg-12 noborderBottom pl0 pr0 pb5">
+                        <span
+                            class="dBlock wd100Percent color000 font12 fontSemiBold fontPoppin mb0 bundleLine CustomerLine deviceLine posRelative">Device General Data</span>
+                    </div>
+                    <div class="row mb10 ml0 mr0">
+                        <div class="col-lg-12 p0">
+                            <input (click)="setDirectValues('loadPrevousCheckIn')" [checked]="loadPrevousCheckIn" id="selectNotificationEmail" class="checkbox-custom"
+                            name="selectNotificationEmail" type="checkbox">
+                        <label for="selectNotificationEmail" class="checkbox-custom-label font12">Load previous check in</label>
+                        </div>
+                        <div *ngIf="loadPrevousCheckIn" class="loadPreviousFormField">
+                            <label for="first-name">Load previous check in form</label>
+                            <input type="text" [(ngModel)]="prevCheckinDate" placeholder="DD/MM/YYYY"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5" (ngModelChange)="getPreviousCheckInData($event)" [ngModelOptions]="{standalone: true}"
+                                [bsConfig]="{showWeekNumbers:false, minDate: todayDate, isAnimated: true  , dateInputFormat: 'MMM/DD/YYYY'}"
+                                bsDatepicker placement="top">
+                            <!-- <input type="text" name="first-name"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="MM/DD/YYYY"> -->
+                        </div>
+                    </div>
+                    <div class="row ml0 mr0">
+                        <div class="col-lg-6 p0">
+                            <label for="clientName">Client's Name</label>
+                            <input readonly type="text" name="clientName" formControlName="client_name"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Type your customer first name">
+                            
+                        </div>
+                        <div class="col-lg-6 pr0">
+                            <label for="clientPhoneNumber">Client's phone number</label>
+                            <input readonly type="text" name="clientPhoneNumber" formControlName="client_phone_number"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Type your customer phone number">
+                            
+                        </div>
+                    </div>
+                    <div class="row ml0 mr0">
+                        <div class="col-lg-6 p0">
+                            <label for="deviceID">Device ID</label>
+                            <input readonly type="text" name="deviceID" formControlName="client_device_id"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Customer device ID">
+                            
+                        </div>
+                        <div class="col-lg-6 pr0">
+                            <label [ngClass]="{'bounce is-invalid':checkinSubmitted && fDeviceCheckInForm.check_in_date.errors}" for="chekinDate">Check in date</label>
+                            <input [ngClass]="{'bounce':checkinSubmitted && fDeviceCheckInForm.check_in_date.errors}" type="text" formControlName="check_in_date" placeholder="DD/MM/YYYY"
+                                class="form-control cust-field font12 borderColorcbcbcb mb5 borderRadius5"
+                                [bsConfig]="{showWeekNumbers:false, minDate: todayDate, isAnimated: true  , dateInputFormat: 'MMM/DD/YYYY'}"
+                                bsDatepicker placement="top">
+                                <span class="bounce is-invalid" *ngIf="checkinSubmitted && fDeviceCheckInForm.check_in_date.errors">
+                                    Check in date is required
+                                </span>
+                            <!-- <input type="email"  name="chekinDate" formControlName="check_in_date"
+                                class="form-control cust-field font12 borderColorcbcbcb mb5 borderRadius5"
+                                placeholder="DD/MM/YYYY"> -->
+                        </div>
+                    </div>
+                    <div class="row ml0 mr0">
+                        <div class="col-lg-6 p0">
+                            <label [ngClass]="{'bounce is-invalid':checkinSubmitted && fDeviceCheckInForm.carrier.errors}" for="carrier">Carrier</label>
+                            <input [ngClass]="{'bounce':checkinSubmitted && fDeviceCheckInForm.carrier.errors}" type="text"  name="carrier" formControlName="carrier"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Example: Verizon">
+                            <span class="bounce is-invalid" *ngIf="checkinSubmitted && fDeviceCheckInForm.carrier.errors">
+                                Carrier is required
+                            </span>
+                        </div>
+                        <div class="col-lg-6 pr0">
+                            <label [ngClass]="{'bounce is-invalid':checkinSubmitted && fDeviceCheckInForm.password.errors}" for="patternPasswoed">Pattern/ Password</label>
+                            <div class="input-group patternPassword">
+                                <input (focusout)="setFormValues('deviceCheckInForm','is_pattern',false)" [ngClass]="{'bounce':checkinSubmitted && fDeviceCheckInForm.password.errors}" type="text" name="patternPasswoed" formControlName="password"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Type the device password">
+                                <a href="JavaScript:void(0)" class="input-group-addon addPatternbtn" (click)="openModal(addPattern,'custModal wd400')"><i class="icon-pattern"></i></a>
+                            </div>
+                            <span class="bounce is-invalid" *ngIf="checkinSubmitted && fDeviceCheckInForm.password.errors">
+                                Pattern/ Password is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 noborderBottom pb5 pt10 pl0 pr0">
+                        <span
+                            class="dBlock wd100Percent color000 font12 fontSemiBold fontPoppin mb0 bundleLine deviceProblems CustomerLine posRelative">Problem Description/Diagnostic</span>
+                    </div>
+                    <div class="row ml0 mr0">
+                        <div class="col-lg-12 p0">
+                            <label [ngClass]="{'bounce is-invalid':checkinSubmitted && fDeviceCheckInForm.device_issue.errors}" for="issues">Issues</label>
+                            <input [ngClass]="{'bounce':checkinSubmitted && fDeviceCheckInForm.device_issue.errors}" type="text" name="issues" formControlName="device_issue"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Type the device issues your customer found">
+                            <span class="bounce is-invalid" *ngIf="checkinSubmitted && fDeviceCheckInForm.device_issue.errors">
+                                Issues is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row ml0 mr0">
+                        <div class="col-lg-12 p0">
+                            <label [ngClass]="{'bounce is-invalid':checkinSubmitted && fDeviceCheckInForm.step_to_reproduce.errors}" for="stepsReproduce">Steps to reproduce</label>
+                            <input [ngClass]="{'bounce':checkinSubmitted && fDeviceCheckInForm.step_to_reproduce.errors}" type="text" name="stepsReproduce" formControlName="step_to_reproduce"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Type the steps you follow to check it">
+                            <span class="bounce is-invalid" *ngIf="checkinSubmitted && fDeviceCheckInForm.step_to_reproduce.errors">
+                                Steps to reproduce is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row ml0 mr0">
+                        <div class="col-lg-12 p0">
+                            <label [ngClass]="{'bounce is-invalid':checkinSubmitted && fDeviceCheckInForm.cosmetic_condition.errors}" for="cosmeticCondition">Cosmetic condition</label>
+                            <input [ngClass]="{'bounce':checkinSubmitted && fDeviceCheckInForm.cosmetic_condition.errors}" type="text" name="cosmeticCondition" formControlName="cosmetic_condition"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Type the cosmetic condition of this device">
+                            <span class="bounce is-invalid" *ngIf="checkinSubmitted && fDeviceCheckInForm.cosmetic_condition.errors">
+                                Cosmetic condition is required
+                            </span>
+                        </div>
+                    </div>
+                    <hr class="mb10 mt10">
+                    <div class="row ml0 mr0 mb10">
+                        <div class="col-lg-12 p0">
+                            <label for="canTested">Does this device can be tested?</label>
+                            <div class="input-group">
+                                <div id="discount-cat-btn" class="btn-group wd100Percent">
+                                    <a (click)="setFormValues('deviceCheckInForm','device_canbe_tested',true)" [ngClass]="{'active':deviceCheckInForm.controls.device_canbe_tested.value , 'notActive':!deviceCheckInForm.controls.device_canbe_tested.value}" 
+                                        class="btn wd15percent height32px lineHeight30px font14">Yes</a>
+                                    <a (click)="setFormValues('deviceCheckInForm','device_canbe_tested',false)" [ngClass]="{'active':!deviceCheckInForm.controls.device_canbe_tested.value , 'notActive':deviceCheckInForm.controls.device_canbe_tested.value}" 
+                                        class="btn wd15percent height32px lineHeight30px font14">No</a>
+                                    <input [readonly]="!deviceCheckInForm.controls.device_canbe_tested.value" class="height32px font12 wd70percent borderLeft0 form-control borderColorcbcbcb input-group-addon borderTLR0 borderBLR0 padding5px" 
+                                        formControlName="reason_for_canbe_tested" type="text" placeholder="Type the reason why can be tested">
+                                    <input type="hidden" name="canTested" id="canTested">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ml0 mr0 mb10">
+                        <div class="col-lg-12 p0">
+                            <label for="previouslyRepaired">Was this device previously repaired?</label>
+                            <div class="input-group">
+                                <div id="discount-cat-btn" class="btn-group wd100Percent">
+                                    <a (click)="setFormValues('deviceCheckInForm','device_previously_repaired',true)" [ngClass]="{'active':deviceCheckInForm.controls.device_previously_repaired.value , 'notActive':!deviceCheckInForm.controls.device_previously_repaired.value}"
+                                        class="btn wd15percent height32px lineHeight30px font14">Yes</a>
+                                    <a (click)="setFormValues('deviceCheckInForm','device_previously_repaired',false)" [ngClass]="{'active':!deviceCheckInForm.controls.device_previously_repaired.value , 'notActive':deviceCheckInForm.controls.device_previously_repaired.value}"
+                                        class="btn wd15percent height32px lineHeight30px font14">No</a>
+                                    <input [readonly]="!deviceCheckInForm.controls.device_previously_repaired.value" formControlName="device_type_previous_repair"
+                                    class="height32px font12 wd70percent borderLeft0 form-control borderColorcbcbcb input-group-addon borderTLR0 borderBLR0 padding5px" type="text" placeholder="Type the previous repair">
+                                    <input type="hidden" name="previouslyRepaired" id="previouslyRepaired">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ml0 mr0">
+                        <div class="col-lg-12 p0">
+                            <label [ngClass]="{'bounce is-invalid':checkinSubmitted && fDeviceCheckInForm.place_repair_done.errors}" for="repairDone">Repair done on this place</label>
+                            <input [ngClass]="{'bounce':checkinSubmitted && fDeviceCheckInForm.place_repair_done.errors}" type="text" name="repairDone" formControlName="place_repair_done"
+                                [readonly]="!deviceCheckInForm.controls.device_previously_repaired.value" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Type the previous repair that was made in this place">
+                            <span class="bounce is-invalid" *ngIf="checkinSubmitted && fDeviceCheckInForm.place_repair_done.errors">
+                                This field is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row ml0 mr0">
+                        <div class="col-lg-4 p0">
+                            <label for="waterDamage">Does this device had water damage?</label>
+                            <div id="discount-cat-btn" class="btn-group wd100Percent">
+                                <a (click)="setFormValues('deviceCheckInForm','is_water_damage',true)" [ngClass]="{'active':deviceCheckInForm.controls.is_water_damage.value , 'notActive':!deviceCheckInForm.controls.is_water_damage.value}" 
+                                    class="btn wd100Percent height32px lineHeight30px font14">Yes</a>
+                                <a (click)="setFormValues('deviceCheckInForm','is_water_damage',false)" [ngClass]="{'active':!deviceCheckInForm.controls.is_water_damage.value , 'notActive':deviceCheckInForm.controls.is_water_damage.value}"
+                                    class="btn wd100Percent height32px lineHeight30px font14">No</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 pr0">
+                            <label for="warrantyRepair">Is this a warranty repair?</label>
+                            <div id="discount-cat-btn" class="btn-group wd100Percent">
+                                <a (click)="setFormValues('deviceCheckInForm','is_warranty',true)" [ngClass]="{'active':deviceCheckInForm.controls.is_warranty.value , 'notActive':!deviceCheckInForm.controls.is_warranty.value}"
+                                    class="btn wd100Percent height32px lineHeight30px font14">Yes</a>
+                                <a (click)="setFormValues('deviceCheckInForm','is_warranty',false)" [ngClass]="{'active':!deviceCheckInForm.controls.is_warranty.value , 'notActive':deviceCheckInForm.controls.is_warranty.value}"
+                                    class="btn wd100Percent height32px lineHeight30px font14">No</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 pr0">
+                            <label [ngClass]="{'bounce is-invalid':checkinSubmitted && fDeviceCheckInForm.battery_life.errors}" for="batteryLife">Battery life</label>
+                            <input [ngClass]="{'bounce':checkinSubmitted && fDeviceCheckInForm.battery_life.errors}" type="text" name="batteryLife" formControlName="battery_life"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                            placeholder="Type the battery life">
+                            <span class="bounce is-invalid" *ngIf="checkinSubmitted && fDeviceCheckInForm.battery_life.errors">
+                                Battery life
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row ml0 mr0">
+                        <div class="col-lg-12 p0">
+                            <label for="device_pictures">Add photographic evidence</label>
+                            <div class="input-group input-file addDeviceimages" name="device_pictures">
+                                <label *ngIf="deviceImages.length != 0" for="device_pictures">
+                                    <span *ngIf="deviceImages.length == 1">{{deviceImages[0].name + ' '}} image uploaded</span>
+                                    <span *ngIf="deviceImages.length > 1">{{deviceImages.length + ' '}} images uploaded</span>
+                                </label>
+                                <label *ngIf="deviceImages.length == 0" for="device_pictures"><span>Upload image</span></label>
+                                    <input class="form-control cust-field" type="file" #imageInput name="device_pictures" id="device_pictures" 
+                                    accept="image/png, image/jpeg" (change)="onFileChanged($event)" multiple>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-choose" type="button">Browse</button>
+                                </span>
+                            </div>
+                            <div *ngIf="imagesAttached.length != 0 || deviceImages.length != 0" class="uploadedImages">
+                                <ul>
+                                    <li *ngFor="let img of imagesAttached; let i = index;">
+                                        <span [ngStyle]="{'background-image':'url('+ baseUrl+img?.path +')'}"></span>
+                                        <!-- <span style="background-image: url(../../../../assets/images/userplaceholder.png);"></span>-->
+                                        <a (click)="removeImageFromDb(img,i)" href="JavaScript:void(0)"><i class="icon-close"></i></a>
+                                    </li>
+                                    <li *ngFor="let img of deviceImages; let i = index;">
+                                        <span [ngStyle]="{'background-image':'url('+ img['base64'] +')'}"></span>
+                                        <!-- <span style="background-image: url(../../../../assets/images/userplaceholder.png);"></span>-->
+                                        <a (click)="removeImage(i)" href="JavaScript:void(0)"><i class="icon-close"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mb10 mt10">
+                    <div class="row mb15 ml0 mr0 device-issues">
+                        <div class="col-lg-12 p0">
+                            <label for="itemLeft">Issues with the device</label>
+                            <ul>
+                                <li *ngFor="let issue of deviceIssues; let i = index;">
+                                    <input [checked]="isChecked(issue,'issue')" id="issue{{i}}" (click)="deviceIssueanditemleft($event,issue , 'issue')" class="checkbox-custom" name="issue{{i}}" type="checkbox">
+                                    <label for="issue{{i}}" class="checkbox-custom-label">{{issue?.name}}</label>
+                                </li>
+                                <li>
+                                    <!-- <input (click)="setDirectValues('issuesOther')" [checked]="issuesOther" id="other" class="checkbox-custom" name="other" type="checkbox">
+                                    <label for="other" class="checkbox-custom-label">Other</label> -->
+                                    <div class="otherinputField">
+                                        <!-- [readonly]="!issuesOther" -->
+                                        <input (keyup.enter)="createDeviceIssues('otherDeviceIssues','issues')" formControlName="otherDeviceIssues" type="text" id="issuesOther" class="form-control cust-field" placeholder="Charging jack issue">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row mb15 ml0 mr0 device-issues">
+                        <div class="col-lg-12 p0">
+                            <label for="itemLeft">Items left with the device</label>
+                            <ul>
+                                <li *ngFor="let item of deviceItems; let i = index;">
+                                    <input [checked]="isChecked(item,'item')" id="item{{i}}" (click)="deviceIssueanditemleft($event,item ,'item')" class="checkbox-custom" name="item{{i}}" type="checkbox">
+                                    <label for="item{{i}}" class="checkbox-custom-label">{{item?.name}}</label>
+                                </li>
+                                <li>
+                                    <!-- <input (click)="setDirectValues('itemsOther')" [checked]="itemsOther" id="otheritems" class="checkbox-custom" name="otheritems" type="checkbox">
+                                    <label for="otheritems" class="checkbox-custom-label">Other</label> -->
+                                    <div class="otherinputField">
+                                        <!-- [readonly]="!itemsOther" -->
+                                        <input (keyup.enter)="createDeviceIssues('otherDeviceItem','items')" formControlName="otherDeviceItem" type="text" id="itemsOther" class="form-control cust-field" placeholder="Eg:Power Bank">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row mb30 ml0 mr0">
+                        <div class="col-lg-6 p0">
+                            <label for="deviceRestorationStatus">Does the customer approved the device to be restored if needed?</label>
+                            <div id="discount-cat-btn" class="btn-group wd100Percent">
+                                <a (click)="setFormValues('deviceCheckInForm','approved_to_device_restored','yes')" [ngClass]="{'active':deviceCheckInForm.controls.approved_to_device_restored.value == 'yes' , 'notActive':deviceCheckInForm.controls.approved_to_device_restored.value != 'yes'}" class="btn wd100Percent height32px lineHeight30px font14 active">Yes</a>
+                                <a (click)="setFormValues('deviceCheckInForm','approved_to_device_restored','no')" [ngClass]="{'active':deviceCheckInForm.controls.approved_to_device_restored.value == 'no' , 'notActive':deviceCheckInForm.controls.approved_to_device_restored.value != 'no'}" class="btn wd100Percent height32px lineHeight30px font14 notActive">No</a>
+                                <a (click)="setFormValues('deviceCheckInForm','approved_to_device_restored','probably')" [ngClass]="{'active':deviceCheckInForm.controls.approved_to_device_restored.value == 'probably' , 'notActive':deviceCheckInForm.controls.approved_to_device_restored.value != 'probably'}" class="btn wd100Percent height32px lineHeight30px font14 notActive">Probably</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 pr0">
+                            <label for="Notes">Notes</label>
+                            <input type="text" name="Notes" formControlName="note"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Type a note">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-action-buttons">
+                <div class="cust-btns text-right">
+                    <a (click)="onCancel()" class="cncl-btn-cust valignMiddle">Cancel</a>
+                    <button type="submit" (click)="saveDeviceCheckIn()" class="btn btn-default noFloat ml10">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<ng-template #addPattern>
+    <div class="modal-header noborder pt40 pb0">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold color000">Pattern Lock</h2>
+            <p class="fontPoppin font12 mb10 color808080">Add the pattern lock to unlock device</p>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="items-form-content pl30 pr30 text-center">
+            <p class="fontPoppin fontSemiBold font11 mb10 color000">Record Pattern</p>
+            <div id="patternHolder"></div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button type="button" (click)="savePattern()"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Save</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>

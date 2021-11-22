@@ -1,0 +1,110 @@
+#discount-cat-btn a {
+  font-size: 12px;
+  padding: 8px;
+  cursor: pointer;
+  line-height: 14px;
+  cursor: pointer;
+}
+#discount-cat-btn .active {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+#discount-cat-btn .notActive {
+  color: #000;
+  background-color: #fff;
+  border-color: #000;
+}
+#discount-cat-btn {
+  padding: 0px;
+  border: none;
+  width: 100%;
+  height: 32px;
+  background-color: #fff;
+  border-radius: 5px;
+}
+.ml10 {
+    margin-left: 10px;
+}
+
+
+/* Table scroll */
+
+.table-scroll thead{
+  background-color: #f1f1f1;  
+  position:relative;
+  display: block;
+  width:102%;
+  overflow-y: scroll;
+}
+
+.table-scroll tbody{
+  /* Position */
+  display: block; position:relative;
+  width:100%; overflow-y:overlay;
+  height: 56px;
+  /* Decoration */
+}
+
+.table-scroll tfoot{
+  width: 100%;
+  display:flex;
+}
+
+
+.table-scroll tr{
+  width: 100%;
+  display:flex;
+}
+
+.table-scroll td,.table-scroll th{
+  flex-basis:100%;
+  flex-grow:2;
+  display: block;
+  padding: 1rem;
+  text-align:left;
+}
+.manufecture-Only{
+  margin-top: 230px;
+  margin-left: 228px;
+}
+.textNoSupp{
+  margin-top: -130px;
+}
+input[type="time"] {
+  color: black;
+}
+input[type="time"]:time{
+  color: green;
+}
+.picker__time-display {
+  background-color:red;
+}
+
+.non-click {
+  pointer-events: none;
+}
+
+.no-dp1 {
+  display: none !important;
+}
+/* .form-control.pholderInput::-webkit-input-placeholder {
+  font-style: normal !important;
+}
+.form-control.pholderInput::placeholder {
+  color: #000 !important;
+} */
+.pholderInput::-webkit-input-placeholder {
+  font-style: normal !important;
+}
+.pholderInput::placeholder {
+  color: #000 !important;
+}
+.temp{
+  color: black
+}
+.suggGivenButton{
+  background-color: #000;
+  color: aliceblue;
+  box-shadow: none;
+}

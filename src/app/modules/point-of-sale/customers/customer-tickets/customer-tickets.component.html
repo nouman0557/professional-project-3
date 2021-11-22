@@ -1,0 +1,205 @@
+<div id="netterms" class="facturacionWrapper">
+    <div class="top-history">
+        <div class="dtable wd100Percent">
+            <div class="dtableCell wd65percent">
+                <div class="wd30percent dInlineBlock">
+                    <div id="discount-cat-btn" class="btn-group wd100Percent">
+                        <!-- <a class="btn borderBRR0 borderTRR0 wd50percent active">Active</a>
+                        <a class="btn borderTLR0 borderBLR0 wd50percent notActive">Completed</a> -->
+                        <a (click)="updateFilters('is_checkout' , false)" 
+                        [ngClass]="{'active': ticketFilters?.is_checkout == false,
+                                    'notActive': ticketFilters?.is_checkout == true}" 
+                        class="btn borderBRR0 borderTRR0 wd50percent">Active</a>
+                    <a (click)="updateFilters('is_checkout' , true)" 
+                        [ngClass]="{'active': ticketFilters?.is_checkout == true,
+                                    'notActive': ticketFilters?.is_checkout == false}" 
+                        class="btn borderTLR0 borderBLR0 wd50percent">Completed</a>
+                    </div>
+                </div>
+                <div class="dInlineBlock wd70percent pl5 text-center valignMiddle">
+                    <div class="filterLinks pOfilter newfilters">
+                        <label>Filter by:</label>
+                        <div class="filterWhenActive dInlineBlock">
+                            <a tooltip="Discount" placement="bottom"
+                                [ngClass]="{'active': ticketFilters?.quickFilter == 'discount'}"
+                                (click)="updateFilters('quickFilter' , 'discount')"
+                                href="JavaScript:void(0)" class="color000">
+                                <i class="icon-discount_tickets"></i>
+                            </a>
+                            <a tooltip="Refund" placement="bottom" [ngClass]="{'active': ticketFilters?.quickFilter == 'refund'}"
+                                (click)="updateFilters('quickFilter' , 'refund')" 
+                                href="JavaScript:void(0)" class="color000">
+                                <i class="icon-refund"></i>
+                            </a>
+                            <a tooltip="Bundles" placement="bottom"
+                                [ngClass]="{'active': ticketFilters?.quickFilter == 'bundle'}"
+                                (click)="updateFilters('quickFilter' , 'bundle')"
+                                href="JavaScript:void(0)" class="color000">
+                                <i class="icon-bundle_product"></i>
+                            </a>
+                            <a tooltip="Partial Payments" placement="bottom"
+                                [ngClass]="{'active': ticketFilters?.quickFilter == 'partial_payment'}"
+                                (click)="updateFilters('quickFilter' , 'partial_payment')"
+                                href="JavaScript:void(0)" class="color000">
+                                <i class="icon-partialPayment_tickets"></i>
+                            </a>
+                            <a tooltip="Gift Card" placement="bottom"
+                                [ngClass]="{'active': ticketFilters?.quickFilter == 'gift_card'}"
+                                (click)="updateFilters('quickFilter' , 'gift_card')"
+                                href="JavaScript:void(0)" class="color000">
+                                <i class="icon-giftcard_tickets"></i>
+                            </a>
+                            <a tooltip="Without Tax" placement="bottom"
+                                [ngClass]="{'active': ticketFilters?.quickFilter == 'with_out_tax'}"
+                                (click)="updateFilters('quickFilter' , 'with_out_tax')"
+                                href="JavaScript:void(0)" class="color000">
+                                <i class="icon-taxes"></i>
+                            </a>
+                            <a tooltip="PayPal Invoice" placement="bottom"
+                                [ngClass]="{'active': ticketFilters?.quickFilter == 'paypal_invoice'}"
+                                (click)="updateFilters('quickFilter' , 'paypal_invoice')"
+                                href="JavaScript:void(0)" class="color000">
+                                <i class="icon-paypal_invoice"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dtableCell wd35percent text-right">
+                <div class="valignMiddle  wd80percent dInlinetable">
+                    <div class="search-field input-group">
+                        <input [formControl]="searchOrder"
+                            type="text" class="form-control"
+                            placeholder="Search by name, phone number, email, address...">
+                        <a href="JavaScript:void(0)"
+                            class="input-group-addon">
+                            <i  *ngIf="searchOrder.value" (click)="searchOrder.reset()"
+                                class="fas fa-times-circle"></i>
+                            <i class="icon-search"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="wd15percent dInlinetable ml5 valignMiddle">
+                    <a tooltip="Clear filters" placement="bottom" (click)="clearAllFilters()" href="JavaScript:void(0)" class="clearAllfilter"><i class="icon-clear_all"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="facturacionList ticketList">
+        <!-- [ngClass]="{'empty':}" -->
+        <div id="po-wrapper" [ngClass]="{'empty':this.isObjectEmpty(allTickets)}"  >
+            <div class="po-top-info">
+                <div class="inner wd3percent allCheckbox">
+                    <span class="ml0">
+                        <input [(ngModel)]="theTicketCheckbox"  (change)="checkedAllField(allTickets,$event)" 
+                        class="checkbox-custom" id="cust-checkMainTicket"
+                            name="cust-checkMainTicket" type="checkbox">
+                        <label class="checkbox-custom-label" for="cust-checkMainTicket"></label>
+                    </span>
+                </div>
+                <div class="inner wd10percent"><span>ID</span></div>
+                <div class="inner wd20percent"><span>Date and time</span></div>
+                <div class="inner wd10percent"><span>Amount</span></div>
+                <div class="inner wd15percent">
+                    <span>Balance
+                        <i [ngClass]="{'active':ticketFilters?.balance_sorting == 'desc',
+                        'notActive':ticketFilters?.balance_sorting == 'none' || ticketFilters?.balance_sorting == 'asc'}" 
+                        (click)="sortBalance('desc')" class="fa fa-arrow-down pl5 cursorPointer" ></i>
+                        <i [ngClass]="{'active':ticketFilters?.balance_sorting == 'asc',
+                        'notActive':ticketFilters?.balance_sorting == 'none' || ticketFilters?.balance_sorting == 'desc'}" 
+                        (click)="sortBalance('asc')" class="fa fa-arrow-up pl5 cursorPointer" ></i>
+                    </span>
+                </div>
+                <div class="inner wd15percent"><span>View ticket</span></div>
+                <div class="inner wd15percent labelFilter">
+                    <div class="btn-group" dropdown>
+                        <button id="button-animated" dropdownToggle type="button"
+                            class="btn dropdown-toggle font10 statusFilter mainPOStatusFilter"
+                            aria-controls="dropdown-animated">
+                            <span class="dBlock btnText wd100px"></span>{{statusFilter}}
+                            <span class="caret"></span>
+                        </button>
+                        <div class="filterDrop">
+                            <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu supplierFilterUl">
+                                <li style="padding:0px 10px" [ngClass]="status.class_name" *ngFor="let status of repairStatuses; let i = index;" (click)="$event.stopPropagation()">
+                                    <input [checked]="returnSelectedRepairFilters(status)" (click)="setRepairFilters($event,status)" 
+                                    id="status{{i + 1}}" class="checkbox-custom" name="status{{i + 1}}" type="checkbox">
+                                    <label [ngClass]="{'active':returnSelectedRepairFilters(status)}" for="status{{i + 1}}"
+                                     class="fontPoppin fontSemiBold font12 checkbox-custom-label">{{status.status_name}}</label>
+                                </li>
+                            </ul>
+                            <a (click)="applyRepairFilters()" href="JavaScript:void(0)"
+                                class="dBlock fontPoppin fontBold font11 padding5 borderRadius5 doneFilter text-center">Done</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="inner wd10percent"><span>Action</span></div>
+            </div>
+            <div class="po-inner-list"  infiniteScroll (scrolled)="onScroll()" [scrollWindow]="false" >
+             <div *ngIf="loadTickets" class="luna-loading"></div>
+               <div class="empty-text">
+                    <h2 class="color808080 font16 fontSemiBold500">No Tickets Available</h2>
+                </div> 
+                <ul>
+                    <li  *ngFor="let ticket of allTickets; let i = index;">
+                        <div class="inner wd3percent allCheckbox">
+                            <span class="text-left">
+                                <input [checked]="ticket?.checked" (change)="singleItemChecked(allTickets,i,$event)"
+                                 class="checkbox-custom" type="checkbox"  name="customer-Ticket{{i}}"   id="customer-Ticket{{i}}">
+                                <label class="checkbox-custom-label" for="customer-Ticket{{i}}"></label>
+                            </span>
+                        </div>
+                        <div class="inner wd10percent"><span class="font10">{{ticket?.transaction_keeping_unit}}</span></div>
+                        <div class="inner wd12percent"><span class="font10">{{ticket?.transaction_date | date : 'MMM/dd/yyyy - HH:mm'}}</span></div>
+                        <div class="inner wd10percent"><span class="font10">{{ticket?.total_amount | currency}}</span></div>
+                        <div class="inner wd10percent"><span class="font10">{{ticket?.remaining_amount | currency}}</span></div>
+                        <div class="inner wd10percent">
+                            <a *ngIf="ticket.transaction_status == 'quote'" (click)="showOrderInCart(ticket)"  href="JavaScript:void(0)" class="viewBtn">View Quote</a>
+                            <a *ngIf="ticket.transaction_status == 'invoice'" (click)="showInvoiceDetail(ticket)" href="JavaScript:void(0)" class="viewBtn">View Invoice</a>
+                            <a *ngIf="ticket.transaction_status == 'order'" (click)="showOrderInCart(ticket)"  href="JavaScript:void(0)" class="viewBtn">View Order</a>
+                        </div>
+                        <div class="inner wd15percent repairRoom">
+                            <ul class="status-info">
+                                <li *ngFor="let taskColor of ticket?.repair_room_color_pallet"
+                                            [ngStyle]="{'background-color': taskColor}">S</li>
+                            </ul>
+                        </div>
+                        <div class="inner wd10percent">
+                            <a  tooltip="Launch Repair Room" placement="bottom" *ngIf="ticket.transaction_status == 'invoice'" (click)="gotoRepairRoom(ticket['_id'])" href="JavaScript:void(0) " class="dInlineBlock launchbtn">
+                                <i class="icon-bundle_service color000 font14"></i>
+                            </a>
+                            <a *ngIf="ticket.transaction_status != 'invoice'" href="JavaScript:void(0) " class="dInlineBlock launchbtn">
+                                <i class="icon-bundle_service color808080 font14"></i>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bottomActionBar">
+            <div class="caution-stock dtableCell wd80percent  valignMiddle">
+                <div class="listCount">
+                    <span>Total: <b>{{ticketCount}} tickets</b></span>
+                </div>
+                <div class="filterLinks newfilters bottomFilters rmaFilters ticketsFilters">
+                    <label>Filter by type:</label>
+                    <a (click)="updateFilters('ticketfooterfilter' , 'all')" [ngClass]="{'active': ticketFilters?.ticketfooterfilter == 'all'}" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">All</a>
+                    <!-- <a (click)="updateFilters('ticketfooterfilter' , 'order')" [ngClass]="{'active': ticketFilters?.ticketfooterfilter == 'order'}" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Orders</a> -->
+                    <a (click)="updateFilters('ticketfooterfilter' , 'invoice')" [ngClass]="{'active': ticketFilters?.ticketfooterfilter == 'invoice'}" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Invoices</a>
+                    <a (click)="updateFilters('ticketfooterfilter' , 'quote')" [ngClass]="{'active': ticketFilters?.ticketfooterfilter == 'quote'}" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Qoutes</a>
+                </div>
+            </div>
+            <div class="caution-stock dtableCell text-right wd20percent">
+                <div class="ifPOUnChecked">
+                    <!-- openModal(downloadInvoice, 'custModal wd300') -->
+                    <a href="JavaScript:void(0)" (click)="openDownloadModal()" 
+                        class="innerStatusBtns dInlineBlock">
+                        Download
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-download-file #downloadFileModal  (downloadFileEmit)="downloadInvoices($event)"> </app-download-file>

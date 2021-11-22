@@ -1,0 +1,1592 @@
+
+<div class="tab-content" id="pills-s-tabContent" (click)="closeOpenOptions()">
+    <!-- (click)="documentSettingsOpen=false"  (click)="deviceSettingsOpen=false" -->
+    <div class="tab-pane fade active show" id="tab-s-two" >
+        <div *ngIf="loading" class="luna-loading zIndex100"></div>
+        <!-- <div [ngClass]="{'empty': !customerDetail}"> -->
+            <div [ngClass]="{'empty': customerId==''}"> 
+            <div class="empty-text">
+                <h2 class="font16 fontSemiBold500"><i class="icon-name font64"></i>Select a customer first, to see their <br>information display here</h2>
+            </div>
+        </div>
+        <div id="customer-info" *ngIf='customerDetail'>
+            
+            <div class="topBar dtable wd100Percent posRelative zIndex3">
+                <div class="dtableCell wd70percent">
+                    <h2 class="maxWidth400 dotedOverflow valignMiddle color000 mb0 font16 fontSemiBold fontPoppin dInlineBlock"
+                    tooltip="{{customer?.first_name + ' ' + customer?.last_name}}" placement="bottom">
+                        {{customer?.first_name + ' ' + customer?.last_name}}
+                    </h2>
+                 <!-- When customer is downloaded form cloud -->
+                    <span *ngIf="customer?.is_linked && customer?.location_id?._id!=locationId" class="colorGreen font16 lineHeight08 dInlineBlock pl10 valignMiddle"><i class="icon-saved"></i></span>
+                </div>
+                <div [ngClass]="{'disableDiv': !customer?.is_linked}" class="dtableCell wd30percent text-right">
+                    <div class="iconActionBox archiveSupp">
+                        <!-- (click)="openRemoveSupplierModal(open_removesupplier,'custModal wd210',sup)"-->
+                        <a>
+                            <div class="icon-img">
+                                <i class="icon-archive"></i>
+                                <div class="text-img"><span>Archive</span></div>
+                            </div>
+                        </a>
+                    </div>
+                    <div  class="iconActionBox editSupp">
+                        <a (click)="onEditCustomer(customer._id)">
+                            <div class="icon-img">
+                                <i class="icon-edit"></i>
+                                <div class="text-img"><span>Edit</span></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="cust-info-inner customer-details clientDetails supDetailBox">
+                <div class="mid subMainMid">
+                    <div class="row m0">
+                        <div class="col-md-12 noborderBottom pl0">
+                            <table class="table info-t mt5 mb0" style="width:100%">
+                                <tbody>
+                                    <tr colspan="2">
+                                        <td class="valignMiddle padding5px">Phone Number:</td>
+                                        <td class="valignMiddle padding5px">
+                                            <a class="color000 textUndeline paddCustom"
+                                                href="tel:{{customer?.phone}}">
+                                                {{customer?.phone || 'N/A'}}
+                                            </a>
+                                        </td>
+                                        <td class="valignMiddle padding5px">Address 1:</td>
+                                        <td class="valignMiddle padding5px">
+                                            <span class="paddCustom">{{customer?.address_1 || 'N/A'}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr colspan="2">
+                                        <td class="valignMiddle padding5px">Email:</td>
+                                        <td class="valignMiddle padding5px">
+                                            <a class="color000 textUndeline paddCustom" target="_blank"
+                                            href="{{customer?.email}}">
+                                            {{customer?.email || 'N/A'}}
+                                        </a>
+                                        </td>
+                                        <td class="valignMiddle padding5px">Address 2:</td>
+                                        <td class="valignMiddle padding5px">
+                                            <span class="paddCustom">{{customer?.address_2 || 'N/A'}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr colspan="2">
+                                        <td class="valignMiddle padding5px">Contact Number:</td>
+                                        <td class="valignMiddle padding5px">
+                                            <a class="color000 textUndeline paddCustom"
+                                                href="tel:{{customer?.phone}}">
+                                                {{customer?.phone || 'N/A'}}
+                                            </a>
+                                        </td>
+                                        <td class="valignMiddle padding5px">City</td>
+                                        <td class="valignMiddle padding5px">
+                                            <span class="paddCustom">{{customer?.city || 'N/A'}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr colspan="2">
+                                        <td class="valignMiddle padding5px">SMS Notification:</td>
+                                        <td class="valignMiddle padding5px" *ngIf="customer?.can_sms">Active</td>
+                                        <td class="valignMiddle padding5px" *ngIf="!customer?.can_sms">Inactive</td>
+                                        <td class="valignMiddle padding5px">State:</td>
+                                        <td class="valignMiddle padding5px">
+                                            <span class="paddCustom">{{customer?.state || 'N/A'}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr colspan="2">
+                                        <td class="valignMiddle padding5px">Email Notification:</td>
+                                        <td class="valignMiddle padding5px" *ngIf="customer?.can_email">Active</td>
+                                        <td class="valignMiddle padding5px" *ngIf="!customer?.can_email">Inactive</td>
+                                        <td class="valignMiddle padding5px">Zip Code:</td>
+                                        <td class="valignMiddle padding5px">
+                                            <span class="paddCustom">{{customer?.zip_code || 'N/A'}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr colspan="2">
+                                        <td class="valignMiddle padding5px">Tags:</td>
+                                        <td class="valignMiddle padding5px">
+                                            <span class="paddCustom">{{customer?.tags || 'N/A'}}</span>
+                                        </td>
+                                        <td class="valignMiddle padding5px"></td>
+                                        <td class="valignMiddle padding5px"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="mid termsLists">
+                    <div class="bottom supDetailTabs custDetailTabs">
+                        <tabset #staticTabs>
+                            <tab heading="Device List" tabOrder="1">
+                                <div id="netterms">
+                                    <div class="top-history">
+                                        <div class="dtable wd100Percent">
+                                            <div class="dtableCell wd50percent">
+                                                <div class="wd50percent dInlineBlock">
+                                                    <div id="discount-cat-btn" class="btn-group wd100Percent">
+                                                        <a  [ngClass]="{'active':searchDeviceInput.is_active , 'notActive' : !searchDeviceInput.is_active }" (click)='applyActiveArchivedDevicesFilter(true)' class="btn borderBRR0 borderTRR0 wd50percent">Active</a>
+                                                        <a  [ngClass]="{'active':!searchDeviceInput.is_active , 'notActive' : searchDeviceInput.is_active }" (click)='applyActiveArchivedDevicesFilter(false)' class="btn borderTLR0 borderBLR0 wd50percent">Archived</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div [ngClass]="{'disableDiv': !customer?.is_linked}"  class="dtableCell wd40percent text-right">
+                                                <div class="btnManageTerm wd85Percent dInlinetable valignMiddle">
+                                                    <a href="JavaScript:void(0)" class="dInlineBlock wd100px" (click)="onAddCustomerDevice(customerId)">
+                                                    Add device</a>
+                                                    <!-- (click)="openModal(adddevice,'box-add-device box-addstock-product')" -->
+                                                </div>
+                                                <div class="btnManageTerm dInlinetable ml5 valignMiddle">
+                                                    <div class="btn-group settingBtn">
+                                                        <a class="innerStatusBtns dInlineBlock minWd30px" href="JavaScript:void(0)"
+                                                            (click)="openDeviceSettings(customerDevices);$event.stopPropagation()">
+                                                            <i class="icon-settings"></i>
+                                                        </a>
+                                                        <div class="dropdown-content settingOptions deviceSettingOptions"
+                                                            *ngIf="deviceSettingsOpen" style="display: block;">
+                                                            <ul *ngIf='searchDeviceInput.is_active'>
+                                                                <li><a [ngClass]="{'disableDiv': !showMergeOption}" (click)="openCompareItemModal(open_CompareTwoItems,'custModal wd600')" class="dropdown-item noFloat">Merge Device(s)</a></li>
+                                                                <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','export')" class="dropdown-item noFloat">Export Device(s)</a></li>
+                                                                <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','archive')" class="dropdown-item noFloat">Archive Device(s)</a></li>
+                                                                <li><a [ngClass]="{'disableDiv': !showTransferOption}" (click)="openDeviceModal(openDeviceTransfer, 'custModal wd600', transfer)" class="dropdown-item noFloat">Transfer Device(s)</a></li>
+                                                            </ul>
+                                                            <ul *ngIf='!searchDeviceInput.is_active'>
+                                                                <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','active')"
+                                                                     class="dropdown-item noFloat">Active Device(s)</a></li>
+                                                                <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','delete')" 
+                                                                    class="dropdown-item noFloat">Permanently Delete Device(s)</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="facturacionList">
+                                        <div id="po-wrapper" [ngClass]="{'empty':customerDevices?.length==0}">
+                                            <div *ngIf='deviceLoader' class="luna-loading"></div>
+                                            <div class="empty-text">
+                                                <h2 class="color808080 font16 fontSemiBold500">There are no devices created to <br> this customers yet. Let's create one!</h2>
+                                            </div>
+                                            <div class="po-top-info">
+                                                <div class="inner wd5percent allCheckbox">
+                                                    <span class="ml0">
+                                                        <input [(ngModel)]="allDeviceCheck"  (change)="checkedAllField(customerDevices,$event)" 
+                                                        class="checkbox-custom"  id="deviceListMain"
+                                                            name="deviceListMain" type="checkbox">
+                                                        <label class="checkbox-custom-label" for="deviceListMain"></label>
+                                                    </span>
+                                                </div>
+                                                <div class="inner wd15percent"><span>Device ID</span></div>
+                                                <div class="inner wd15percent"><span>Brand</span></div>
+                                                <div class="inner wd15percent"><span>Model</span></div>
+                                                <div class="inner wd15percent"><span>Color</span></div>
+                                                <div class="inner wd20percent"><span>IMEI/ESN</span></div>
+                                                <div class="inner wd15percent"><span>Actions</span></div>
+                                            </div>
+                                            <div class="po-inner-list">
+                                                <ul>
+                                                    <!-- (click)="selectDeviceToDelete(device)" -->
+                                                    <li *ngFor="let device of customerDevices;  let i = index">
+                                                        <div class="inner wd5percent allCheckbox">
+                                                            <span class="text-left">
+                                                                <input [checked]="device?.checked"  (change)="singleItemChecked(customerDevices,i,$event,'allDeviceCheck')"
+                                                                 class="checkbox-custom" type="checkbox"  name="deviceCheck{{i}}"   id="deviceCheck{{i}}">
+                                                                <label class="checkbox-custom-label" for="deviceCheck{{i}}"></label>
+                                                            </span>
+                                                        </div>
+                                                        <div class="inner wd15percent">
+                                                            <span>{{device?.device_keeping_unit}}</span>
+                                                        </div>
+                                                        <div class="inner wd15percent">
+                                                            <span>{{device?.deviceBrand?.brand_name ||'N/A'}}</span>
+                                                        </div>
+                                                        <div class="inner wd15percent">
+                                                            <span>{{device?.deviceModel?.name ||'N/A'}}</span>
+                                                        </div>
+                                                        <div class="inner wd15percent">
+                                                            <span>{{device?.device_color}}</span>
+                                                        </div>
+                                                        <div class="inner wd20percent">
+                                                            <span>{{device?.imei_ssn}}</span>
+                                                        </div>
+                                                        <div class="inner wd15percent">
+                                                            <div class="title-info">
+                                                                <a (click)="onDeviceHistoryIconClick(device._id)" class="font12">
+                                                                    <i class="fas fa-info-circle"></i>
+                                                                </a>
+                                                                <a *ngIf="searchDeviceInput.is_active" (click)="onUpdateCustomerDevice(device._id)" class="font12 pl8 pr8">
+                                                                    <i class="icon-edit"></i>
+                                                                </a>
+                                                                <!-- (click)="openFetchDeviceImagesModal(fetchImg, 'box-fetchimg',dev)" -->
+                                                                <!-- <a class="font12">
+                                                                    <i class="icon-print"></i>
+                                                                </a> -->
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tab>
+                            <tab heading="Purchase History" tabOrder="2">
+                                <div id="purchasehistory">
+                                    <div class="top-history summarytab">
+                                        <!-- <a (click)="seeAllOrder()">See all orders.</a> -->
+                                    </div>
+                                    <div class="bottom-history overflow166px">
+                                        <div class="row height73px">
+                                            <div class="col-lg-6">
+                                                <div class="inner-history">
+                                                    <div class="left-history">
+                                                        <p>Total amount spent:</p>
+                                                    </div>
+                                                    <div class="right-history  posRelative">
+                                                        <h2>{{customerPurchaseHistory?.total_amount_spend | currency}}</h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="inner-history">
+                                                    <div class="left-history">
+                                                        <p>Total number of visits:</p>
+                                                    </div>
+                                                    <div class="right-history posRelative">
+                                                        <h2>{{customerPurchaseHistory?.total_number_of_visits + ' '}} Visits
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row height73px">
+                                            <div class="col-lg-6">
+                                                <div class="inner-history">
+                                                    <div class="left-history">
+                                                        <p>Average purchase per vist:</p>
+                                                    </div>
+                                                    <div class="right-history  posRelative">
+                                                        <h2>{{customerPurchaseHistory?.average_purchase_per_visit | currency}}</h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="inner-history">
+                                                    <div class="left-history">
+                                                        <p>Average number of items per visit:
+                                                        </p>
+                                                    </div>
+                                                    <div class="right-history posRelative">
+                                                        <h2>{{customerPurchaseHistory?.average_number_of_items_per_visit + ' '}}
+                                                            Items
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tab>
+                            <tab heading="Tickets" tabOrder="3">
+                             <app-customer-tickets [customerId]="customerId" > </app-customer-tickets>
+                            </tab>
+                            <tab heading="Net terms" tabOrder="4" >
+                                <div id="netterms">
+                                    <div class="top-history">
+                                        <div class="dtable wd100Percent pt5">
+                                            <div class="dtableCell wd60percent">
+                                                <p class="dInlineBlock valignMiddle color000 font11">
+                                                    Credit Limit <span
+                                                        class="colorGreen fontSemiBold">{{nettermDetails?.credit_limit |currency}}</span>
+                                                </p>
+                                                <p
+                                                    class="dInlineBlock valignMiddle pl15 pr15 color000 font11">
+                                                    Used Credit <span
+                                                        class="colorGreen fontSemiBold">{{nettermDetails?.used_credit |currency}}</span>
+                                                </p>
+                                                <p class="dInlineBlock valignMiddle color000 font11">
+                                                    Overdue <span
+                                                        class="colorRed fontSemiBold">{{nettermDetails?.over_dues |currency}}</span>
+                                                </p>
+                                            </div>
+                                            <div class="dtableCell wd40percent text-right">
+                                                <div class="btnManageTerm dInlineBlock">
+                                                    <a href="JavaScript:void(0)"
+                                                        (click)="loadNetTerm()">Manage Net Terms</a>
+                                                </div>
+                                                <div class="btnManageTerm dInlineBlock ml5">
+                                                    <a href="JavaScript:void(0)"
+                                                        (click)="loadNetTermPayment()">Record
+                                                        Payment</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="facturacionList"  [ngClass]="{'empty': isObjectEmpty(customerNetTermsLogs)}">
+                                        <!--  [ngClass]="{'empty': isObjectEmpty()}" -->
+                                        <div id="po-wrapper">
+                                            <div class="po-top-info">
+                                                <div class="inner wd15percent"><span>Date</span></div>
+                                                <div class="inner wd15percent"><span>Days Left</span></div>
+                                                <div class="inner wd20percent"><span>Transaction Detail</span></div>
+                                                <div class="inner wd15percent"><span>Debit</span></div>
+                                                <div class="inner wd15percent"><span>Credit</span></div>
+                                                <div class="inner wd20percent"><span>Ledger Balance</span></div>
+                                            </div>
+                                            <div class="po-inner-list">
+                                                <div *ngIf="netTermsLoader" class="luna-loading">
+                                                </div>
+                                                <div class="empty-text">
+                                                    <h2>
+                                                        No Net Terms available
+                                                    </h2>
+                                                </div>
+                                                <ul>
+                                                    <li  *ngFor="let customerNet of customerNetTermsLogs; let i = index">
+                                                        <div class="inner wd15percent">
+                                                            <span>{{customerNet?.date |customDateFormat  }}</span>
+                                                        </div>
+                                                        <div class="inner wd15percent">
+                                                            <span *ngIf="customerNet?.transactionNo[0]!='T'">
+                                                               <span *ngIf="customerNet?.is_overdue"  class="dec"> Overdue({{customerNet?.pay_term_number}})</span>
+                                                               <span *ngIf="!customerNet?.is_overdue" class="inc"> on time({{customerNet?.pay_term_number}})</span>
+                                                            </span>
+                                                            <span *ngIf="customerNet?.transactionNo[0]=='T'">--</span>
+                                                        </div>
+                                                        <div class="inner wd20percent">
+                                                            <span>{{customerNet?.transactionNo }}</span>
+                                                        </div>
+                                                        <div class="inner wd15percent">
+                                                            <span>{{customerNet?.debit_amount | currency}}</span>
+                                                        </div>
+                                                        <div class="inner wd15percent">
+                                                            <span>{{customerNet?.credit_amount | currency}}</span>
+                                                        </div>
+                                                        <div class="inner wd20percent">
+                                                            <span>{{customerNet?.balance | currency }}</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tab>
+                            <tab heading="Store Credit" tabOrder="5" id="store-credit">
+                                <div id="internalcredit">
+                                    <div class="top-history">
+                                        <div class="dtable wd100Percent pt5">
+                                            <div class="dtableCell wd60percent">
+                                                <p class="dInlineBlock valignMiddle color000 font11">
+                                                    Store Credit <span
+                                                        class="colorGreen fontSemiBold">{{customerStoreCredit | currency}}</span>
+                                                </p>
+                                            </div>
+                                            <div class="dtableCell wd40percent text-right">
+                                                <div class="btnManageTerm dInlineBlock">
+                                                    <a href="JavaScript:void(0)"
+                                                        (click)="loadStoreCredit()">Manage Credit</a>
+                                                </div>
+                                                <div class="btnManageTerm dInlineBlock ml5">
+                                                    <a href="JavaScript:void(0)"
+                                                        (click)="loadStoreTransCredit()">Transfer
+                                                        Credit</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <!--  [ngClass]="{'empty': isObjectEmpty()}" -->
+                                    <div [ngClass]="{'empty': storeCreditLogs.length == 0}" class="facturacionList">
+                                        <div id="po-wrapper">
+                                            <div class="po-top-info">
+                                                <div class="inner wd20percent"><span>Date</span></div>
+                                                <div class="inner wd20percent"><span>Admin</span>
+                                                </div>
+                                                <div class="inner wd20percent"><span>Credit
+                                                        Balance</span></div>
+                                                <div class="inner wd20percent"><span>Added/
+                                                        Deducted</span></div>
+                                                <div class="inner wd20percent"><span>Transaction
+                                                        ID</span></div>
+                                            </div>
+                                            <div class="po-inner-list">
+                                                <div *ngIf="supplierLoaderPO" class="luna-loading">
+                                                </div>
+                                                <div class="empty-text">
+                                                    <h2>
+                                                        No Store credits Available
+                                                    </h2>
+                                                </div>
+                                                <ul>
+                                                    <li *ngFor="let log of storeCreditLogs;">
+                                                        <div class="inner wd20percent">
+                                                            <span>{{log?.date | customDateFormat}}</span>
+                                                        </div>
+                                                        <div class="inner wd20percent">
+                                                            <span>{{log?.User?.first_name + ' ' + log?.User?.last_name}}</span>
+                                                        </div>
+                                                        <div class="inner wd20percent">
+                                                            <span>{{log?.balance | currency}}</span>
+                                                        </div>
+                                                        <div class="inner wd20percent">
+                                                            <span *ngIf="log?.is_increase">{{log?.amount | currency}}</span>
+                                                            <span *ngIf="!log?.is_increase">-{{log?.amount | currency}}</span>
+                                                        </div>
+                                                        <div class="inner wd20percent">
+                                                            <span>{{log?.transaction_no}}</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tab>
+                            <tab heading="Documents" tabOrder="6">
+                                <div id="netterms" (click)="hideSettingList()">
+                                    <div class="top-history">
+                                        <div class="dtable wd100Percent">
+                                            <div class="dtableCell wd50percent">
+                                            </div>
+                                            <div  class="dtableCell wd40percent text-right">
+                                                <div class="btnManageTerm wd85Percent dInlinetable valignMiddle">
+                                                    <a class="innerStatusBtns dInlineBlock wd100px add-btn-item btnBottom" for="uploadAlbumImages"
+                                                     href="JavaScript:void(0)">Add Document 
+                                                        <input accept="image/png, image/jpeg, application/pdf" class="form-control cust-field" id="uploadAlbumImages" 
+                                                        multiple="" name="uploadAlbumImages" (change)="createCustomerDocumentFun($event)" placeholder="" type="file">
+                                                    </a>
+                                                </div>
+                                                <div class="btnManageTerm dInlinetable ml5 valignMiddle">
+                                                    <div class="btn-group settingBtn">
+                                                        <a class="innerStatusBtns dInlineBlock minWd30px" href="JavaScript:void(0)"
+                                                            (click)="openDocumentSettings();$event.stopPropagation()">
+                                                            <i class="icon-settings"></i>
+                                                        </a>
+                                                        <div class="dropdown-content settingOptions deviceSettingOptions"
+                                                            *ngIf="documentSettingsOpen" style="display: block;">
+                                                            <ul>
+                                                                <!-- <li><a (click)="openDocModal(open_downloadDocument,'custModal wd210')" class="dropdown-item noFloat">Download Document(s)</a></li> -->
+                                                                <li><a (click)="openDocModal(open_removeDocument,'custModal wd210')"  class="dropdown-item noFloat">Delete Document(s)</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="facturacionList" >
+                                        <div id="po-wrapper" [ngClass]="{'empty': isObjectEmpty(customerDocument)}">
+                                            <div *ngIf='deviceLoader' class="luna-loading"></div>
+                                            <div class="empty-text">
+                                                <h2 class="color808080 font16 fontSemiBold500">There are no documents available <br> for this customer.</h2>
+                                            </div>
+                                            <div class="po-top-info">
+                                                <div class="inner wd5percent allCheckbox">
+                                                    <span class="ml0">
+                                                        <input [(ngModel)]="allDocCheck"  (change)="checkedAllField(customerDocument,$event)" 
+                                                        class="checkbox-custom"  id="document-checkMain11"
+                                                            name="document-checkMain11" type="checkbox">
+                                                        <label class="checkbox-custom-label" for="document-checkMain11"></label>
+                                                    </span>
+                                                </div>
+                                                <div class="inner wd25percent"><span>Date</span></div>
+                                                <div class="inner wd50percent"><span>Document Name</span></div>
+                                                <div class="inner wd20percent"><span>Actions</span></div>
+                                            </div>
+                                            <div class="po-inner-list">
+                                                <div *ngIf="docLoader" class="luna-loading"></div>
+                                                <ul>
+                                                    <li *ngFor="let document of customerDocument; let i = index">
+                                                        <div class="inner wd5percent allCheckbox">
+                                                            <span class="text-left">
+                                                                <input [checked]="document?.checked"  (change)="singleItemChecked(customerDocument,i,$event,'allDocCheck')"
+                                                                 class="checkbox-custom" type="checkbox"  name="document{{i}}"   id="document{{i}}">
+                                                                <label class="checkbox-custom-label" for="document{{i}}"></label>
+                                                            </span>
+                                                        </div>
+                                                        <div class="inner wd25percent">
+                                                            <span>{{document?.created_at |customDateFormat}}</span>
+                                                        </div>
+                                                        <div class="inner wd50percent">
+                                                            <span>{{document?.customer_document_name}}</span>
+                                                        </div>
+                                                        <div class="inner wd20percent">
+                                                            <div class="title-info">
+                                                                <a class="font12 color000" (click)="customerDocumentOpenModal(viewDocument,'custModal wd500',document)" ><i class="fas fa-eye"></i></a>
+                                                                <a class="font12 color000 pl10" (click)="customerDocumentShare(document)" target="_blank"><i class="icon-email2"></i></a>
+                                                                <a class="font12 color000 pl10" target="_blank" (click)='downloadDocument(document)' download ><i class="icon-download"></i></a>
+                                                            </div>
+                                                            <!-- (click)='downloadDocument(document)' target="_blank" href={{baseUrl+document?.document_file_path}} -->
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tab>
+                        </tabset>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- Net Terms  -->
+         <div *ngIf="createNote" id="customer-info">
+            <div class="termsCredit creditSec">
+                <div class="cut-search-area">
+                    <div class="top">
+                        <div class="lt">
+                            <a (click)="cancel('createNote','customerDetail')"
+                                class="back-cust-list">Back</a>
+                        </div>
+                        <div class="rt">
+                            <div id="discount-cat-btn" class="btn-group height31px dInlineBlock">
+                                <a (click)="loadNetTerm()" class="btn wd50percent active" >Manage Net
+                                    terms</a>
+                                <a (click)="loadNetTermPayment()"
+                                    class="btn wd50percent notActive">Record Paynment</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="div-border noborderBottom Netborder-bottom bgWhite formScroll padding10px">
+                <div *ngIf="netTermsLoader" class="luna-loading"></div>
+                <div class="mb10">
+                    <div class="row m0 mb15 text-center">
+                        <div class="col-lg-3 pl0 noborderBottom">
+                            <p class="dInlineBlock valignMiddle color000 font11">Credit Limit <span
+                                    class="colorGreen fontSemiBold">{{nettermDetails?.credit_limit |currency}}</span>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 pl0 noborderBottom">
+                            <p class="dInlineBlock valignMiddle color000 font11">Available Credit <span
+                                    class="colorGreen fontSemiBold">{{nettermDetails?.available_credit |currency}}</span>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 pl0 noborderBottom">
+                            <p class="dInlineBlock valignMiddle color000 font11">Used Credit <span
+                                    class="colorGreen fontSemiBold">{{nettermDetails?.used_credit |currency}}</span>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 p0 noborderBottom">
+                            <p class="dInlineBlock valignMiddle color000 font11">Overdue <span
+                                    class="colorGreen fontSemiBold">{{nettermDetails?.over_dues |currency}}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <form autocomplete="off" [formGroup]="netTermsForm" (ngSubmit)="saveNetTermsForm()">
+                    <div class="row m0">
+                        <div class="col-md-6 pl0">
+                            <label for="Increase-Decrease-Credit">Increase/Decrease Credit<sup>*</sup></label>
+                                <div class="btn-group" dropdown>
+                                    <button id="button-animated" dropdownToggle type="button"
+                                        class="btn btn-primary dropdown-toggle form-control cust-field font11 borderColorcbcbcb borderRadius5"
+                                        aria-controls="dropdown-animated">{{inCredit}}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu"
+                                        role="menu" aria-labelledby="button-animated">
+                                        <li (click)="changeValue('inCredit','Increase')"
+                                            role="menuitem"><a class="dropdown-item">Increase</a>
+                                        </li>
+                                        <li (click)="changeValue('inCredit','Decrease')"
+                                            role="menuitem"><a class="dropdown-item">Decrease</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- <span *ngIf="dataSavednetTerms" class="field-error-msg">
+                                    Required
+                                    </span> -->
+                        </div>
+                        <div class="col-lg-6 p0">
+                            <label for="amount" [ngClass]="{ 'is-invalid': netTermsSubmitted && fNetTermsForm.credit_amount.errors}" >Amount<sup>*</sup></label>
+                                <input  [ngClass]="{ 'bounce': netTermsSubmitted && fNetTermsForm.credit_amount.errors}" 
+                                appTwoDigitDecimaNumber  formControlName="credit_amount" type="" name="amount" class="form-control cust-field font11 borderColorcbcbcb borderRadius5" placeholder="$">
+                                <span *ngIf="netTermsSubmitted && fNetTermsForm.credit_amount.errors" class="field-error-msg">
+                                    Amount is required
+                                    </span>
+                        </div>
+                    </div>
+                    <div class="row m0">
+                        <div class="col-lg-6 pl0">
+                            <label  for="days" [ngClass]="{ 'is-invalid': netTermsSubmitted && fNetTermsForm.days.errors}" >Time of Credit Limit<sup>*</sup></label>
+                                <input (keypress)="numberOnly($event)"  [ngClass]="{ 'bounce': netTermsSubmitted && fNetTermsForm.days.errors}" formControlName="days" type="text" name="days"
+                                 class="form-control cust-field font11 borderColorcbcbcb borderRadius5" placeholder="Days">
+                                <!-- <span class="dollarSymbol">$</span> -->
+                                <span *ngIf="netTermsSubmitted && fNetTermsForm.days.errors" class="field-error-msg">
+                                    Credit Limit is required
+                                    </span>
+                        </div>
+                        <div class="col-lg-6 p0">
+                            <label for="interest" [ngClass]="{ 'is-invalid': netTermsSubmitted && fNetTermsForm.interest_rate.errors}">Interest on late payment<sup>*</sup></label>
+                                <input [ngClass]="{ 'bounce': netTermsSubmitted && fNetTermsForm.interest_rate.errors}" appTwoDigitDecimaNumber  formControlName="interest_rate" type="text" name="interest" class="form-control cust-field font11 borderColorcbcbcb borderRadius5" placeholder="%">
+                                <!-- <span class="dollarSymbol">%</span> -->
+                                <span *ngIf="netTermsSubmitted && fNetTermsForm.interest_rate.errors" class="field-error-msg">
+                                    Interest is required
+                                    </span>
+                                <!-- <span class="dollarSymbol">%</span> -->
+                        </div>
+                    </div>
+                    <div class="row m0">
+                        <div class="col-lg-6 pl0">
+                            <label for="note" [ngClass]="{ 'is-invalid': netTermsSubmitted && fNetTermsForm.note.errors}">Note<sup>*</sup></label>
+                            <input [ngClass]="{ 'bounce': netTermsSubmitted && fNetTermsForm.note.errors}"
+                             formControlName="note" type="text" name="note" class="form-control cust-field font11 borderColorcbcbcb borderRadius5" placeholder="Note">
+                            <span *ngIf="netTermsSubmitted && fNetTermsForm.note.errors" class="field-error-msg">
+                                Note is required
+                                </span>
+                        </div>
+                        <div class="col-lg-6 p0">
+                            <label for="note" [ngClass]="{ 'is-invalid': netTermsSubmitted && fNetTermsForm.date.errors}"> Date<sup>*</sup></label>
+                            <!-- <input type="text" name="note"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Month/Day/Year"> -->
+                            <input [ngClass]="{ 'bounce': netTermsSubmitted && fNetTermsForm.date.errors}" type="text" placeholder="Month/Day/Year" formControlName="date"
+                                class="form-control cust-field font11 borderColorcbcbcb borderRadius5"
+                                [bsConfig]="{showWeekNumbers:false, minDate: todayDate, isAnimated: true  , dateInputFormat: 'MMM/D/YY'}"
+                                bsDatepicker placement="top" [isOpen]="isOpennettemsPicker">
+                            <!-- <span (click)="isOpennettemsPicker = !isOpennettemsPicker"
+                                class="datePickerIcon"></span> -->
+                                <span *ngIf="netTermsSubmitted && fNetTermsForm.date.errors" class="field-error-msg">
+                                   Date is required
+                                    </span>
+                        </div>
+                    </div>
+                    <div class="row m0">
+                        <div class="col-md-12">
+                            <button type="submit"  class="btnSubmit">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="div-border bggrey p0 borderWidth1pxSolid borderColor808080"  >
+                <div id="stock-supplier" [ngClass]="{'empty': isObjectEmpty(customerNetTermsLogs)}">
+                    <div id="po-wrapper">
+                        <div class="po-top-info">
+                            <div class="inner wd15percent"><span>Date</span></div>
+                            <div class="inner wd15percent"><span>Manage credit</span></div>
+                            <div class="inner wd15percent"><span>Amount</span></div>
+                            <div class="inner wd15percent"><span>Time of credit limit</span></div>
+                            <div class="inner wd15percent"><span>Intrest</span></div>
+                            <div class="inner wd15percent"><span>Credit Limit</span></div>
+                            <div class="inner wd25percent"><span>Notes</span></div>
+                        </div>
+                        <div class="po-inner-list">
+                            <div class="empty-text">
+                                <h2>
+                                    No Netterms Record Available
+                                </h2>
+                            </div>
+                            <ul>
+                                <li  *ngFor="let customerNet of customerNetTermsLogs; let i = index">
+                                    <div class="inner wd15percent">
+                                        <span>{{customerNet?.date |customDateFormat  }}</span>
+                                    </div>
+                                    <div class="inner wd15percent">
+                                        <span *ngIf="customerNet?.is_increase" class="inc" >Increase</span>
+                                        <span *ngIf="!customerNet?.is_increase" class="dec">Decrease</span>
+                                    </div>
+                                    <div class="inner wd15percent">
+                                        <span  *ngIf="customerNet?.is_increase" >{{customerNet?.credit_amount | currency}}</span>
+                                        <span  *ngIf="!customerNet?.is_increase" >{{customerNet?.debit_amount | currency}}</span>
+                                    </div>
+                                    <div class="inner wd15percent">
+                                        <span>{{customerNet?.pay_term_number }}</span>
+                                    </div>
+                                    <div class="inner wd15percent">
+                                        <span>{{customerNet?.interest_rate +"%"}}</span>
+                                    </div>
+                                    <div class="inner wd15percent">
+                                        <span>{{customerNet?.balance | currency }}</span>
+                                    </div>
+                                    <div class="inner wd20percent">
+                                        <span>{{customerNet?.note}}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Manage Payment -->
+        <div *ngIf="netTermsPayment" id="customer-info">
+            <div *ngIf="netternPaymentLoader" class="luna-loading"></div>
+            <div class="termsCredit creditSec">
+                <div class="cut-search-area">
+                    <div class="top">
+                        <div class="lt">
+                            <a (click)="cancel('createNote','customerDetail')"
+                                class="back-cust-list">Back</a>
+                        </div>
+                        <div class="rt">
+                            <div id="discount-cat-btn" class="btn-group height31px dInlineBlock">
+                                <a (click)="loadNetTerm()" class="btn wd50percent notActive">Manage Net
+                                    terms</a>
+                                <a (click)="loadNetTermPayment()" class="btn wd50percent active">Record
+                                    Paynment</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="section-checkout"
+                class="div-border noborderBottom Netborder-bottom formScroll padding10px">
+                <!-- <div *ngIf="netternPaymentLoader" class="luna-loading"></div> -->
+                <div class="checkout-right-wrapper">
+                    <div class="inner-contetnt">
+                        <div class="top">
+                            <p>Amount to pay</p>
+                            <h2>{{netternPaymentamount ||0 | currency }}</h2>
+                            <!-- <p>Not allocated: {{ priorPayment | currency }}</p> -->
+                        </div>
+                        <div class="mid custNetPayment">
+                            <div class="cash-btns">
+                                <a [ngClass]="{'active':boxCredit}" id="btn-credit" class="active"
+                                    (click)="changePay('boxCredit')">
+                                    <div class="credit">
+                                        <i class="icon-credit_card font18"></i>
+                                        <span>Credit Card</span>
+                                    </div>
+                                </a>
+                                <a [ngClass]="{'active':boxCash}" id="btn-cash"
+                                    (click)="changePay('boxCash')">
+                                    <div class="cash">
+                                        <i class="icon-cash font18"></i>
+                                        <span>Cash</span>
+                                    </div>
+                                </a>
+                                <a [ngClass]="{'active':boxCheck}" id="btn-check"
+                                    (click)="changePay('boxCheck')">
+                                    <div class="check">
+                                        <i class="icon-check font18"></i>
+                                        <span>Check</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="cash-btns right">
+                                <a [ngClass]="{'active':boxPaypal}" id="btn-net-term"
+                                    (click)="changePay('boxPaypal')">
+                                    <div class="credit">
+                                        <i class="icon-paypal font18"></i>
+                                        <span>PayPal</span>
+                
+                                    </div>
+                                </a>
+                                <a [ngClass]="{'active':boxNetterm}" id="btn-store-credit"
+                                    (click)="changePay('boxNetterm')">
+                                    <div class="check">
+                                        <i class="icon-banck_account font18"></i>
+                                        <span>Bank Transfer</span>
+                                    </div>
+                                </a>
+                                <a [ngClass]="{'active':boxStorecredit}" id="btn-Paypal"
+                                    (click)="changePay('boxStorecredit')">
+                                    <div class="cash">
+                                        <i class="icon-store_credit font18"></i>
+                                        <span>Store Credit</span>
+                
+                                    </div>
+                                </a>
+                            </div>
+                            <div *ngIf="noMethodSelected" class="inner ifNoSelected">
+                                <div class="ifDisable">
+                                    <span
+                                        class="color808080 pt15 pb15 mx-auto wd50percent font12 fontSemiBold dBlock fontPoppin">Select
+                                        one option to record your payment(s)</span>
+                                </div>
+                            </div>
+                            <div *ngIf="boxCredit" class="inner" id="box-credit">
+                                <div class="ifEnable">
+                                    <div class="topInfo">
+                                        <i class="icon-credit_card font32px color000"></i>
+                                        <p>Credit Card</p>
+                                    </div>
+                                    <div class="scrollPayment">
+                                        <div class="text-field">
+                                            <label for="checkout-cardPaid">Amount</label>
+                                            <input appTwoDigitDecimaNumber type="text"
+                                                [(ngModel)]="netternPaymentamount"
+                                                (focusout)="addpaymentAmout()" name="checkout-cardPaid"
+                                                class="form-control text-right cust-field font11 borderColorcbcbcb borderRadius10"
+                                                placeholder="$0.00">
+                                        </div>
+                                    </div>
+                                    <!-- (click)="createNetTermPaymentFun('CreditCard')" -->
+                                    <div class="checkout-action">
+                                        <div [ngClass]="{'disableDiv' : netternPaymentamount==''}"
+                                            (click)="payWithCardModalOpen()"
+                                            class="right">
+                                            <a class="checkout-btn-pay">Add Data Manually</a> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="boxNetterm" class="inner" id="box-credit">
+                                <div class="ifEnable">
+                                    <div class="topInfo">
+                                        <i class="icon-cash font32px color000"></i>
+                                        <p>Cash</p>
+                                    </div>
+                                    <div class="scrollPayment">
+                                        <div class="text-field">
+                                            <label for="checkout-cardPaid">Amount</label>
+                                            <input appTwoDigitDecimaNumber type="text"
+                                                [(ngModel)]="netternPaymentamount"
+                                                (focusout)="addpaymentAmout()" name="checkout-cardPaid"
+                                                class="form-control text-right cust-field font11 borderColorcbcbcb borderRadius10"
+                                                placeholder="$0.00">
+                                        </div>
+                                        <div class="text-field">
+                                            <label for="checkout-checkPaidUsed">Bank and Account
+                                                Number</label>
+                                            <input [(ngModel)]="bankAccNo" type="text"
+                                                name="checkout-checkPaidUsed"
+                                                (keypress)="numberOnly($event)" maxlength="20"
+                                                class="form-control cust-field font11 borderColorcbcbcb borderRadius10"
+                                                placeholder="Example Bank xxxx xxxxxxxx xxxxx xxx">
+                                        </div>
+                                    </div>
+                                    <div class="checkout-action">
+                                        <div [ngClass]="{'disableDiv' : bankAccNo=='' ||netternPaymentamount==''}"
+                                            (click)="createNetTermPaymentFun('BankTransfer')"
+                                            class="right">
+                                            <a class="checkout-btn-pay">Record Payment</a> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="boxCash" class="inner" id="box-cash">
+                                <div class="ifEnable">
+                                    <div class="topInfo">
+                                        <i class="icon-check font32px color000"></i>
+                                        <p>Check</p>
+                                    </div>
+                                    <div class="scrollPayment">
+                                        <div class="text-field">
+                                            <label for="checkout-CashPaid">Amount</label>
+                                            <input [(ngModel)]="netternPaymentamount" maxlength="20"
+                                                appTwoDigitDecimaNumber type="text"
+                                                (focusout)="addpaymentAmout()" name="checkout-CashPaid"
+                                                class="form-control text-right cust-field font11 borderColorcbcbcb borderRadius10"
+                                                placeholder="$0.00">
+                                        </div>
+                                        <div class="text-field">
+                                            <label for="checkout-cashDrawer" class="valignMiddle">Cash
+                                                drawer</label>
+                                            <div class="btn-group wd100Percent" dropdown>
+                                                <button id="button-animated" dropdownToggle
+                                                    type="button"
+                                                    class="paymentDropBtn btn bgWhite cust-field font11 borderColorcbcbcb borderRadius10 color000 dropdown-toggle"
+                                                    aria-controls="dropdown-animated">{{changeCashDrawer}}
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul id="dropdown-animated" *dropdownMenu
+                                                    class="dropdown-menu paymentDropUL" role="menu"
+                                                    aria-labelledby="button-animated">
+                                                    <li *ngFor="let reg of cashRegisterars;"
+                                                        (click)="selectCashRegisterar(reg)"
+                                                        role="menuitem"><a
+                                                            class="dropdown-item">{{reg?.name}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="checkout-action">
+                                        <div [ngClass]="{'disableDiv' : netternPaymentamount==''  || changeCashDrawer=='Select cash drawer you used to paid' }"
+                                            (click)="createNetTermPaymentFun('Cash')" class="right">
+                                            <a class="checkout-btn-pay">Record Payment</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="boxCheck" class="inner" id="box-check">
+                                <div class="ifEnable">
+                                    <div class="topInfo">
+                                        <i class="icon-paypal font32px color000"></i>
+                                        <p>Paypal Payment</p>
+                                    </div>
+                                    <div class="scrollPayment">
+                                        <div class="text-field">
+                                            <label for="checkout-checkPaid">Amount</label>
+                                            <input [(ngModel)]="netternPaymentamount" type="text"
+                                                name="checkout-checkPaid" (focusout)="addpaymentAmout()"
+                                                appTwoDigitDecimaNumber
+                                                class="form-control text-right cust-field font11 borderColorcbcbcb borderRadius10"
+                                                placeholder="$0.00">
+                                        </div>
+                                        <div class="text-field">
+                                            <label for="checkout-checkPaidUsed">Cheque Number</label>
+                                            <input [(ngModel)]="checkqueNo" type="text"
+                                                name="checkout-checkPaidUsed"
+                                                (keypress)="numberOnly($event)" maxlength="20"
+                                                class="form-control cust-field font11 borderColorcbcbcb borderRadius10"
+                                                placeholder="Type the number of cheque used">
+                                        </div>
+                                    </div>
+                                    <div class="checkout-action">
+                                        <div [ngClass]="{'disableDiv' :   checkqueNo==''  ||netternPaymentamount==''}"
+                                            (click)="createNetTermPaymentFun('Cheque')" class="right"><a
+                                                class="checkout-btn-pay">Record Payment</a> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="boxPaypal" class="inner" id="box-Paypal">
+                                <div class="ifEnable">
+                                    <div class="topInfo">
+                                        <i class="icon-check font32px color000"></i>
+                                        <p>Bank Transfer</p>
+                                    </div>
+                                    <div class="scrollPayment">
+                                        <div class="text-field">
+                                            <label>Amount</label>
+                                            <input appTwoDigitDecimaNumber
+                                                [(ngModel)]="netternPaymentamount" type="text"
+                                                (focusout)="addpaymentAmout()"
+                                                class="form-control cust-field font11 borderColorcbcbcb borderRadius10 text-right"
+                                                placeholder="$0.00">
+                                        </div>
+                                        <div class="text-field">
+                                            <label>Transaction ID</label>
+                                            <input [(ngModel)]="paypalTransactionID" type="text"
+                                                class="form-control cust-field font11 borderColorcbcbcb borderRadius10"
+                                                placeholder="Type paypal transaction ID">
+                                        </div>
+                                    </div>
+                                    <div class="checkout-action">
+                                        <div [ngClass]="{'disableDiv' : paypalTransactionID==''  ||netternPaymentamount==''}"
+                                            (click)="createNetTermPaymentFun('PaypalTransactionId')" class="right"><a
+                                                class="checkout-btn-pay">Record Payment</a> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="boxStorecredit" class="inner" id="box-store-credit">
+                                <div class="ifEnable">
+                                    <div class="topInfo">
+                                        <i class="icon-store_credit font32px color000"></i>
+                                        <p>Store Credit</p>
+                                    </div>
+                                    <div class="scrollPayment">
+                                        <div class="text-field">
+                                            <label for="checkout-amountPaid"
+                                                [ngClass]="{'bounce colorRedError': false}">Amount</label>
+                                            <input [(ngModel)]="netternPaymentamount" type="text"
+                                                name="checkout-amountPaid"
+                                                (focusout)="addpaymentAmout()" appTwoDigitDecimaNumber
+                                                class="form-control text-right cust-field font11 borderColorcbcbcb"
+                                                placeholder="$0.00">
+                                        </div>
+                                        <div class="change">
+                                            <p>Credit Available:</p>
+                                            <p>
+                                                 {{ customerStoreCredit | currency}}
+                                          </p>
+                                        </div>
+                                    </div>
+                                    <div class="checkout-action">
+                                        <div [ngClass]="{'disableDiv' : netternPaymentamount==''}"
+                                            (click)="payWithStoreCredit()"
+                                            class="right"><a class="checkout-btn-pay">Record Payment</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- (click)="createNetTermPaymentFun('BankTransfer')" -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m0 mb15">
+                    <div class="col-lg-6 pl0 noborderBottom text-right">
+                        <p class="dInlineBlock valignMiddle color000 font11">Total Amount owed: <span
+                                class="colorGreen fontSemiBold">{{totalOwenAmount||0 |currency}}</span>
+                        </p>
+                    </div>
+                    <div class="col-lg-6 pl0 noborderBottom text-left">
+                        <p class="dInlineBlock valignMiddle color000 font11">Amount owed after payment:
+                            <span
+                                class="colorGreen fontSemiBold">{{totalOwenAmount-netternPaymentamount |currency}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="div-border bggrey p0 borderWidth1pxSolid borderColor808080">
+                <div id="stock-supplier">
+                    <div id="po-wrapper"
+                        [ngClass]="{'empty': isObjectEmpty(customerNetTermPaymentLogsData)}">
+                        <div class="po-top-info">
+                            <div class="inner wd10percent"><span>Date</span></div>
+                            <div class="inner wd15percent"><span>Order No.</span></div>
+                            <div class="inner wd15percent"><span>Total</span></div>
+                            <div class="inner wd15percent"><span>Amount owed</span></div>
+                            <div class="inner wd15percent"><span>Days left</span></div>
+                            <div class="inner wd15percent"><span>Amount to Pay</span></div>
+                            <div class="inner wd15percent"><span>Balance</span></div>
+                        </div>
+                        <div class="po-inner-list">
+                            <div *ngIf='netTermsOrdersLoader==true' class="luna-loading"></div>
+                            <div class="empty-text">
+                                <h2>
+                                    No Logs Available
+                                </h2>
+                            </div>
+                            <ul>
+                                <li class=""
+                                    *ngFor="let payment of customerNetTermPaymentLogsData; let i = index">
+                                    <div class="inner wd10percent"><span
+                                            class="text-center">{{payment?.date | customDateFormat}}</span>
+                                    </div>
+                                    <div class="inner wd15percent">
+                                        <span
+                                            class="dInlineBlock valignMiddle pr5">{{payment?.order_no}}</span>
+                                        <span class="statusFiltericon dInlineBlock"
+                                            tooltip="{{payment?.dynamic_status?.status_name}}"
+                                            placement="top"
+                                            [style.background-color]="payment?.dynamic_status?.status_background_color"></span>
+                                    </div>
+                                    <div class="inner wd15percent">
+                                        <span>{{payment?.total |currency}}</span></div>
+                                    <div class="inner wd15percent">
+                                        <span>{{payment?.amount_owed |currency}}</span></div>
+                                    <div *ngIf='payment.is_overdue' class="inner wd15percent">
+                                        <span class="dec">{{payment?.day_left}}</span>
+                                    </div>
+                                    <div *ngIf='!payment.is_overdue' class="inner wd15percent">
+                                        <span class="inc">{{payment?.day_left}}</span>
+                                    </div>
+                                    <div class="inner wd15percent">
+                                        <input appTwoDigitDecimaNumber
+                                            (focusout)="amountToPayFun(payment)"
+                                            [(ngModel)]="payment.amount_pay" placeholder="$0.00"
+                                            class="form-control" type="text">
+                                    </div>
+                                    <div class="inner wd15percent">
+                                        <span>{{payment?.balance |currency}}</span></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Manage Credit -->
+        <div *ngIf="manageCredit" id="customer-info">
+            <div class="termsCredit creditSec">
+                <div class="cut-search-area">
+                    <div class="top">
+                        <div class="lt">
+                            <a (click)="cancelProcess()"
+                                class="back-cust-list valignMiddle mr10">Back</a>
+                        </div>
+                        <div class="rt">
+                            <div id="discount-cat-btn" class="btn-group height31px dInlineBlock">
+                                <a [ngClass]="{'active':manageCredit , 'notActive':!manageCredit}" (click)="loadProcess('manageCredit','transferCredit')" class="btn wd50percent active">Manage
+                                    Credit</a>
+                                <a [ngClass]="{'active':transferCredit , 'notActive':!transferCredit}" (click)="loadProcess('transferCredit','manageCredit')" class="btn wd50percent notActive">
+                                    Transfer Credit
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+                    [hideToster]="showToaster"></app-toaster>
+                </div>
+            </div>
+            <div class="div-border noborderBottom Netborder-bottom bgWhite formScroll padding10px">
+                <div *ngIf="manageCreditLoader" class="luna-loading">
+                </div>
+                <div class="mb10">
+                    <div class="row m0">
+                        <div class="col-lg-12 noborderBottom text-right">
+                            <p class="dInlineBlock valignMiddle color000 font11">Store Credit <span
+                                    class="colorGreen fontSemiBold">{{customerStoreCredit | currency}}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <form autocomplete="off" class="checkinFrom" [formGroup]="storeCreditForm">
+                    <!-- <div *ngIf='storeCreditsLoader==true' class="luna-loading"></div> -->
+                    <div class="row m0">
+                        <div class="col-lg-6 pl0">
+                            <label [ngClass]="{'bounce is-invalid':storeCreditSubmitted && fStoreCredit.amount.errors}" for="Amount">Store credit amount<sup>*</sup></label>
+                            <input [ngClass]="{'bounce':storeCreditSubmitted && fStoreCredit.amount.errors}" appTwoDigitDecimaNumber type="text" name="Amount" formControlName="amount"
+                                class="form-control text-right cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="0.00">
+                            <span class="dollarSymbol">$</span>
+                            <span class="bounce is-invalid" *ngIf="storeCreditSubmitted && fStoreCredit.amount.errors">Amount is required</span>
+                        </div>
+                    </div>
+                    <div class="row m0">
+                        <div class="col-md-6 pl0">
+                            <label [ngClass]="{'bounce is-invalid':storeCreditSubmitted && fStoreCredit.reason.errors}" for="Increase-Decrease-Credit">Reason<sup>*</sup></label>
+                            <div class="btn-group" dropdown>
+                                <button id="button-animated" dropdownToggle type="button"
+                                    class="btn font12 borderColorcbcbcb borderRadius5 dropdown-toggle"
+                                    aria-controls="dropdown-animated">{{storeCreditForm.controls.reasonName.value}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu">
+                                    <li *ngFor="let reason of reasons;" (click)="setFormValue('storeCreditForm','reason',reason)">
+                                        <a class="dropdown-item">{{reason.reason_name}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <span class="bounce is-invalid" *ngIf="storeCreditSubmitted && fStoreCredit.reason.errors">Reason is required</span>
+                        </div>
+                        <div class="col-lg-6 p0">
+                            <label [ngClass]="{'bounce is-invalid':storeCreditSubmitted && fStoreCredit.orderId.errors}" for="amount">Order ID<sup>*</sup></label>
+                            <input [ngClass]="{'bounce':storeCreditSubmitted && fStoreCredit.orderId.errors}" type="text" name="amount" formControlName="orderId"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="#xxx-xxxxxx">
+                            <span class="bounce is-invalid" *ngIf="storeCreditSubmitted && fStoreCredit.orderId.errors">Order ID is required</span>
+                        </div>
+                    </div>
+                    <!-- <div class="row m0">
+                            <div class="col-lg-6 pl0">
+                                <label for="adminUserName">Admin user name<sup>*</sup></label>
+                                <input formControlName="email" type="text" name="adminUserName"
+                                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Name">
+                                <span *ngIf="StoreCreditsSubmitted && fStoreCreditsForm.email.errors"
+                                    class="field-error-msg">
+                                    Required
+                                </span>
+                            </div>
+                            <div class="col-lg-6 pr0">
+                                <label for="adminPassword">Admin Password<sup>*</sup></label>
+                                <input formControlName="password" type="password" name="adminPassword"
+                                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="*******">
+                                <span *ngIf="StoreCreditsSubmitted && fStoreCreditsForm.password.errors"
+                                    class="field-error-msg">
+                                    Required
+                                </span>
+                            </div>
+                        </div> -->
+                    <div class="row m0">
+                        <div class="col-lg-6 pl0">
+                            <label [ngClass]="{'bounce is-invalid':storeCreditSubmitted && fStoreCredit.note.errors}" for="note">Note<sup>*</sup></label>
+                            <input [ngClass]="{'bounce':storeCreditSubmitted && fStoreCredit.note.errors}" type="text" name="note" formControlName="note"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Write a note...">
+                            <span class="bounce is-invalid" *ngIf="storeCreditSubmitted && fStoreCredit.note.errors">Note is required</span>
+                        </div>
+                        <div class="col-lg-6 p0">
+                            <label [ngClass]="{'bounce is-invalid':storeCreditSubmitted && fStoreCredit.date.errors}" for="note">Date<sup>*</sup></label>
+                            <!-- <input type="text" name="note" formControlName="sku"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Month/Day/Year"> -->
+                            <input [ngClass]="{'bounce':storeCreditSubmitted && fStoreCredit.date.errors}" type="text" placeholder="Month/Day/Year" 
+                                formControlName="date" class="form-control cust-field font11 borderColorcbcbcb borderRadius5"
+                                [bsConfig]="{showWeekNumbers:false, minDate: todayDate, isAnimated: true  , dateInputFormat: 'MMM/DD/YYYY'}"
+                                bsDatepicker placement="top" [isOpen]="isOpenpaymentDate">
+                            <span (click)="isOpenpaymentDate = !isOpenpaymentDate" class="datePickerIcon"></span>
+                            <span class="bounce is-invalid" *ngIf="storeCreditSubmitted && fStoreCredit.date.errors">Date is required is required</span>
+                        </div>
+                    </div>
+                    <div class="row m0">
+                        <div class="col-md-12 p0">
+                            <button (click)="createStoreCredit()" class="btnSubmit">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="div-border bggrey p0 borderWidth1pxSolid borderColor808080">
+                <div [ngClass]="{'empty': storeCreditLogs.length == 0}" id="stock-supplier">
+                    <!-- [ngClass]="{'empty': supplierService.isObjectEmpty(supplierCreditLogs)}" -->
+                    <div id="po-wrapper">
+                        <div class="po-top-info">
+                            <div class="inner wd10percent"><span>Date</span></div>
+                            <div class="inner wd15percent"><span>Order ID</span></div>
+                            <div class="inner wd12Percent"><span>Transaction ID</span></div>
+                            <div class="inner wd25percent"><span>Reason</span></div>
+                            <div class="inner wd12Percent"><span>Added / Deducted</span></div>
+                            <div class="inner wd12Percent"><span>Credit Balance</span></div>
+                            <div class="inner wd12percent"><span>Notes</span></div>
+                        </div>
+                        <div class="po-inner-list">
+                            <div *ngIf="showCreditLogLoader" class="luna-loading">
+                            </div>
+                            <div class="empty-text">
+                                <h2>
+                                    No Store credits Available
+                                </h2>
+                            </div>
+                            <ul>
+                                <li *ngFor="let log of storeCreditLogs;" class="">
+                                    <div class="inner wd10percent"><span class="text-center">{{log?.date | customDateFormat}}</span></div>
+                                    <div class="inner wd15percent"><span>{{log?.order_id}}</span></div>
+                                    <div class="inner wd12Percent"><span>{{log?.transaction_no}}</span></div>
+                                    <div class="inner wd25percent"><span>{{log?.reason}}</span></div>
+                                    <div class="inner wd12percent">
+                                        <span *ngIf="log.is_increase" class="inc">{{log?.amount | currency}} increase</span>
+                                        <span *ngIf="!log.is_increase" class="dec">{{log?.amount |currency}} decrease</span>
+                                    </div>
+                                    <div class="inner wd12Percent"><span>{{log?.balance | currency}}</span></div>
+                                    <div class="inner wd12percent"><span>{{log?.note}}</span></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Transfer Credit -->
+        <div *ngIf="transferCredit" id="customer-info">
+            <div class="termsCredit creditSec">
+                <div class="cut-search-area">
+                    <div class="top">
+                        <div class="lt">
+                            <a (click)="cancelProcess()"
+                                class="back-cust-list valignMiddle mr10">Back</a>
+                        </div>
+                        <div class="rt">
+                            <div id="discount-cat-btn" class="btn-group height31px dInlineBlock">
+                                <a [ngClass]="{'active':manageCredit , 'notActive':!manageCredit}" (click)="loadProcess('manageCredit','transferCredit')" class="btn wd50percent active">Manage
+                                    Credit</a>
+                                <a [ngClass]="{'active':transferCredit , 'notActive':!transferCredit}" (click)="loadProcess('transferCredit','manageCredit')" class="btn wd50percent notActive">
+                                    Transfer Credit
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+                    [hideToster]="showToaster"></app-toaster>
+            <div class="div-border noborderBottom Netborder-bottom bgWhite formScroll padding10px">
+                <div *ngIf="transferCreditLoader" class="luna-loading">
+                </div>
+                <div class="mb10">
+                    <div class="row m0 mb15 text-center">
+                        <div class="col-lg-3 pl0 noborderBottom">
+                            <p class="dInlineBlock valignMiddle color000 font11">Customer:<span
+                                class="colorGreen fontSemiBold">{{customer.first_name + ' ' + customer.last_name}}</span>
+                        </p>
+                        </div>
+                        <div class="col-lg-3 pl0 noborderBottom">
+                            <p class="dInlineBlock valignMiddle color000 font11">Phone No.:<span
+                                class="colorGreen fontSemiBold">{{customer.phone }}</span>
+                        </p>
+                        </div>
+                        <div class="col-lg-3 pl0 noborderBottom">
+                            <p class="dInlineBlock valignMiddle color000 font11">Store Credit:<span
+                                    class="colorGreen fontSemiBold">{{customerStoreCredit | currency}}</span>
+                            </p>
+                        </div>
+                        <div class="col-lg-3 p0 noborderBottom">
+                            <p class="dInlineBlock valignMiddle color000 font11">Balance after transfer:<span
+                                    class="colorGreen fontSemiBold">{{customerStoreCredit - transferStoreCreditForm.controls.transferAmount.value |currency }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <form autocomplete="off" class="checkinFrom" [formGroup]="transferStoreCreditForm">
+                    <div class="row m0">
+                        <div class="col-md-6 pl0">
+                            <label [ngClass]="{ 'bounce is-invalid': submitTransferCredit && fTransferStoreCredit.toCustomerId.errors}" for="Amount">Search a customer<sup>*</sup></label>
+                            <div class="cut-search-area">
+                                <div class="search-field input-group">
+                                    <input [ngClass]="{ 'bounce is-invalid': submitTransferCredit && fTransferStoreCredit.toCustomerId.errors}" type="text" class="form-control" [(ngModel)]="customerSearch" (ngModelChange)="searchCustomerForTransferCredit($event)"
+                                        placeholder="Search a customer" [ngModelOptions]="{standalone: true}"> 
+                                    <a href="JavaScript:void(0)" class="input-group-addon">
+                                        <!-- <i *ngIf="searchP.value" (click)="searchP.reset()"
+                                            class="fas fa-times-circle"></i> -->
+                                        <i class="icon-search"></i>
+                                    </a>
+                                </div>
+                                <span *ngIf="submitTransferCredit && fTransferStoreCredit.toCustomerId.errors" class="bounce field-error-msg">
+                                    Customer is required
+                                </span>
+                                <ul class="compaign_list" *ngIf="showCustomerListForTransferCredit" >
+                                    <li (click)="selectCustomer(cust)" *ngFor="let cust of customerSearchList;" class="pr-suggestion-list">
+                                        <a>{{cust?.first_name + ' ' + cust?.last_name}}</a>
+                                    </li>
+                                    <li *ngIf="customerSearchList.length == 0" class="pr-suggestion-list">
+                                        <i><b>No Customer found</b></i>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p0">
+                            <label for="Amount" [ngClass]="{ 'bounce is-invalid': submitTransferCredit && fTransferStoreCredit.transferAmount.errors}">
+                                Amount to be transfered<sup>*</sup></label>
+                            <input appTwoDigitDecimaNumber [ngClass]="{ 'bounce': submitTransferCredit && fTransferStoreCredit.transferAmount.errors}"  type="text" 
+                              formControlName="transferAmount"  name="Amount" class="form-control text-right cust-field font12 borderColorcbcbcb borderRadius5" placeholder="0.00">
+                                <span class="dollarSymbol">$</span>
+                            <span *ngIf="submitTransferCredit && fTransferStoreCredit.transferAmount.errors" class="bounce field-error-msg">
+                                Amount to be transfered is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row m0">
+                        <div class="col-lg-6 pl0">
+                            <label [ngClass]="{ 'bounce is-invalid': submitTransferCredit && fTransferStoreCredit.email.errors}" for="adminUserName">
+                                Admin user name
+                                <sup>*</sup>
+                            </label>
+                            <input [ngClass]="{ 'bounce': submitTransferCredit && fTransferStoreCredit.email.errors}" type="text" name="adminUserName"
+                                formControlName="email" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Name">
+                            <span *ngIf="submitTransferCredit && fTransferStoreCredit.email.errors" class="bounce field-error-msg">
+                                    Admin user name is required
+                            </span>
+                        </div>
+                        <div class="col-lg-6 p0">
+                            <label [ngClass]="{ 'bounce is-invalid': submitTransferCredit && fTransferStoreCredit.password.errors}" for="adminPassword">Admin Password<sup>*</sup></label>
+                            <input [ngClass]="{ 'bounce': submitTransferCredit && fTransferStoreCredit.password.errors}" type="password" name="adminPassword"
+                            formControlName="password" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="*******">
+                            <span *ngIf="submitTransferCredit && fTransferStoreCredit.password.errors" class="bounce field-error-msg">
+                                    Admin password is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row m0">
+                        <div class="col-lg-6 pl0">
+                            <label [ngClass]="{ 'bounce is-invalid': submitTransferCredit && fTransferStoreCredit.note.errors}" for="note">Note<sup>*</sup></label>
+                            <input [ngClass]="{ 'bounce': submitTransferCredit && fTransferStoreCredit.note.errors}" type="text" name="note"
+                                formControlName="note" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Write a note...">
+                            <span *ngIf="submitTransferCredit && fTransferStoreCredit.note.errors" class="bounce field-error-msg">
+                                Note is required
+                            </span>
+                        </div>
+                        <div class="col-lg-6 p0">
+                            <label [ngClass]="{ 'bounce is-invalid': submitTransferCredit && fTransferStoreCredit.date.errors}" for="note">Date</label>
+                            <!-- <input type="text" name="note"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                placeholder="Month/Day/Year"> -->
+                            <input [ngClass]="{ 'bounce is-invalid': submitTransferCredit && fTransferStoreCredit.date.errors}" style="color: #000 !important;" type="text" name="sprTDate" id="sprTDate"
+                                placeholder="DD/MM/YYYY" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                bsDatepicker [bsConfig]="{showWeekNumbers:false, isAnimated: true  , dateInputFormat: 'MMM/DD/YYYY'}" placement="top"
+                                [isOpen]="isOpenpaymentDate" formControlName="date">
+                            <span (click)="isOpenpaymentDate = !isOpenpaymentDate" class="datePickerIcon"></span>
+                            <span *ngIf="submitTransferCredit && fTransferStoreCredit.date.errors" class="bounce field-error-msg">
+                                Date is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row m0">
+                        <div class="col-md-12 p0">
+                            <button (click)="sendTransferCredit()" class="btnSubmit">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="div-border bggrey p0 borderWidth1pxSolid borderColor808080">
+                <div [ngClass]="{'empty': storeCreditLogs.length == 0}" id="stock-supplier">
+                    <!-- [ngClass]="{'empty': supplierService.isObjectEmpty(supplierCreditLogs)}" -->
+                    <div id="po-wrapper">
+                        <div class="po-top-info">
+                            <div class="inner wd10percent"><span>Date</span></div>
+                            <div class="inner wd15percent"><span>Admin</span></div>
+                            <div class="inner wd12Percent"><span>Transaction ID</span></div>
+                            <div class="inner wd25percent"><span>Credit Balance</span></div>
+                            <div class="inner wd12Percent"><span>Added / Deducted</span></div>
+                            <!-- <div class="inner wd12Percent"><span>Credit Balance</span></div> -->
+                            <div class="inner wd12percent"><span>Notes</span></div>
+                        </div>
+                        <div class="po-inner-list">
+                            <div *ngIf="showCreditLogLoader" class="luna-loading">
+                            </div>
+                            <div class="empty-text">
+                                <h2>
+                                    No Store credits Available
+                                </h2>
+                            </div>
+                            <ul>
+                                <li *ngFor="let log of storeCreditLogs;" class="">
+                                    <div class="inner wd10percent"><span class="text-center">{{log?.date | customDateFormat}}</span></div>
+                                    <div class="inner wd15percent"><span>{{log?.User?.first_name + ' ' + log?.User?.last_name}}</span></div>
+                                    <div class="inner wd12Percent"><span>{{log?.transaction_no}}</span></div>
+                                    <div class="inner wd25percent"><span>{{log?.balance | currency}}</span></div>
+                                    <div class="inner wd12percent">
+                                        <span *ngIf="log.is_increase" class="inc">{{log?.amount | currency}} increase</span>
+                                        <span *ngIf="!log.is_increase" class="dec">{{log?.amount |currency}} decrease</span>
+                                    </div>
+                                    <!-- <div class="inner wd12Percent"><span>{{log?.balance | currency}}</span></div> -->
+                                    <div class="inner wd12percent"><span>{{log?.note}}</span></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<ng-template #open_DevicesModal>
+    <div class="modal-body">
+        <div *ngIf='deleteSuppLoader' class="luna-loading"></div>
+        <div class="modalTitle mx-auto text-center pt15">
+            <i class="icon-archive font42 color000"></i>
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000">Do you want to <br> {{deviceModalFor}} device(s)</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button  (click)="callFunction()" (click)="modalRef.hide()" type="button" class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite wd140px">
+            Yes, {{deviceModalFor}} it</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font10 fontLato fontSemiBold mx-auto p0">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_CompareTwoItems>
+    <div  class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin notextTransform fontBold font24 color000">Merge Devices</h2>
+            <p style="color: black;">Select which device you want as principle.</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <div class="items-form-content">
+            <div class="row mb15">
+                <div class="col-lg-6">
+                    <!-- [ngClass]="{ 'boxSelected': sentSupplierForImport[count]?.selected=='given'}" -->
+                    <div class="compareBox posRelative nOcenter" [ngClass]="{ 'boxSelected': mergeDevicesDate[0]?._id==principalDevice[0]?._id}">
+                        <div class="innerCompare">
+                            <h2 class="fontPoppin font14 mb15 fontSemiBold color000 text-center">{{mergeDevicesDate[0]?.deviceBrand?.brand_name |titlecase }}
+                            </h2>
+                            <div class="addressInfo">
+                                <span class="dBlock color808080 fontSemiBold">Device Model</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[0]?.deviceModel?.name}}</span>
+                                <span class="dBlock color808080 fontSemiBold">Device ID</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[0]?.device_keeping_unit}}</span>
+                                <span class="dBlock color808080 fontSemiBold">Color</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[0]?.device_color |titlecase }}</span>
+                                <span class="dBlock color808080 fontSemiBold">IMEI/SSN</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[0]?.imei_ssn}}</span>
+                            </div>
+                            <!-- device.deviceBrand.brand_name
+                                    device.deviceModel.product_name -->
+                            <!-- suggGivenButton -->
+                            <a href="JavaScript:void(0)" [ngClass]="{ 'suggGivenButton': mergeDevicesDate[0]?._id==principalDevice[0]?._id}"
+                            (click)="selectprincipalDevice(mergeDevicesDate[0],mergeDevicesDate[1])" class="mt20 font12 dBlock mx-auto text-center "> Use as principal </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="compareBox posRelative nOcenter" [ngClass]="{ 'boxSelected': mergeDevicesDate[1]?._id==principalDevice[0]?._id}" >
+                        <div class="innerCompare">
+                            <h2 class="fontPoppin font14 mb15 fontSemiBold color000 text-center">{{mergeDevicesDate[1]?.deviceBrand?.brand_name |titlecase }}
+                            </h2>
+                            <div class="addressInfo">
+                                <span class="dBlock color808080 fontSemiBold">Device Model</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[1]?.deviceModel?.name}}</span>
+                                <span class="dBlock color808080 fontSemiBold">Device ID</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[1]?.device_keeping_unit}}</span>
+                                <span class="dBlock color808080 fontSemiBold">Color</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[1]?.device_color |titlecase }}</span>
+                                <span class="dBlock color808080 fontSemiBold">IMEI/SSN</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[1]?.imei_ssn}}</span>
+                            </div>
+                            <a href="JavaScript:void(0)" [ngClass]="{ 'suggGivenButton': mergeDevicesDate[1]?._id==principalDevice[0]?._id}"
+                            (click)="selectprincipalDevice(mergeDevicesDate[1],mergeDevicesDate[0])" class="mt20 font12 dBlock mx-auto text-center">Use as principal</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span class="dBlock wd100Percent text-center confirmMergeBox">
+            <input [(ngModel)]='itemCompareYesCheck' class="checkbox-custom"  id="confirmMerge" name="confirmMerge" type="checkbox">
+            <label class="checkbox-custom-label font12 fontPoppin fontSemiBold500 color000" for="confirmMerge">I understand this change is irreversible</label>
+        </span>
+            <!-- <input [(ngModel)]='itemCompareYesCheck' type="checkbox"> I understand this change is irreversible -->
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button type="button" (click)='mergeDeviceFun()' (click)="modalRef.hide()"  [ngClass]="{'disableDiv': !itemCompareYesCheck || isObjectEmpty(principalDevice)}"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Save</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #openDeviceTransfer>
+    <div  class="modal-header noborder pt30" (click)="showCustomerList=false">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin notextTransform fontBold font24 color000">Transfer Device</h2>
+            <p class="fontPoppin font12 mb10 color000">This device is going to be transfer to the customer you select on the search bar.</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40" (click)="showCustomerList=false">
+        <div class="items-form-content">
+            <label class="m0 color000 mb0 fontPoppin font12 fontSemiBold" for="selectCustomer">Select a Customer</label>
+            <div class="search-field input-group selectCustomer">
+                <input type="text" [(ngModel)]="searchCustomer" name="selectCustomer"
+                 id="selectCustomer" class="form-control cust-field font12 borderColorcbcbcb"
+                  placeholder="Search by name phone number or email..." (ngModelChange)='customerSearchForTransferDevice(inputSearchCustomer2,$event)' >
+                <a href="JavaScript:void(0)" class="input-group-addon">Select</a>
+            </div>
+            <div class="ulWrapper selectCustomerDrop" *ngIf="showCustomerList">
+                <ul>
+                    <li *ngFor="let customer of customerList" (click)="showCustomerList=false"
+                    (click)="searchCustomer=customer?.first_name + ' ' + customer?.last_name"   (click)="transferCutomerId=customer._id">
+                        <a class="dtable wd100Percent">
+                            <span class="dtableCell wd35percent">{{customer?.first_name + ' ' + customer?.last_name || 'N/A'}}</span>
+                            <span class="dtableCell wd25percent">{{customer?.phone || 'N/A'}}</span>
+                            <span class="dtableCell wd40percent">{{customer?.email || 'N/A'}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button (click)="modalRef.hide()" (click)='transferDeviceFun()' [ngClass]="{'disableDiv': transferCutomerId==''}" type="button"
+         class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite wd140px">
+         Transfer</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font10 fontLato fontSemiBold mx-auto p0">Cancel</button>
+    </div>
+</ng-template>
+<app-add-customer-device #adddevice (addDeviceDone)="applyActiveArchivedDevicesFilter(true)"></app-add-customer-device>
+<ng-template #open_removeDocument>
+    <div class="modal-body">
+        <div *ngIf='deleteSuppLoader' class="luna-loading"></div>
+        <div class="modalTitle mx-auto text-center pt15">
+            <i class="icon-archive font42 color000"></i>
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000">Do you want to <br> delete document(s)?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button  (click)="modalRef.hide()" (click)="customerDocumentDelete()" type="button" class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite wd140px">
+            Yes, delete</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font10 fontLato fontSemiBold mx-auto p0">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_downloadDocument>
+    <div class="modal-body">
+        <div *ngIf='deleteSuppLoader' class="luna-loading"></div>
+        <div class="modalTitle mx-auto text-center pt15">
+            <i class="icon-download font42 color000"></i>
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000">Do you want to <br> download this document?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button (click)="modalRef.hide()" type="button" class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite wd140px">
+            Yes, download it</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font10 fontLato fontSemiBold mx-auto p0">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #viewDocument>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center pt15">
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000">{{selectedDoc?.customer_document_name}}</h2>
+        </div>
+        <div *ngIf="selectedDoc?.document_extension !='pdf'" class="docView">
+            <div class="docImage"  [ngStyle]="{'background-image':'url('+ [baseUrl+selectedDoc?.document_file_path] +')'}" ></div>
+        </div>
+        <div *ngIf="selectedDoc?.document_extension=='pdf'" class="docView">
+            <div class="docImage">
+                <pdf-viewer 
+                [src]="baseUrl+selectedDoc?.document_file_path"
+                [render-text]="true"
+                [zoom]="0.53"
+              style="display: block;">
+            </pdf-viewer>
+            </div>
+        </div> 
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button (click)="modalRef.hide()" type="button" class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite">Close</button>
+    </div>
+</ng-template>
+<app-pay-with-card #payWithCardModal (cardDetails)='doneCardDetails($event)'> </app-pay-with-card>

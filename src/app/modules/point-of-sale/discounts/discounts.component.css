@@ -1,0 +1,101 @@
+.hide-input{
+    display: none;
+}
+
+.discount-bg {
+    background: url("../../../../assets/images/New-discounts_03.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-size: 200px 200px;
+    background-position-y: 50px;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+  }
+
+.add-dis {
+    margin-left: 40%;
+    margin-top: 22%;
+    background-color: #87e8d3;
+    border-radius: 21px;
+    color: #fff;
+}
+
+.date-adjust{
+    float: right;
+    margin-top: -63px;
+}
+
+.add-campaign {
+    color: #000;
+    float: right;
+    margin-top: -38px;
+    position: relative;
+    z-index: 999999;
+    box-shadow: none;
+    outline: none;
+    border-radius: 0px 8px 7px 0px;
+    border-left-color: #cbcbcb;
+}
+.add-campaign:hover {
+    color: #fff;
+    background-color: #000;
+    float: right;
+    margin-top: -38px;
+    position: relative;
+    z-index: 999999;
+    box-shadow: none;
+    outline: none;
+    border-radius: 0px 8px 7px 0px;
+    border-left-color: #cbcbcb;
+}
+
+.campaingn-adjust{
+    float: right;
+    margin-right: 49px;
+    margin-top: -34px;
+    position: relative
+}
+.increase-width{
+    width: 200px;
+    height: auto;
+}
+.cust-seg-congigure{
+    float: right;
+    margin-top: -9px;
+    height: auto;
+    width: 33%;
+    margin-right: auto;
+    margin-bottom: 10px;
+    border-radius: 7px;
+}
+
+.disable-input-field{
+    pointer-events: none;
+    background-color: #e9ecef;
+}
+.temp{
+    border-radius: 5px;
+    background-color: #fff;
+    display: table;
+    width: 100%;
+    padding: 0px 10px 5px;
+
+    display: table-cell;
+    text-align: right;
+
+    /* background-color: #000;
+    color: #fff;
+    border-radius: 3px;
+    padding: 0px 10px;
+    font-size: 12px;
+    line-height: 17px;
+    vertical-align: middle;
+    border: 1px solid #000;
+
+    background-color: transparent;
+    color: #000; */
+
+
+}

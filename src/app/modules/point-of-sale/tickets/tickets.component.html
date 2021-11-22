@@ -1,0 +1,1175 @@
+<section *ngIf="existingOrders" id="order-invoice">
+    <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+        [hideToster]="showToaster"></app-toaster>
+    <div class="row">
+        <div class="col-lg-12 p0">
+            <div [ngClass]="{'empty':allTickets.length==0}" class="existing-order-wrapper text-center table-responsive">
+                <div class="top-info">
+                    <div class="left">
+                        <h2>Tickets</h2>
+                    </div>
+                    <div class="right">
+                        <div class="iconActions">
+                            <a (click)="minOrder()" class="colorWhite"><i class="icon-minimized font16"></i></a>
+                            <a class="colorWhite"><i class="icon-close font16"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="cut-search-area posRelative zIndex100 dtable wd100Percent">
+                    <div class="dtableCell wd65percent text-left">
+                        <div class="dInlinetable wd25percent">
+                            <div id="discount-cat-btn" class="btn-group dInlineBlock height30px wd100Percent">
+                                <a (click)="updateFilters('is_checkout' , false)" 
+                                    [ngClass]="{'active': ticketFilters?.is_checkout == false,
+                                                'notActive': ticketFilters?.is_checkout == true}" 
+                                    class="btn wd50percent font11 lineHeight28 ">Active</a>
+                                <a (click)="updateFilters('is_checkout' , true)" 
+                                    [ngClass]="{'active': ticketFilters?.is_checkout == true,
+                                                'notActive': ticketFilters?.is_checkout == false}" 
+                                    class="btn wd50percent font11 lineHeight28">Completed</a>
+                            </div>
+                        </div>
+                        <div class="dInlinetable wd50percent valignMiddle pl15 pr15"> 
+                            <div class="filterLinks pOfilter bottomBarFilter newfilters noposRelative">
+                                <label>Quick filter:</label>
+                                <div class="filterWhenActive dInlineBlock">
+                                    <a tooltip="Discount" placement="bottom"
+                                        [ngClass]="{'active': ticketFilters?.quickFilter == 'discount'}"
+                                        (click)="updateFilters('quickFilter' , 'discount')"
+                                        href="JavaScript:void(0)" class="color000">
+                                        <i class="icon-discount_tickets"></i>
+                                    </a>
+                                    <a tooltip="Refund" [ngClass]="{'active': ticketFilters?.quickFilter == 'refund'}"
+                                        (click)="updateFilters('quickFilter' , 'refund')"
+                                        placement="bottom" href="JavaScript:void(0)" class="color000">
+                                        <i class="icon-refund"></i>
+                                    </a>
+                                    <a tooltip="Bundles"
+                                        [ngClass]="{'active': ticketFilters?.quickFilter == 'bundle'}"
+                                        (click)="updateFilters('quickFilter' , 'bundle')"
+                                        placement="bottom" href="JavaScript:void(0)" class="color000">
+                                        <i class="icon-bundle_product"></i>
+                                    </a>
+                                    <a tooltip="Partial Payments"
+                                        [ngClass]="{'active': ticketFilters?.quickFilter == 'partial_payment'}"
+                                        (click)="updateFilters('quickFilter' , 'partial_payment')"
+                                        placement="bottom" href="JavaScript:void(0)" class="color000">
+                                        <i class="icon-partialPayment_tickets"></i>
+                                    </a>
+                                    <a tooltip="Gift Card"
+                                        [ngClass]="{'active': ticketFilters?.quickFilter == 'gift_card'}"
+                                        (click)="updateFilters('quickFilter' , 'gift_card')"
+                                        placement="bottom" href="JavaScript:void(0)" class="color000">
+                                        <i class="icon-giftcard_tickets"></i>
+                                    </a>
+                                    <a tooltip="Without Tax"
+                                        [ngClass]="{'active': ticketFilters?.quickFilter == 'with_out_tax'}"
+                                        (click)="updateFilters('quickFilter' , 'with_out_tax')"
+                                        placement="bottom" href="JavaScript:void(0)" class="color000">
+                                        <i class="icon-taxes"></i>
+                                    </a>
+                                    <a tooltip="PayPal Invoice"
+                                        [ngClass]="{'active': ticketFilters?.quickFilter == 'paypal_invoice'}"
+                                        (click)="updateFilters('quickFilter' , 'paypal_invoice')"
+                                        placement="bottom" href="JavaScript:void(0)" class="color000">
+                                        <i class="icon-paypal_invoice"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dInlinetable wd25percent valignMiddle">
+                            <div class="filterLinks pOfilter newfilters">
+                                <label>Filter by time:</label>
+                                <a (click)="updateFilters('dateFilter' , 'today')" tooltip="Arrives Today" placement="bottom"
+                                    href="JavaScript:void(0)" class="color000"
+                                    [ngClass]="{'active': ticketFilters?.dateFilter == 'today'}">
+                                    <i class="icon-today"></i>
+                                </a>
+                                <a (click)="updateFilters('dateFilter' , 'yesterday')" tooltip="Arrives Yesterday"
+                                    placement="bottom" href="JavaScript:void(0)" class="color000"
+                                    [ngClass]="{'active': ticketFilters?.dateFilter == 'yesterday'}">
+                                    <i class="icon-tomorrow"></i>
+                                </a>
+                                <a tooltip="Set date range" placement="bottom"
+                                    (click)="openModal(open_DateRange, 'custModal wd400')" href="JavaScript:void(0)"
+                                    class="color000"
+                                    [ngClass]="{'active': ticketFilters?.start_date != null && ticketFilters?.end_date != null }">
+                                    <i class="icon-calendar_tickets"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dtableCell wd35percent text-right">
+                        <div class="dInlinetable wd80percent">
+                            <div class="search-field input-group">
+                                <input type="text" class="form-control" [formControl]="searchOrder"
+                                    placeholder="Search by name, phone number, email, address...">
+                                <a href="JavaScript:void(0)" class="input-group-addon">
+                                    <i *ngIf="searchOrder.value" (click)="searchOrder.reset()"
+                                        class="fas fa-times-circle"></i>
+                                    <i class="icon-search"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="wd15percent dInlinetable ml5 valignMiddle">
+                            <a tooltip="Scanner" placement="bottom" class="receivingIcon dInlineBlock" href="JavaScript:void(0)">
+                                <i class="icon-scan1"></i>
+                            </a>
+                            <a tooltip="Clear filters" placement="bottom" (click)="clearAllFilters()" class="receivingIcon dInlineBlock ml5" href="JavaScript:void(0)">
+                                <i class="icon-clear_all"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div id="existing-order-table_wrapper">
+                    <div *ngIf="loadTickets" class="luna-loading"></div>
+                    <div class="empty-text">
+                        <h2><i class="fa fa-cogs" aria-hidden="true"></i>No Tickets Available</h2>
+                    </div>
+                    <div class="orders-top-info">
+                        <div class="inner wd3percent allCheckbox">
+                            <span class="ml0">
+                                <input [(ngModel)]="theCheckbox"  (change)="checkedAllField(allTickets,$event)" 
+                                class="checkbox-custom" id="cust-checkMain1"
+                                    name="cust-checkMain1" type="checkbox">
+                                <label class="checkbox-custom-label" for="cust-checkMain1"></label>
+                            </span>
+                        </div>
+                        <div class="inner wd10percent"><span>ID</span></div>
+                        <div class="inner wd12percent"><span>Date and time</span></div>
+                        <div class="inner wd15percent"><span>Customer Name</span></div>
+                        <div class="inner wd10percent"><span>Phone Number</span></div>
+                        <div class="inner wd10percent"><span>Amount</span></div>
+                        <div class="inner wd10percent">
+                            <span>Balance
+                                <i [ngClass]="{'active':ticketFilters?.balance_sorting == 'desc',
+                                'notActive':ticketFilters?.balance_sorting == 'none' || ticketFilters?.balance_sorting == 'asc'}" 
+                                (click)="sortBalance('desc')" class="fa fa-arrow-down pl5 cursorPointer" ></i>
+                                <i [ngClass]="{'active':ticketFilters?.balance_sorting == 'asc',
+                                'notActive':ticketFilters?.balance_sorting == 'none' || ticketFilters?.balance_sorting == 'desc'}" 
+                                (click)="sortBalance('asc')" class="fa fa-arrow-up pl5 cursorPointer" ></i>
+                            </span>
+                        </div>
+                        <div class="inner wd10percent"><span>View ticket</span></div>
+                        <div *ngIf="!ticketFilters?.is_checkout" class="inner wd10percent labelFilter">
+                            <div class="btn-group" dropdown>
+                                <button id="button-animated" dropdownToggle type="button"
+                                    class="btn dropdown-toggle statusFilter mainPOStatusFilter"
+                                    aria-controls="dropdown-animated">{{statusFilter}}
+                                    <span class="caret"></span>
+                                </button>
+                                <div class="filterDrop">
+                                    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu supplierFilterUl">
+                                        <li style="padding:0px 10px" [ngClass]="status.class_name" *ngFor="let status of repairStatuses; let i = index;" (click)="$event.stopPropagation()">
+                                            <input [checked]="returnSelectedRepairFilters(status)" (click)="setRepairFilters($event,status)" 
+                                            id="status{{i + 1}}" class="checkbox-custom" name="status{{i + 1}}" type="checkbox">
+                                            <label [ngClass]="{'active':returnSelectedRepairFilters(status)}" for="status{{i + 1}}" class="fontPoppin fontSemiBold font12 checkbox-custom-label">{{status.status_name}}</label>
+                                        </li>
+                                    </ul>
+                                    <a (click)="applyRepairFilters()" href="JavaScript:void(0)"
+                                        class="dBlock fontPoppin fontBold font11 padding5 borderRadius5 doneFilter text-center">Done</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="inner wd10percent"><span>Actions</span></div>
+                    </div>
+                    <div class="orders-inner-list" infiniteScroll (scrolled)="onScroll()" [scrollWindow]="false">
+                        <ul>
+                            <li [ngClass]="{'checked':getCheckedTicketById(ticket['_id'])}" *ngFor="let ticket of allTickets; let i = index;" class="">
+                                <div class="inner wd3percent allCheckbox">
+                                    <span class="text-left">
+                                        <input [checked]="ticket?.checked" (change)="singleItemChecked(allTickets,i,$event)"
+                                         class="checkbox-custom" type="checkbox"  name="customer{{i}}"   id="customer{{i}}">
+                                        <label class="checkbox-custom-label" for="customer{{i}}"></label>
+                                    </span>
+                                </div>
+                                <div class="inner wd10percent"><span>{{ticket?.transaction_keeping_unit}}</span></div>
+                                <div class="inner wd12percent"><span>{{ticket?.transaction_date | date : 'MMM/dd/yyyy - HH:mm'}}</span></div>
+                                <div class="inner wd15percent"><span>{{ticket?.Customer?.first_name + ' ' + ticket?.Customer?.last_name}}</span></div>
+                                <div class="inner wd10percent"><span>{{ticket?.Customer?.phone}}</span></div>
+                                <div class="inner wd10percent"><span>{{ticket?.total_amount | currency}}</span></div>
+                                <div class="inner wd10percent"><span>{{ticket?.remaining_amount | currency}}</span></div>
+                                <div class="inner wd10percent">
+                                    <a *ngIf="ticket.transaction_status == 'quote'" (click)="showOrderInCart(ticket)"  href="JavaScript:void(0)" class="viewBtn">View Quote</a>
+                                    <a *ngIf="ticket.transaction_status == 'invoice'" (click)="showInvoiceDetail(ticket)" href="JavaScript:void(0)" class="viewBtn">View Invoice</a>
+                                    <a *ngIf="ticket.transaction_status == 'order'" (click)="showOrderInCart(ticket)"  href="JavaScript:void(0)" class="viewBtn">View Order</a>
+                                </div>
+                                <div *ngIf="!ticket?.is_checkout" class="inner wd10percent repairRoom">
+                                    <ul class="status-info">
+                                        <li *ngFor="let taskColor of ticket?.repair_room_color_pallet"
+                                            [ngStyle]="{'background-color': taskColor}">S</li>
+                                    </ul>
+                                    <!-- <span [style.color]="ticket?.repire_room_status?.status_font_color"
+                                        [style.background-color]="ticket?.repire_room_status?.status_background_color" 
+                                        class="status fontPoppin fontSemiBold wd100px mx-auto">{{ticket?.repire_room_status?.status_name}}
+                                    </span> -->
+                                </div>
+                                <div class="inner wd10percent text-center">
+                                    <a  tooltip="Launch Repair Room" placement="bottom" *ngIf="ticket.transaction_status == 'invoice' && !ticket.is_repair_done && ticket.invoice_for_repair_room" (click)="gotoRepairRoom(ticket['_id'])" href="JavaScript:void(0) " class="dInlineBlock launchbtn">
+                                        <i class="icon-bundle_service color000 font14"></i>
+                                    </a>
+                                    <a *ngIf="ticket.transaction_status != 'invoice' && ticket.invoice_for_repair_room" href="JavaScript:void(0) " class="dInlineBlock launchbtn">
+                                        <i class="icon-bundle_service color808080 font14"></i>
+                                    </a>
+                                    <a  tooltip="Checkout" placement="bottom" *ngIf="ticket.remaining_amount == 0 && ticket.is_repair_done && !ticket.is_checkout && ticket.invoice_for_repair_room" (click)="openModal(checkoutWithoutBalance, 'custModal wd300');selectedTicket = ticket" href="JavaScript:void(0) " class="dInlineBlock launchbtn">
+                                        <i class="fas fa-shopping-cart color000 font14"></i>
+                                    </a>
+                                    <a tooltip="Checkout" placement="bottom" *ngIf="ticket.remaining_amount !== 0 && ticket.is_repair_done && !ticket.is_checkout && ticket.invoice_for_repair_room" (click)="openModal(checkoutWithBalance, 'custModal wd300'); selectedTicket = ticket" href="JavaScript:void(0) " class="dInlineBlock launchbtn">
+                                        <i class="fas fa-shopping-cart color000 font14"></i>
+                                    </a>
+                                    <a tooltip="Re-open" placement="bottom" *ngIf="ticket.is_repair_done && ticket.is_checkout && ticket.invoice_for_repair_room" (click)="openTicketReOpenModal(reopenTicket, 'custModal wd700',ticket?._id)" href="JavaScript:void(0) " class="dInlineBlock launchbtn">
+                                        <i class="fas fa-box-open color000 font14"></i>
+                                    </a>
+                                   
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom bottomActionBar">
+                        <div class="caution-stock dtableCell wd40percent valignMiddle">
+                            <div class="listCount">
+                                <span>Total: <b>{{ticketCount}} tickets</b></span>
+                            </div>
+                            <div class="filterLinks newfilters bottomFilters rmaFilters ticketsFilters">
+                                <label>Filter by type:</label>
+                                <a (click)="updateFilters('ticketfooterfilter' , 'all')" [ngClass]="{'active': ticketFilters?.ticketfooterfilter == 'all'}" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">All</a>
+                                <!-- <a (click)="updateFilters('ticketfooterfilter' , 'order')" [ngClass]="{'active': ticketFilters?.ticketfooterfilter == 'order'}" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Orders</a> -->
+                                <a (click)="updateFilters('ticketfooterfilter' , 'invoice')" [ngClass]="{'active': ticketFilters?.ticketfooterfilter == 'invoice'}" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Invoices</a>
+                                <a (click)="updateFilters('ticketfooterfilter' , 'quote')" [ngClass]="{'active': ticketFilters?.ticketfooterfilter == 'quote'}" href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Qoutes</a>
+                            </div>
+                        </div>
+                        <div class="caution-stock dtableCell text-right wd60percent">
+                            <div class="ifPOUnChecked">
+                                <!--downloadFileModal.openModal()-->
+                                <a *ngIf="isTicketChecked()" href="JavaScript:void(0)" (click)="openModal(downloadInvoice, 'custModal wd300')" 
+                                    class="innerStatusBtns dInlineBlock">
+                                    Download
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section *ngIf="viewInvoice" id="order-invoices">
+    <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+        [hideToster]="showToaster"></app-toaster>
+    <div class="row">
+        <div class="col-lg-12 p0">
+            <div class="existing-order-wrapper text-center table-responsive">
+                <div class="top-info">
+                    <div class="left">
+                        <h2>Tickets</h2>
+                    </div>
+                    <div class="right">
+                        <div class="iconActions">
+                            <a (click)="minOrder()" class="colorWhite"><i class="icon-minimized font16"></i></a>
+                            <a class="colorWhite"><i class="icon-close font16"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="loadTicketDetail" class="luna-loading ticketsInvoice"></div>
+                <div class="cut-search-area posRelative zIndex100 dtable wd100Percent">
+                    <div class="dtableCell wd50percent text-left">
+                        <div class="dInlinetable">
+                            <a href="JavaScript:void(0)" (click)="loadTicketListing()" class="back-cust-list">Back</a>
+                        </div>
+                        <div class="dInlinetable">
+                            <h2 class="fontPoppin font16 fontSemiBold textUpperCase">{{ticketDetail?.transaction_keeping_unit + '-' + ticketDetail?.Customer?.first_name + ' ' + ticketDetail?.Customer?.last_name}}</h2>
+                        </div>
+                        <div class="dInlinetable"> 
+                            <div class="filterLinks pOfilter bottomBarFilter newfilters noposRelative">
+                                <div class="filterWhenActive dInlineBlock">
+                                    <a *ngIf="getInvoiceHeader('discount')" tooltip="Discount" placement="bottom" href="JavaScript:void(0)" class="color000 active">
+                                        <i class="icon-discount_tickets"></i>
+                                    </a>
+                                    <a *ngIf="getInvoiceHeader('refund')" tooltip="Refund" placement="bottom" href="JavaScript:void(0)" class="color000 active">
+                                        <i class="icon-refund"></i>
+                                    </a>
+                                    <a *ngIf="getInvoiceHeader('bundle')" tooltip="Bundles" placement="bottom" href="JavaScript:void(0)" class="color000 active">
+                                        <i class="icon-bundle_product"></i>
+                                    </a>
+                                    <a *ngIf="getInvoiceHeader('partial')" tooltip="Partial Payments" placement="bottom" href="JavaScript:void(0)" class="color000 active">
+                                        <i class="icon-partialPayment_tickets"></i>
+                                    </a>
+                                    <a *ngIf="getInvoiceHeader('giftCard')" tooltip="Gift Card" placement="bottom" href="JavaScript:void(0)" class="color000 active">
+                                        <i class="icon-giftcard_tickets"></i>
+                                    </a>
+                                    <a *ngIf="getInvoiceHeader('without_tax')" tooltip="Without Tax" placement="bottom" href="JavaScript:void(0)" class="color000 active">
+                                        <i class="icon-taxes"></i>
+                                    </a>
+                                    <a *ngIf="getInvoiceHeader('paypalInvoice')" tooltip="PayPal Invoice" placement="bottom" href="JavaScript:void(0)" class="color000 active">
+                                        <i class="icon-paypal_invoice"></i>
+                                    </a>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  (click)="downloadFileModal.openModal()" -->
+                    <div class="dtableCell wd50percent text-right">
+                        <a href="JavaScript:void(0)" (click)="gotoCustomers(ticketDetail?.Customer?._id)" class="innerStatusBtns dInlineBlock">Go to customer</a>
+                        <a href="JavaScript:void(0)" (click)="openModal(downloadInvoice, 'custModal wd300')"  class="innerStatusBtns dInlineBlock mr10 ml10">Download</a>
+                        <a href="JavaScript:void(0)" (click)="printInVoice(true)" class="innerStatusBtns dInlineBlock"><i class="icon-print pr5"></i>Print</a>
+                        <!-- <a href="JavaScript:void(0)" (click)="openModal(printInvoice, 'custModal wd300')" class="innerStatusBtns dInlineBlock"><i class="icon-print pr5"></i>Print</a> -->
+                    </div>
+                </div>
+                <div class="col-lg-8 padding15px fl">
+                    <div [ngClass]="{'refundWrapper ': refundMethod}" class="current-order-table-wrapper table-responsive" id="existing-order-table_wrapper">
+                        <div *ngIf="!refundMethod" class="cart-list">
+                            <div class="cart-top">
+                                <div class="inner wd15percent"><span class="text-center">SKU</span></div>
+                                <div class="inner wd35percent"><span>Product Name</span></div>
+                                <div class="inner wd12Percent"><span>Qty.</span></div>
+                                <div class="inner wd12Percent"><span>Unit Price</span></div>
+                                <div class="inner wd12Percent"><span>Item Discount</span></div>
+                                <div class="inner wd12Percent"><span>Total</span></div>
+                            </div>
+                            <div class="cart-bottom">
+                                <accordion [isAnimated]="true" [closeOthers]="true">
+                                    <accordion-group [ngClass]="{'singleProduct singleRefund':!pro?.is_device && pro?.sell_line_product_type != 'bundleProduct'}" 
+                                        *ngFor="let pro of ticketDetail?.TransactionSellLine; let i = index;">
+                                        
+                                        <!-- Products with Device starts from here -->
+                                        <ul *ngIf="pro?.is_device" accordion-heading>
+                                            <li>
+                                                <div class="outer">
+                                                    <div class="inner wd50percent text-left">
+                                                        <span class="font14 fontSemiBold Poppin text-left">{{pro?.Device?.device_keeping_unit + '-' + pro?.Device?.deviceBrand?.brand_name + ' ' + pro?.Device?.deviceModel?.name + ' Repair'}}</span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                    </div>
+                                                    <div class="inner wd12Percent text-right">
+                                                        <span class="font14 fontPoppin fontSemiBold">{{pro?.total_amount | currency}}</span>
+                                                    </div>
+                                                </div>
+                                            </li> 
+                                        </ul>
+                                        <accordion [isAnimated]="true" [closeOthers]="true" *ngIf="pro?.is_device">
+                                            <accordion-group [ngClass]="{'singleProduct': devItems?.serviceProduct.length >= 0}" *ngFor="let devItems of pro?.products; let j = index;">
+                                                <ul accordion-heading>
+                                                    <li >
+                                                        <div class="outer">
+                                                            <div class="inner wd15percent text-left pl10">
+                                                                <span class="fontPoppin fontSemiBold500">{{devItems?.supplier_sku || devItems?.product_sku || 'N/A'}}</span>
+                                                            </div>
+                                                            <div class="inner wd35percent text-left">
+                                                                <span class="fontPoppin fontSemiBold500">{{devItems?.Product?.product_name || devItems?.customProduct?.name}}
+                                                                    <i tooltip="Items previously refunded: {{devItems?.return_quantity}}" placement="bottom" *ngIf="devItems?.is_refund_item" class="icon-refund pl10"></i>
+                                                                </span>
+                                                            </div>
+                                                            <div class="inner wd12Percent">
+                                                                <span class="fontPoppin fontSemiBold500">{{devItems?.quantity}}</span>
+                                                            </div>
+                                                            <div class="inner wd12Percent">
+                                                                <span class="fontPoppin fontSemiBold500">{{devItems?.product_sale_price | currency}}</span>
+                                                            </div>
+                                                            <div class="inner wd12Percent">
+                                                                <span class="fontPoppin fontSemiBold500">{{devItems?.discount_amount |currency}}</span>
+                                                            </div>
+                                                            <div class="inner wd12Percent text-right pr10">
+                                                                <span class="fontPoppin fontSemiBold500">{{devItems?.total_amount | currency}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <ul>
+                                                    <li *ngFor="let subItems of devItems?.serviceProduct;">
+                                                        <div class="outer">
+                                                            <div class="inner wd90Percent text-left pl10">
+                                                                <span class="fontPoppin fontSemiBold500">{{subItems?.serviceProductId?.product_name || subItems?.serviceCustomProductId?.name}}</span>
+                                                            </div>
+                                                            <div class="inner wd10Percent">
+                                                                <span class="fontPoppin fontSemiBold500">{{subItems?.serviceProductQuantity}}</span>
+                                                            </div>
+                                                            <!-- <div class="inner wd12Percent">
+                                                                <span class="fontPoppin fontSemiBold500">{{devItems?.product_sale_price | currency}}</span>
+                                                            </div>
+                                                            <div class="inner wd12Percent">
+                                                                <span class="fontPoppin fontSemiBold500">{{devItems?.discount_amount |currency}}</span>
+                                                            </div>
+                                                            <div class="inner wd12Percent text-right pr10">
+                                                                <span class="fontPoppin fontSemiBold500">{{devItems?.total_amount | currency}}</span>
+                                                            </div> -->
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </accordion-group>
+                                        </accordion>
+                                        <!-- Products with Device ends here -->
+
+                                        <!-- Bundle Products starts from here -->
+                                        <ul *ngIf="!pro?.is_device && pro?.sell_line_product_type == 'bundleProduct'" accordion-heading>
+                                            <li>
+                                                <div class="outer">
+                                                    <div class="inner wd15percent text-left">
+                                                        <span class="font12 fontSemiBold Poppin">{{pro?.supplier_sku || 'N/A'}}</span>
+                                                    </div>
+                                                    <div class="inner wd35percent text-left">
+                                                        <span *ngIf="pro?.product_type == 'product'" class="fontPoppin fontSemiBold500">
+                                                            {{pro?.Product?.product_name}}
+                                                            <i tooltip="Items previously refunded: {{pro?.return_quantity}}" placement="bottom" *ngIf="pro?.is_refund_item" class="icon-refund pl10"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{pro?.quantity}}</span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{pro?.product_sale_price | currency}}</span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{pro?.discount_amount | currency}}</span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{pro?.total_amount | currency}}</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <ul *ngIf="!pro?.is_device && pro?.sell_line_product_type == 'bundleProduct'">
+                                            <li *ngFor="let bundle of pro?.Product?.bundle_products?.bundleProduct; let j = index;">
+                                                <div class="outer">
+                                                    <div class="inner wd15percent text-left pl10">
+                                                        <span class="fontPoppin fontSemiBold500">{{bundle?.bundleProductID?.sku}}</span>
+                                                    </div>
+                                                    <div class="inner wd35percent text-left">
+                                                        <span class="fontPoppin fontSemiBold500">{{bundle?.bundleProductID?.product_name}}
+                                                            <i tooltip="Items previously refunded: {{pro?.return_quantity}}" placement="bottom" *ngIf="pro?.is_refund_item" class="icon-refund pl10"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{bundle?.quantity}}</span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{bundle?.selling_price | currency}}</span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{bundle?.discount_amount | currency}}</span>
+                                                    </div> 
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{bundle?.selling_price * bundle?.quantity | currency}}</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <!-- Bundle Products ends here -->
+
+                                        <!-- Simple Products starts from here -->
+                                        <ul *ngIf="!pro?.is_device && pro?.sell_line_product_type != 'bundleProduct'" accordion-heading>
+                                            <li>
+                                                <div class="outer">
+                                                    <div class="inner wd15percent text-left">
+                                                        <span class="font12 fontSemiBold Poppin">{{pro?.supplier_sku || 'N/A'}}</span>
+                                                    </div>
+                                                    <div class="inner wd35percent text-left">
+                                                        <span *ngIf="pro?.product_type == 'giftCard'" class="fontPoppin fontSemiBold500">
+                                                            Gift Card <i tooltip="{{pro?.return_quantity}} items refunded" *ngIf="pro?.is_refund_item" class="icon-refund pl10"></i></span>
+                                                        <span *ngIf="pro?.product_type == 'custom'" class="fontPoppin fontSemiBold500">
+                                                            {{pro?.customProduct?.name || 'N/A'}}
+                                                            <i tooltip="Items previously refunded: {{pro?.return_quantity}}" placement="bottom" *ngIf="pro?.is_refund_item" class="icon-refund pl10"></i>
+                                                        </span>
+                                                        <span *ngIf="pro?.product_type == 'product'" class="fontPoppin fontSemiBold500">
+                                                            {{pro?.Product?.product_name}}
+                                                            <i tooltip="Items previously refunded: {{pro?.return_quantity}}" placement="bottom" *ngIf="pro?.is_refund_item" class="icon-refund pl10"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{pro?.quantity}}</span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{pro?.product_sale_price | currency}}</span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{pro?.discount_amount | currency}}</span>
+                                                    </div>
+                                                    <div class="inner wd12Percent">
+                                                        <span class="fontPoppin fontSemiBold500">{{pro?.total_amount | currency}}</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <!-- Simple Products ends  here -->
+
+                                    </accordion-group>
+                                </accordion>
+                            </div>
+                        </div>
+                        <div *ngIf="refundMethod" class="cart-list">
+                            <div class="refundType dtable wd100Percent text-left mb15 pl10">
+                                <div class="dInlinetable wd8percent pr15">
+                                    <h2 class="color000 font14 fontPoppin fontSemiBold">Refund</h2>
+                                </div>
+                                <div class="dInlinetable wd20percent">
+                                    <div id="discount-cat-btn" class="btn-group dInlineBlock height18px wd100Percent">
+                                        <a (click)="openRefundType('refundByItem','refundByAmount')" [ngClass]="{'active':refundByItem , 'notActive':!refundByItem}" class="btn wd50percent font11 lineHeight18px">By Item</a>
+                                        <a (click)="openRefundType('refundByAmount','refundByItem')" [ngClass]="{'active':refundByAmount , 'notActive':!refundByAmount}" class="btn wd50percent font11 lineHeight18px">By Amount</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="refundByItem" class="returnByItem"> 
+                                <div class="cart-top">
+                                    <div class="inner wd25percent"><span class="text-center">Product Name and SKU</span></div>
+                                    <div class="inner wd10percentFull"><span>Orig. Qty.</span></div>
+                                    <div class="inner wd10percentFull"><span>Select Qty.</span></div>
+                                    <div class="inner wd10percentFull"><span>Unit Price</span></div>
+                                    <div class="inner wd12percent"><span>Select Reason</span></div>
+                                    <div class="inner wd12percent"><span>Back to stock<sup>*</sup></span></div>
+                                    <div class="inner wd10percentFull"><span>Serial No.</span></div>
+                                    <div class="inner wd10percentFull"><span>Total</span></div>
+                                </div>
+                                <div class="cart-bottom">
+                                    <accordion [isAnimated]="true" [closeOthers]="true">
+                                        <accordion-group [ngClass]="{'singleProduct':!pro?.is_device || pro?.sell_line_product_type == 'bundleProduct'}"
+                                             *ngFor="let pro of sellLines; let i = index;">
+                                            <ul *ngIf="pro?.is_device" accordion-heading (click)="noOpenAccordianOnInput($event)">
+                                                <li>
+                                                    <div class="outer">
+                                                        <div class="inner wd95percent text-left pl10">
+                                                            <span class="font14 fontSemiBold Poppin text-left">{{pro?.Device?.device_keeping_unit + '-' + pro?.Device?.deviceBrand?.brand_name + ' ' + pro?.Device?.deviceModel?.name + ' Repair'}}</span>
+                                                        </div>
+                                                        <div class="inner wd5percent">
+                                                            <span class="font10 fontSemiBold"><i class="icon-dropdown_stock"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <ul *ngIf="pro?.is_device">
+                                                <li *ngFor="let devItems of pro?.products; let j = index;">
+                                                    <div *ngIf="devItems?.Product?.is_product" class="outer">
+                                                        <div class="inner wd25percent text-left">
+                                                            <span class="fontPoppin fontSemiBold500 dBlock">{{devItems?.Product?.product_name}}</span>
+                                                            <span class="fontPoppin fontSemiBold500 dBlock color808080">{{devItems?.supplier_sku || 'N/A'}}</span>
+                                                        </div>
+                                                        <div class="inner wd10percentFull">
+                                                            <span class="fontPoppin fontSemiBold500">{{devItems?.quantity}}</span>
+                                                        </div>
+                                                        <div class="inner wd10percentFull">
+                                                            <span class="fontPoppin fontSemiBold500">
+                                                                <div class="input-group borderWidth1pxSolid borderColorcbcbcb borderRadius5 bgWhite">
+                                                                    <span (click)="decreaseReturnQtyItem(i,j,true)" class="input-group-btn m0">
+                                                                        <button type="button" class="btn btn-default btn-number borderBRR0 borderTRR0" data-type="minus" data-field="quant[j]">
+                                                                            <i class="fas fa-minus"></i>
+                                                                        </button>
+                                                                    </span>
+                                                                    <span class="form-control input-number color000" style="line-height:2.5">{{devItems?.return_quantity}} / {{devItems?.quantity}}</span>
+                                                                    <span class="input-group-btn m0">
+                                                                        <button (click)="increaseReturnQtyItem(i,j,true)" type="button" class="btn btn-default btn-number borderBLR0 borderTLR0" data-type="plus" data-field="quant[j]">
+                                                                            <i class="fas fa-plus"></i>
+                                                                        </button>
+                                                                    </span>
+                                                                </div>
+                                                            </span>
+                                                        </div>
+                                                        <div class="inner wd10percentFull">
+                                                            <span class="fontPoppin fontSemiBold500">{{devItems?.product_sale_price | currency}}</span>
+                                                        </div>
+                                                        <div class="inner wd12percent text-left labelFilter invNumStoreName">
+                                                            <div class="btn-group" dropdown>
+                                                                <button [ngClass]="{'bounce':refundItemSubmitted && devItems?.reason == null && devItems?.return_quantity > 0 }" id="button-animated" dropdownToggle type="button"
+                                                                    class="btn dropdown-toggle statusFilter mainPOStatusFilter"
+                                                                    aria-controls="dropdown-animated">
+                                                                    <span class="btnText dBlock wd90Percent">{{devItems?.reason == null ? 'Select reason' : devItems?.reason}}</span>
+                                                                    <span class="caret"></span>
+                                                                </button>
+                                                                <div class="filterDrop">
+                                                                    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu supplierFilterUl">
+                                                                        <li *ngFor="let reason of refundReasons; let k = index;" (click)="selectReason(i,j,true,reason?.reason_name)" role="menuitem">
+                                                                            <a class="dropdown-item">{{reason?.reason_name}}</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="inner wd12percent">
+                                                            <input numeric (focusout)="backToStock(i,j,true)" [(ngModel)]="devItems.back_to_stock" class="color000 wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5" placeholder="0" type="text">
+                                                        </div>
+                                                        <div class="inner wd10percentFull">
+                                                            <span class="fontPoppin color000 fontSemiBold500">{{devItems?.serial_number}}</span>
+                                                        </div>
+                                                        <div class="inner wd10percentFull">
+                                                            <span class="fontPoppin fontSemiBold500">{{devItems?.total_amount | currency}}</span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <ul *ngIf="!pro?.is_device" accordion-heading>
+                                                <li>
+                                                    <div *ngIf="(pro?.product_type != 'giftCard' && pro?.Product?.is_product) || pro?.product_type == 'custom'" class="outer">
+                                                        <div class="inner wd25percent text-left">
+                                                            <span *ngIf="pro?.product_type == 'custom'" class="fontPoppin fontSemiBold500">
+                                                                {{pro?.customProduct?.name || 'N/A'}}
+                                                                <i *ngIf="pro?.is_refund_item" class="icon-refund pl10"></i>
+                                                            </span>
+                                                            <span *ngIf="pro?.product_type == 'product'" class="fontPoppin fontSemiBold500">
+                                                                {{pro?.Product?.product_name}}
+                                                                <i *ngIf="pro?.is_refund_item" class="icon-refund pl10"></i>
+                                                            </span>
+                                                            <span class="fontPoppin fontSemiBold500 dBlock color808080">{{pro?.supplier_sku || 'N/A'}}</span>
+                                                        </div>
+                                                        <div class="inner wd10percentFull">
+                                                            <span class="fontPoppin fontSemiBold500">{{pro?.quantity}}</span>
+                                                        </div>
+                                                        <div class="inner wd10percentFull">
+                                                            <span class="fontPoppin fontSemiBold500">
+                                                                <div class="input-group borderWidth1pxSolid borderColorcbcbcb borderRadius5 bgWhite">
+                                                                    <span class="input-group-btn m0">
+                                                                        <button (click)="decreaseReturnQtyItem(i,j,false)" type="button" class="btn btn-default btn-number borderBRR0 borderTRR0" data-type="minus" data-field="quant[1]">
+                                                                            <i class="fas fa-minus"></i>
+                                                                        </button>
+                                                                    </span>
+                                                                    <span class="form-control input-number color000" style="line-height:2.5">{{pro?.return_quantity}} / {{pro?.quantity}}</span>
+                                                                    <span class="input-group-btn m0">
+                                                                        <button (click)="increaseReturnQtyItem(i,j,false)" type="button" class="btn btn-default btn-number borderBLR0 borderTLR0" data-type="plus" data-field="quant[1]">
+                                                                            <i class="fas fa-plus"></i>
+                                                                        </button>
+                                                                    </span>
+                                                                </div>
+                                                            </span>
+                                                        </div>
+                                                        <div class="inner wd10percentFull">
+                                                            <span class="fontPoppin fontSemiBold500">{{pro?.product_sale_price | currency}}</span>
+                                                        </div>
+                                                        <div class="inner wd12percent text-left labelFilter invNumStoreName">
+                                                            <div class="btn-group" dropdown>
+                                                                <button [ngClass]="{'bounce':refundItemSubmitted && pro?.reason == null && pro?.return_quantity > 0 }" id="button-animated" dropdownToggle type="button"
+                                                                    class="btn dropdown-toggle statusFilter mainPOStatusFilter"
+                                                                    aria-controls="dropdown-animated">
+                                                                    <span class="btnText dBlock wd90Percent">{{pro?.reason == null ? 'Select reason' : pro?.reason}}</span>
+                                                                    <span class="caret"></span>
+                                                                </button>
+                                                                <div class="filterDrop">
+                                                                    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu supplierFilterUl">
+                                                                        <li *ngFor="let reason of refundReasons; let k = index;" (click)="selectReason(i,j,false,reason?.reason_name)" role="menuitem">
+                                                                            <a class="dropdown-item">{{reason?.reason_name}}</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="inner wd12percent">
+                                                            <input numeric (focusout)="backToStock(i,j,false)" [(ngModel)]="pro.back_to_stock" 
+                                                                class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 color000" placeholder="0" type="text">
+                                                        </div>
+                                                        <div class="inner wd10percentFull">
+                                                            <span class="fontPoppin color000 fontSemiBold500">{{pro?.serial_number || 'N/A'}}</span>
+                                                        </div>
+                                                        <div class="inner wd10percentFull">
+                                                            <span class="fontPoppin fontSemiBold500">{{pro?.total_amount | currency}}</span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </accordion-group>
+                                    </accordion>
+                                </div>
+                            </div>
+                            <div *ngIf="refundByAmount" class="returnByAmount cart-bottom text-left"> 
+                                <div class="row ml0 mr0 mb15">
+                                    <div class="col-lg-12 p0 noborderBottom">
+                                        <label [ngClass]="{'bounce is-invalid': refundAmountSubmitted && refundAmountReason == 'Please select any reason'}" class="color000 mb0 fontSemiBold fontPoppin font11">Why do you want a refund for the amount?<sup>*</sup></label>
+                                        <div class="btn-group wd70percent" dropdown>
+                                            <button [ngClass]="{'bounce': refundAmountSubmitted && refundAmountReason == 'Please select any reason'}" id="button-animated" dropdownToggle type="button"
+                                                class="btn dropdown-toggle form-control cust-field font11 borderColorcbcbcb borderRadius5 wd100Percent"
+                                                aria-controls="dropdown-animated">{{refundAmountReason}}
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu">
+                                                <li *ngFor="let reason of refundAmountReasons; let i = index;" (click)="setRefundAmountReason(reason?.reason_name)" role="menuitem">
+                                                    <a class="dropdown-item">{{reason?.reason_name}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <span *ngIf="refundAmountSubmitted && refundAmountReason == 'Please select any reason'" class="bounce is-invalid">
+                                        Reason is required
+                                    </span>
+                                </div>
+                                <div class="row ml0 mr0 mb15">
+                                    <div class="col-lg-12 p0 noborderBottom">
+                                        <label class="color000 mb0 fontSemiBold fontPoppin font11">Notes</label>
+                                        <input [(ngModel)]="refundAmountNote" type="text"  class="form-control cust-field font11 borderColorcbcbcb borderRadius5 dInlineBlock wd70percent"
+                                            placeholder="Type your notes...">
+                                    </div>
+                                </div>
+                                <div class="row ml0 mr0 mb15">
+                                    <div class="col-lg-12 p0 noborderBottom">
+                                        <label [ngClass]="{'bounce is-invalid': refundAmountSubmitted && amountToRefund == ''}" class="color000 mb0 fontSemiBold fontPoppin font11">Type the amount that is going to be refund<sup>*</sup></label>
+                                        <input [ngClass]="{'bounce': refundAmountSubmitted && amountToRefund == ''}" [(ngModel)]="amountToRefund" type="text"  class="form-control text-right cust-field font11 borderColorcbcbcb borderRadius5 dInlineBlock wd70percent"
+                                            placeholder="$00.00">
+                                    </div>
+                                    <span class="bounce is-invalid" *ngIf="refundAmountSubmitted && amountToRefund == ''">
+                                        Amount is required
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 padding15px pl0 pr0 fl">
+                    <div class="dis-ltwrapper"  [ngClass]="{'refundType': refundMethod}">
+                        <div class="dis-inner">
+                            <div class="dis-top">
+                                <div class="top">
+                                    <h3  *ngIf="!refundMethod">Payment Summary</h3>
+                                    <h3 *ngIf="refundMethod">Refund Summary</h3>
+                                </div>
+                                <div class="bottom-info pr15">
+                                    <table class="table totals m0" style="width:100%">
+                                        <thead>
+                                            <tr class="sub-total">
+                                                <td>Sub Total</td>
+                                                <td>{{ticketDetail?.sub_total_amount | currency}}</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody  *ngIf="!refundMethod">
+                                            <tr>
+                                                <td>Discounted amount:</td>
+                                                <td>{{ticketDetail?.discount_amount | currency}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Discount coupon:</td>
+                                                <td>{{ticketDetail?.coupon_code || '---'}}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="total">
+                                                <td>Tax Charged ({{ ticketDetail?.is_apply_sale_tax ? ticketDetail?.tax_value : '0'}}%):</td>
+                                                <td>{{ ticketDetail?.is_apply_sale_tax ? ticketDetail?.tax_amount : '0' | currency}}</td>
+                                            </tr>
+                                            <tr  *ngIf="!refundMethod" class="balance">
+                                                <td>
+                                                    <a *ngIf="ticketDetail?.is_apply_sale_tax" href="JavaScript:void(0)" (click)="openModal(addTaxCertificate,'custModal wd500')" class="btnTaxRefund">Refund Tax</a>
+                                                    <div class="refundTaxOptions pl5 valignMiddle dInlineBlock">
+                                                        <a *ngIf="ticketDetail?.is_tax_refund" href="JavaScript:void(0)" tooltip="View Document" placement="bottom" 
+                                                            (click)="openModal(viewDocument,'custModal wd500')" class="colorWhite valignMiddle">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a *ngIf="ticketDetail?.is_tax_refund" href="JavaScript:void(0)" tooltip="Download Document" placement="bottom" 
+                                                            (click)="downloadDocument()" class="pl10 pr10 colorWhite">
+                                                            <i class="fas fa-download"></i>
+                                                        </a>
+                                                        <a *ngIf="ticketDetail?.is_tax_refund" href="JavaScript:void(0)" tooltip="Send Email" placement="bottom" 
+                                                            (click)="sendEmail()" class="colorWhite valignMiddle">
+                                                            <i class="icon-email2"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="invoiceAction dtable wd100Percent">
+                                <div class="invLeft dInlinetable wd60percent pr15">
+                                    <table class="table totals m0" style="width:100%">
+                                        <tbody>
+                                            <tr class="alltotal">
+                                                <td>Total</td>
+                                                <td>{{ticketDetail?.total_amount | currency}}</td>
+                                            </tr>
+                                            <tr *ngIf="!refundMethod" class="allbalance">
+                                                <td>Balance</td>
+                                                <td>{{ticketDetail?.remaining_amount | currency}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="invRight dInlinetable wd40percent valignMiddle">
+                                    <div class="beforeRfund" *ngIf="!refundMethod">
+                                        <a *ngIf="ticketDetail?.remaining_amount != 0" (click)="recordMorePayment()" href="JavaScript:void(0)" class="dBlock">Make Payment</a>
+                                        <a href="JavaScript:void(0)" (click)="openRefund()" class="dBlock">Refund</a>
+                                    </div>
+                                    <div class="afterRefund" *ngIf="refundMethod">
+                                        <a href="JavaScript:void(0)" (click)="refundType()" class="dBlock">Save</a>
+                                        <a href="JavaScript:void(0)" (click)="closeRefund()" class="dBlock">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rightAccordians">
+                            <accordion [isAnimated]="true" [closeOthers]="true">
+                                <accordion-group heading="Original method of Payment(s)">
+                                    <div id="po-wrapper" class="paymentDetails">
+                                        <div class="po-top-info">
+                                            <div class="inner wd22percent">
+                                                <span class="text-center">Date</span>
+                                            </div>
+                                            <div class="inner wd10percent">
+                                                <span class="text-center">Time</span>
+                                            </div>
+                                            <div class="inner wd30percent">
+                                                <span class="text-center">Payment Method</span>
+                                            </div>
+                                            <div class="inner wd30percent">
+                                                <span class="text-center">Amount</span></div>
+                                        </div>
+                                        <div class="po-inner-list">
+                                            <ul>
+                                                <li *ngFor="let pay of ticketDetail?.TransactionPayment; let i = index;" class="">
+                                                    <div class="inner text-center wd20percent">
+                                                        <span class="text-center">{{pay?.paid_on | customDateFormat }}</span>
+                                                    </div>
+                                                    <div class="inner text-center wd15percent">
+                                                        <span class="text-center">{{pay?.paid_on | date : 'HH:mm' }}</span>
+                                                    </div>
+                                                    <div class="inner text-center wd35percent">
+                                                        <span class="text-center dtable wd100Percent m0">
+                                                            <i *ngIf="pay?.method == 'cash'" class="icon-cash pr5 dtableCell wd10percent"></i>
+                                                            <i *ngIf="pay?.method == 'cheque'" class="icon-check pr5 dtableCell wd10percent"></i>
+                                                            <i *ngIf="pay?.method == 'discount_card'" class="icon-discount_tickets pr5 dtableCell"></i>
+                                                            <i *ngIf="pay?.method == 'paypal_invoice'" class="icon-paypal pr5 dtableCell wd10percent"></i>
+                                                            <i *ngIf="pay?.method == 'net_term'" class="icon-net_terms pr5 dtableCell wd10percent"></i>
+                                                            <i *ngIf="pay?.method == 'store_credit'" class="icon-store_credit pr5 dtableCell wd10percent"></i>
+                                                            <i *ngIf="pay?.method == 'credit_card' || pay?.method == 'stripe'" class="icon-credit_card pr5 dtableCell wd10percent"></i>
+                                                            <i *ngIf="pay?.method == 'paypal_transaction_id'" class="icon-paypal_invoice pr5 dtableCell wd10percent"></i>
+                                                            <i *ngIf="pay?.method == 'gift_card'" class="icon-giftcard_tickets pr5 dtableCell wd10percent"></i>
+                                                            <i *ngIf="pay?.method != 'credit_card' && pay?.method != 'stripe' && pay?.method != 'paypal_transaction_id'" 
+                                                                class="dtableCell fontStyleNormal text-left">{{pay?.method.replace("_", " ") | titlecase}}
+                                                            </i>
+                                                            <i *ngIf="pay?.method == 'credit_card' || pay?.method == 'stripe' " class="dtableCell fontStyleNormal text-left">Credit Card</i>
+                                                            <i *ngIf="pay?.method == 'paypal_transaction_id'" class="dtableCell fontStyleNormal text-left">Paypal Transaction</i>
+                                                            <i *ngIf="pay?.method == 'cheque' && pay.is_paid_amount == false" (click)="openModal(verifyCheckPaid,'custModal wd300'); selectTransactionPayment = pay " class="dtableCell fontStyleNormal paymentUnverified textUndeline">Verify</i>
+                                                            <!-- <i *ngIf="pay?.method == 'cheque'" class="dtableCell fontStyleNormal paymentVerified">Paid</i> -->
+                                                            <!-- <i *ngIf="pay?.method == 'paypal_invoice'" class="dtableCell fontStyleNormal paymentUnverified">unpaid</i> -->
+                                                            <i *ngIf="pay?.method == 'paypal_invoice'" class="dtableCell fontStyleNormal paymentVerified">Paid</i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="inner text-center wd30percent">
+                                                        <span class="text-center ml25">{{pay?.amount || 0 | currency}}</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </accordion-group>
+                                <accordion-group heading="Activity History">
+                                    <div id="po-wrapper" class="paymentDetails">
+                                        <div class="po-top-info">
+                                            <div class="inner wd25percent">
+                                                <span class="text-center">Date</span>
+                                            </div>
+                                            <div class="inner wd15percent">
+                                                <span class="text-center">Time</span>
+                                            </div>
+                                            <div class="inner wd60percent">
+                                                <span class="text-center">Activity</span>
+                                            </div>
+                                        </div>
+                                        <div class="po-inner-list">
+                                            <ul>
+                                                <li *ngFor="let logs of ticketDetail?.TicketLogs; let i = index;" class="">
+                                                    <div class="inner text-center wd25percent">
+                                                        <span class="text-center">{{logs?.date | customDateFormat}}</span>
+                                                    </div>
+                                                    <div class="inner text-center wd15percent">
+                                                        <span class="text-center">{{logs?.date | date : 'HH:mm'}}</span>
+                                                    </div>
+                                                    <div class="inner text-center wd60percent">
+                                                        <span class="text-center">{{logs?.remarks}}</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </accordion-group>
+                            </accordion>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #downloadInvoice>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt20 wd250">
+            <i class="fas fa-download font42 color000"></i>
+            <h2 class="fontPoppin font20 fontSemiBold mt15 color000">
+                How do you want to download your file?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb30">
+        <button type="button" (click)="downloadInvoices('pdf')" 
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">PDF</button>
+        <button type="button" (click)="downloadInvoices('csv')"
+            class="btn modalSaveBtnReceive mb5 fontPoppin borderRadius20">CSV</button>
+        <button (click)="closeModel()" type="button" class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #printInvoice>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt20 wd250">
+            <i class="icon-print font42 color000"></i>
+            <h2 class="fontPoppin font20 fontSemiBold mt15 color000">Print Invoice</h2>
+            <p class="fontPoppin font12 mb0 color808080">Select what kind of invoice would you like to print</p>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb30">
+        <button  type="button" (click)="printInVoice(true)"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Invoice with details</button>
+        <button type="button" (click)="printInVoice(false)"
+            class="btn modalSaveBtnReceive mb5 fontPoppin borderRadius20">Invoice without details</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #addTaxCertificate>
+    <app-toaster (closeToaster)="closePopUpToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+        [hideToster]="showPopUpToaster"></app-toaster>
+    <div class="modal-header noborder pt40 pb0">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold color000">Add Tax Certificate Device</h2>
+        </div>
+    </div>
+    <div class="modal-body" >
+        <div class="items-form-content pl30 pr30">
+            <!--  -->
+            <form autocomplete="off">
+                <div class="row mb15">
+                    <div class="col-lg-6">
+                        <label [ngClass]="{ 'bounce is-invalid': refundSalesTaxSubmitted && state == ''}" for="taxState" class="color000 mb0 fontPoppin font12 fontSemiBold">State</label>
+                        <input [ngClass]="{ 'bounce': refundSalesTaxSubmitted && state == ''}"  [(ngModel)]="state" type="text" name="taxState" id="taxState"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Type: State">
+                        <span class="bounce is-invalid" *ngIf="refundSalesTaxSubmitted && state == ''">State is required</span>
+                    </div>
+                    <div class="col-lg-6">
+                        <label [ngClass]="{ 'bounce is-invalid': refundSalesTaxSubmitted && taxId == ''}" for="taxCerID" class="color000 mb0 fontPoppin font12 fontSemiBold">Tax Certificate ID</label>
+                        <input [ngClass]="{ 'bounce is-invalid': refundSalesTaxSubmitted && taxId == ''}" [(ngModel)]="taxId" type="text" name="taxCerID" id="taxCerID"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Type the tax certificate ID">
+                        <span class="bounce is-invalid" *ngIf="refundSalesTaxSubmitted && taxId == ''">Tax ID is required</span>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-lg-12">
+                        <label [ngClass]="{ 'bounce is-invalid': refundSalesTaxSubmitted && document == null}" for="taxDocument" class="color000 mb0 fontPoppin font12 fontSemiBold">Upload tax document</label>
+                        <div class="input-group input-file addDeviceimages" name="device_pictures">
+                            <label *ngIf="document != null"for="device_pictures"><span>{{document?.name}} document uploaded</span></label>
+                            <label *ngIf="document == null"for="device_pictures"><span>Upload new tax exemption document</span></label>
+                                <input [ngClass]="{ 'bounce': refundSalesTaxSubmitted && document == null}" class="form-control cust-field" 
+                                    type="file" #imageInput name="device_pictures" id="device_pictures" accept="image/png, image/jpeg"
+                                    (change)="addTaxDocument($event)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default btn-choose" type="button">Upload file</button>
+                            </span>
+                        </div>
+                        <span class="bounce is-invalid" *ngIf="refundSalesTaxSubmitted && document == null">Document is required</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button (click)="refundSalesTax()" type="button" class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Save</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_DateRange>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold color000">
+                Date Range</h2>
+            <p class="fontPoppin font12 mb0 color808080">Set your date range.</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <div class="items-form-content popupList">
+            <form autocomplete="off" action="#">
+                <div class="row mb15">
+                    <div class="col-lg-12">
+                        <label class="fontPoppin mb0 font12 fontSemiBold color000" for="startDate">Start date</label>
+                        <!-- <datetime-popup [(value)]="myDate"></datetime-popup> -->
+                        <input [(ngModel)]="fromDate" type="text" name="startDate" id="startDate"
+                            placeholder="Select From Date" class="form-control font12 borderColorcbcbcb " bsDatepicker
+                            [bsConfig]="{showWeekNumbers:false, isAnimated: true  , dateInputFormat: 'MMM/DD/YYYY'}"
+                            placeholder="MM/DD/YY" [isOpen]="isOpenfromDate">
+                        <span (click)="isOpenfromDate = !isOpenfromDate" class="datePickerIcon"></span>
+                    </div>
+                </div>
+                <div class="row mb15">
+                    <div class="col-lg-12">
+                        <label class="fontPoppin mb0 font12 fontSemiBold color000" for="endDate">End Date</label>
+                        <input type="text" [(ngModel)]="toDate" name="endDate" id="endDate" placeholder="Select To Date"
+                            class="form-control font12 borderColorcbcbcb" bsDatepicker
+                            [bsConfig]="{showWeekNumbers:false, minDate: fromDate , isAnimated: true  , dateInputFormat: 'MMM/DD/YYYY'}"
+                            placeholder="MM/DD/YY" [isOpen]="isOpentoDate">
+                        <span (click)="isOpentoDate = !isOpentoDate" class="datePickerIcon"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button [ngClass]="{'disabled' : toDate == null || fromDate == null}" (click)="applyDateRange()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Filter</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #viewDocument>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center pt15">
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000">Document</h2>
+        </div>
+        <div class="docView">
+            <div *ngIf="!ticketDetail?.is_tax_refund" style="color: black;">Document not attached.</div>
+            <div *ngIf="ticketDetail?.is_tax_refund" [ngStyle]="{'background-image':'url('+ [documentPath+ticketDetail?.tax_refund?.document_path] +')'}"
+             class="docImage"></div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button (click)="modalRef.hide()" type="button" class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite">Close</button>
+    </div>
+</ng-template>
+<ng-template #verifyCheckPaid>
+    <div class="modal-body" [ngClass]="{'bounce colorRedError':userNotValid}">
+        <div class="modalTitle mx-auto text-center mt30">
+            <i class="icon-invoice font42 color000"></i>
+            <h2 class="fontPoppin font18 fontSemiBold mt15 color000">Please login to confirm<br> the check clearence
+            </h2>
+        </div>
+        <form autocomplete="off">
+            <div class="row mb15 mt15">
+                <div class="col-lg-12">
+                    <label
+                        [ngClass]="{'bounce colorRedError':verifyChequeSubmitted && userEmail== '' || verifyChequeSubmitted && validateEmail(this.userEmail)}"
+                        class="fontPoppin mb0 font12 fontSemiBold color000">User Name</label>
+                    <input (blur)='isEmailValid = validateEmail(userEmail)'
+                        [ngClass]="{'bounce':verifyChequeSubmitted && userEmail== '' || !isEmailValid}"
+                        [(ngModel)]="userEmail" type="text"
+                        class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                        placeholder="example@example.com" [ngModelOptions]="{standalone: true}">
+                    <span  *ngIf="userEmail == ''" style="color: red;"
+                        [ngClass]="{'bounce colorRedError':verifyChequeSubmitted && userEmail== ''}">User name is
+                        required</span>
+                    <span *ngIf="!isEmailValid && userEmail !== ''" style="color: red;" [ngClass]="{'bounce colorRedError': verifyChequeSubmitted && !isEmailValid}">Invalid Email</span>
+                </div>
+            </div>
+            <div class="row mb15">
+                <div class="col-lg-12">
+                    <label [ngClass]="{'bounce colorRedError':verifyChequeSubmitted && userPwd== ''}"
+                        class="fontPoppin mb0 font12 fontSemiBold color000">Password</label>
+                    <input [ngClass]="{'bounce':verifyChequeSubmitted && userPwd== ''}"
+                        [(ngModel)]="userPwd" type="password"
+                        class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                        placeholder="Type the password here" [ngModelOptions]="{standalone: true}">
+                    <span *ngIf="userPwd== ''"
+                        [ngClass]="{'bounce colorRedError':verifyChequeSubmitted && userPwd== ''}">Password is
+                        required</span>
+                </div>
+            </div>
+        </form>
+        <!-- <span *ngIf="userNotValid" class="bounce colorRed">{{userMsg}}</span> -->
+    </div>
+    <div [ngClass]="{'bounce colorRedError':userNotValid}"
+        class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button [ngClass]="{ 'disabled': cencleButtonDisable}" (click)="onVerifyCheque(ticketDetail._id, selectTransactionPayment._id,userEmail,userPwd);" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Yes,
+            confirm it</button>
+        <button (click)="closeModel()" type="button" class="btn modalSaveBtnReceive fontPoppin borderRadius20">No,
+            go back</button>
+    </div>
+</ng-template>
+<ng-template #checkoutWithoutBalance>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <i class="fas fa-shopping-cart color000 font42"></i>
+            <h2 class="fontPoppin font20 fontSemiBold mt15 color000">Do you want to chekout this ticket?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb30">
+        <button type="button" (click)="closeModel(); checkOutTicket(selectedTicket._id)" 
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Yes, checkout</button>
+        <button (click)="closeModel()" type="button" class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #checkoutWithBalance>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font42 fontSemiBold mt15 color000">{{selectedTicket.remaining_amount | currency}}</h2>
+            <p class="fontPoppin font12 mb0 color808080">balance remaining agianst this ticket</p>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb30">
+        <button type="button" (click)="closeModel(); goToCheckOut(selectedTicket)" 
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Make Payment</button>
+            <!-- <button type="button" (click)="closeModel(); checkOutTicket(selectedTicket._id)" 
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Continue with checkout</button> -->
+        <button (click)="closeModel()" type="button" class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #reopenTicket>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <i class="fas fa-box-open color000 font42"></i>
+            <h2 class="fontPoppin font20 fontSemiBold mt15 color000">Re-open this ticket?</h2>
+            <p class="fontPoppin font12 mb0 color808080">Please select the tasks to Re-open</p>
+        </div>
+    </div>
+    <div class="modal-body pl30 pr30">
+       <div class="reOpenDevices">
+        <accordion [isAnimated]="true" [closeOthers]="true">
+            <accordion-group *ngFor="let deviceDetail of tasksReopen;let d = index">
+                <ul accordion-heading (click)="noOpenAccordianOnInput($event)">
+                    <li>
+                        <div class="outer">
+                            <div class="inner wd3percent allCheckbox">
+                                <span class="ml0">
+                                    <input (click)="openDeviceAllTasks($event,deviceDetail)" class="checkbox-custom"  id="devReopen{{d + 1}}" name="devReopen{{d + 1}}" type="checkbox">
+                                    <label class="checkbox-custom-label" for="devReopen{{d + 1}}"></label>
+                                </span>
+                            </div>
+                            <div class="inner wd60percent text-left pl10">
+                                <span class="font14 fontSemiBold fontPoppin">
+                                    {{deviceDetail.device.device_keeping_unit}}
+                                    - {{deviceDetail?.device.deviceBrand?.brand_name}} Repair</span>
+                            </div>
+                            <div class="inner wd15Percent">
+                                <span class="fontPoppin fontSemiBold500">{{deviceDetail.repair_count}} Repair</span>
+                            </div>
+                            <div class="inner wd15Percent text-right">
+                                <span class="fontPoppin fontSemiBold500">{{deviceDetail.device_total_repair_time_string}}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul>
+                    <li *ngFor="let deviceItem of deviceDetail.deviceItems; let i = index ">
+                        <div class="outer">
+                            <div class="inner wd3percent allCheckbox">
+                                <span class="text-left">
+                                    <input (click)="openDeviceTask($event,deviceDetail?.device?._id,deviceItem?._id)" [checked]="checkServiceInList(deviceDetail?.device?._id,deviceItem?._id)" class="checkbox-custom" type="checkbox"  name="reopen{{d + i}}"   id="reopen{{d + i}}">
+                                    <label class="checkbox-custom-label" for="reopen{{d + i}}"></label>
+                                </span>
+                            </div>
+                            <div class="inner wd60percent text-left pl10">
+                                <span class="fontPoppin fontSemiBold500">R{{i + 1}} - {{deviceItem?.Product?.product_name}}</span>
+                            </div>
+                            <div class="inner wd15Percent">
+                                <!-- <span class="fontPoppin fontSemiBold500"></span> -->
+                            </div>
+                            <div class="inner wd15Percent text-right pr10">
+                                <span class="fontPoppin fontSemiBold500">{{_repairRoom.time_convert(deviceItem?.time_log)}}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </accordion-group>
+        </accordion>
+       </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb30">
+        <button type="button" (click)="closeModel(); taskDeviceReOpen()" 
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Re-open</button>
+        <button (click)="closeModel()" type="button" class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+
+<!-- <app-download-file #downloadFileModal  (downloadFileEmit)="downloadInvoices($event)"> </app-download-file> -->

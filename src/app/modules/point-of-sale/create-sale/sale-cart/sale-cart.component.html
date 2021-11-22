@@ -1,0 +1,310 @@
+<div [ngClass]="{'inner-wrapper':true ,'down-list':isScrollable}">
+    <div *ngIf="loading" class="luna-loading zIndex100"></div>
+    <div class="top" [ngClass]="{'empty-cust':saleCartService.customer == null}">
+        <div class="empty-text" *ngIf="createSaleService.isObjectEmpty(saleCartService.customer)">
+            <h2>Customer name</h2>
+        </div>
+        <div class="left">
+            <div class="cutomer-title">
+                <h2>
+                    {{saleCartService.customer?.first_name + ' ' + saleCartService.customer?.last_name}}
+                    <div class="titleHover dtable">
+                        <i class="icon-name dtableCell wd10percent font11 text-right"></i>
+                        <a *ngIf="!editContactField" class="dtableCell wd80percent font12"
+                            href="tel:{{saleCartService.customer?.phone}}">{{saleCartService.customer?.phone}}</a>
+                        <input *ngIf="editContactField" [(ngModel)]="saleCartService.customer.phone" type="text"
+                            class="form-control contactEditInput">
+                        <i *ngIf="!editContactField" (click)="editContactNumber()"
+                            class="icon-edit dtableCell wd10percent font11 text-left"></i>
+                        <i *ngIf="editContactField" (click)="saveContactNumber()"
+                            class="far fa-save dtableCell wd10percent font11 text-left"></i>
+                    </div>
+                </h2>
+            </div>
+            <div class="title-info-wrapper">
+                <div class="title-info">
+                    <a (click)="onCustomerInfoClick(saleCartService.customer?._id)" class="cust-info color000 font12">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                    <a (click)="createSaleService.openModal(open_removeCustomerFromCart,'custModal wd300')"
+                        class="color000 font12">
+                        <i class="icon-delete"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="text-right">
+                <div class="iconActionBox convertOrder">
+                    <a *ngIf='changeSaveB'
+                        [ngClass]="{'btn-disable': saleCartService.createSaleInput.saleCart.length==0}"
+                        (click)="changeSaveButton()">
+                        <div class="icon-img">
+                            <i class="icon-draft"></i>
+                            <div class="text-img"><span>Order</span></div>
+                        </div>
+                    </a>
+                    <a *ngIf='!changeSaveB'
+                        [ngClass]="{'btn-disable': saleCartService.createSaleInput.saleCart.length==0}"
+                        (click)="changeSaveButton()">
+                        <div class="icon-img">
+                            <i class="icon-quote"></i>
+                            <div class="text-img"><span>Quote</span></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="iconActionBox trashOrder">
+                    <a [ngClass]="{'btn-disable':saleCartService.createSaleInput.saleCart.length==0}"
+                        (click)="createSaleService.openModal(open_removeProdutsFromCart,'custModal wd300')">
+                        <div class="icon-img">
+                            <i class="icon-delete"></i>
+                            <div class="text-img"><span>Delete</span></div>
+                        </div>
+                    </a>
+                </div>
+                <!-- <div class="iconActionBox convertOrder">
+                    <a [ngClass]="{'btn-disable':''}" (click)="minOrder()">
+                        <div class="icon-img">
+                            <i class="icon-minimized"></i>
+                            <div class="text-img"><span>Minimize</span></div>
+                        </div>
+                    </a>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="scroll-content">
+        <!-- <div  class="luna-loading"></div> -->
+        <div class="current-order-table-wrapper table-responsive">
+            <div class="empty-text">
+                <h2 class="font16 fontSemiBold500"><i class="fa fa-shopping-cart font64" aria-hidden="true"></i>Cart is
+                    empty</h2>
+            </div>
+            <div class="cart-list">
+                <div class="cart-top">
+                    <div class="inner wd51percent"><span>Item</span></div>
+                    <div class="inner wd11Percent"><span>Qty.</span></div>
+                    <div class="inner wd11Percent"><span>Discount</span></div>
+                    <div class="inner wd11Percent"><span>Price</span></div>
+                    <div class="inner wd11Percent"><span>Total</span></div>
+                    <div class="inner wd5percent"><span></span></div>
+                </div>
+                <div class="cart-bottom">
+                    <!-- <cart-accordion [cart]="saleCartService.saleCart">
+                    </cart-accordion> -->
+                    <accordion [isAnimated]="true" [closeOthers]="true">
+                        <div *ngFor="let product of saleCartService.createSaleInput.saleCart" class="giftList">
+                            <!--  For Gift -->
+                            <sale-gift [gift]="product" *ngIf="product.product_type == 'giftCard'"
+                                (removeFromCart)="onRemoveItemFromCart($event)"
+                                (onCalculateTotal)="onCalculateSubTotal()">
+                            </sale-gift>
+                            <!-- <cart-accordion [product]="product"></cart-accordion> -->
+
+                            <sale-product
+                                *ngIf="(product.product_type == 'product' || product.product_type == 'custom' ) && !product.is_device && (!product['Suppliers'] || product['Suppliers'].length <= 1)"
+                                class="giftList addingProduct addingBundleProduct" [product]="product"
+                                [isDeviceProduct]="false" (onCalculateTotal)="onCalculateSubTotal()"
+                                (removeFromCart)="onRemoveItemFromCart($event[0])">
+                            </sale-product>
+                            <sale-procduct-with-multiple-supplier class="giftList addingProduct addingBundleProduct"
+                                *ngIf="product.product_type == 'product' && !product.is_device 
+                            && product['Suppliers'] && product['Suppliers'].length > 1" [product]="product"
+                                [isDeviceProduct]="false" (onCalculateTotal)="onCalculateSubTotal()"
+                                (removeFromCart)="onRemoveItemFromCart($event[0])">
+
+                            </sale-procduct-with-multiple-supplier>
+
+                            <!--  When Device is added first and all type items added in it-->
+                            <sale-device-product class="giftList deviceList"
+                                *ngIf="product.product_type == 'product' && product.is_device" [device]="product"
+                                (onCalculateTotal)="onCalculateSubTotal()"
+                                (removeFromCart)="onRemoveItemFromCart($event[0])">
+                            </sale-device-product>
+                        </div>
+                    </accordion>
+
+                </div>
+            </div>
+        </div>
+        <div class="bottom order-cash-details po-info box-shadow">
+            <div class="down">
+                <div class="center">
+                    <a (click)="downcart()"><i class="fas fa-caret-down"></i></a>
+                </div>
+            </div>
+            <div class="up">
+                <div class="center">
+                    <a (click)="upcart()"><i class="fas fa-caret-up"></i></a>
+                </div>
+            </div>
+
+            <div class="rightText"><span>Total: {{createSaleInput.sub_total_amount | currency}}</span></div>
+            <div class="inner-top">
+                <div class="notes-field">
+                    <textarea [(ngModel)]="createSaleInput.additional_notes" class="form-control"
+                        placeholder="Add Note..."></textarea>
+                    <div class="notes-privte">
+                        <div class="left">
+                            <input [(ngModel)]="createSaleInput.is_private" id="post-private-1" class="checkbox-custom"
+                                name="post-private-1" type="checkbox">
+                            <label for="post-private-1" class="checkbox-custom-label">Post as
+                                private note</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="cash-field">
+                    <div class="top">
+                        <table class="table" style="width:100%">
+                            <tbody>
+                                <tr colspan="2">
+                                    <td>Subtotal:</td>
+                                    <td>{{createSaleInput.sub_total_amount | currency}}</td>
+                                </tr>
+                                <tr colspan="2">
+                                    <td>Discount this order by:</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <div id="discount-cat-btn" class="btn-group " role="group"
+                                                aria-label="Basic example">
+                                                <a id="$" class="btn btn-primary btn-sm"
+                                                    [ngClass]="{'active':!createSaleInput.is_discount_percentage, 'notActive': createSaleInput.is_discount_percentage }"
+                                                    data-toggle="dis-cat" data-title="$"
+                                                    (click)="createSaleInput.is_discount_percentage = false;createSaleInput.discount_value = ''; onDiscountChange()">$</a>
+
+                                                <a id="%" class="btn btn-primary btn-sm"
+                                                    [ngClass]="{'active':createSaleInput.is_discount_percentage, 'notActive': !createSaleInput.is_discount_percentage }"
+                                                    data-toggle="dis-cat" data-title="%"
+                                                    (click)="createSaleInput.is_discount_percentage = true;createSaleInput.discount_value = ''; onDiscountChange()">%</a>
+
+                                                <input numeric decimals="2" class="form-control input-group-addon"
+                                                    type="text" [(ngModel)]="createSaleInput.discount_value"
+                                                    placeholder="{{createSaleInput.is_discount_percentage ?  '0.00': '$0.00'}}"
+                                                    (change)="onDiscountChange()">
+                                                <input type="hidden" name="dis-cat" id="dis-cat">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr colspan="2">
+                                    <td>
+                                        <div class="check-taxcharge">
+                                            <input id="taxchargecheckbox-1" class="checkbox-custom"
+                                                name="taxchargecheckbox-1"
+                                                [(ngModel)]="createSaleInput.is_apply_sale_tax"
+                                                (change)="onApplySaleTaxAmountChange(createSaleInput.is_apply_sale_tax)"
+                                                type="checkbox">
+                                            <label for="taxchargecheckbox-1" class="checkbox-custom-label">
+                                                Charge Taxes
+                                                (<span>{{createSaleInput['is_tax_percentage'] ? createSaleInput['tax_value'] : createSaleInput['tax_value'] | currency}}%</span>):
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span>{{createSaleInput['tax_amount'] | currency}}</span>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bottom">
+                        <table class="table" style="width:100%">
+                            <tbody>
+                                <tr colspan="2">
+                                    <td>Total</td>
+                                    <td>{{createSaleInput.total_amount| currency}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- </form> -->
+        </div>
+    </div>
+    <div *ngIf='changeSaveB' class="checkout-btns" style="padding-bottom: 0px !important">
+        <div *ngIf='!isQuoteSave' [ngClass]="{'btn-disable':''}" class="save-btn" style="width: 15% !important"><a
+                class="save-order" (click)="onSaveOrder('quote')">Save
+                Quote</a></div>
+        <div class="save-btn" style="width: 35% !important">
+            <span class="color000 pl5" *ngIf='!isQuoteSave'>To print and email save this quotation<sup>*</sup></span>
+            <span class="color000 pl5" *ngIf='isQuoteSave'>To check out this quote convert to order<sup>*</sup></span>
+        </div>
+        <div [ngClass]="{'btn-disable': saleCartService.createSaleInput.saleCart.length==0}"
+            class="check-out-btn  d-click-wrap" style="width: 15% !important">
+            <a *ngIf='isQuoteSave' href="JavaScript:void(0);" (click)="onSendEmail()" class="check-out d-click-btn">Send
+                Email</a>
+        </div>
+        <div [ngClass]="{'btn-disable': saleCartService.createSaleInput.saleCart.length==0}"
+            class="check-out-btn  d-click-wrap" style="width: 15% !important">
+            <a *ngIf='isQuoteSave' href="JavaScript:void(0);" (click)="OnPrintInvoice()" class="check-out d-click-btn">
+                Print Quote
+            </a>
+        </div>
+    </div>
+    <div *ngIf='!changeSaveB' class="checkout-btns">
+        <div (click)="createSaleService.openModal(open_closeOrder,'custModal wd300')"
+            [ngClass]="{'btn-disable': saleCartService.createSaleInput.saleCart.length==0}" class="save-btn"><a
+                class="save-order">Close
+                Order</a> </div>
+        <div [ngClass]="{'btn-disable': createSaleInput.saleCart.length==0}" class="check-out-btn  d-click-wrap"><a
+                href="JavaScript:void(0);" (click)="onSaveOrder('order')" class="check-out d-click-btn">Check Out</a>
+        </div>
+    </div>
+</div>
+
+<ng-template #open_removeCustomerFromCart>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30">
+            <i class="icon-invoice font42 color000"></i>
+            <h2 class="fontPoppin font18 fontSemiBold mt15 color000">
+                Removing customer will<br>clear the cart!
+            </h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button (click)="onDiscardOrder(); createSaleService.closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Yes,
+            remove </button>
+        <button (click)="createSaleService.closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20">No,
+            go back</button>
+    </div>
+</ng-template>
+<ng-template #open_removeProdutsFromCart>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30">
+            <i class="icon-invoice font42 color000"></i>
+            <h2 class="fontPoppin font18 fontSemiBold mt15 color000">
+                Remove all products from the cart?
+            </h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button (click)="onRemoveAllProduct(); createSaleService.closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Yes,
+            remove </button>
+        <button (click)="createSaleService.closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20">No,
+            go back</button>
+    </div>
+</ng-template>
+<ng-template #open_closeOrder>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30">
+            <i class="icon-invoice font42 color000"></i>
+            <h2 class="fontPoppin font18 fontSemiBold mt15 color000">
+                Closing order will<br> clear the cart?
+            </h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button (click)="onDiscardOrder(); createSaleService.closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Yes,
+            close it </button>
+        <button (click)="createSaleService.closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20">No,
+            go back</button>
+    </div>
+</ng-template>

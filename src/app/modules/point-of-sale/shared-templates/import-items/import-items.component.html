@@ -1,0 +1,115 @@
+<ng-template  #importModal let-modal>
+    <div *ngIf='fileUploadTemplate'> 
+        <div class="modal-body">
+            <h2 class="fontPoppin notextTransform font24 fontBold color000">Import {{ItemToImport}}</h2>
+            <p>Upload your {{ItemToImport}} as a .CSV or .XSL files.</p>
+            <div  class="download-sample"><a
+                    href="../../../../assets/ImportSampleFiles/{{sampleCsvPath}}" download>Download sample csv</a>
+            </div>
+            <!-- ImportProductsSample.csv -->
+            <div class="import-file">
+                <div class="input-group input-file" name="add-importPO">
+                    <label *ngIf="fileName != ''" for="add-importPO"><span>{{fileName}}</span></label>
+                    <label *ngIf="fileName == ''" for="add-importPO"><span>Please select csv file</span></label>
+                    <input type="file" accept=".csv" #uploads (change)="onFileChanged(uploads.files)" multiple
+                        value="process" name="add-importPO" id="add-importPO" class="form-control cust-field"
+                        placeholder="Example: filename.csv">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default btn-choose" type="button">Browse</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button (click)="ngOnDestroy()"  type="button"
+                class="btn btn-default fontSemiBold fontPoppin notextTransform padding5px font13 ">Cancel</button>
+            <button (click)="fileUploadTemplate=false"  [ngClass]="{ 'disabled': fileName == ''}"
+                class="btn btn-default fontSemiBold fontPoppin notextTransform padding5px font13">Upload</button>
+        </div>
+    </div>
+    <div *ngIf='!fileUploadTemplate'> 
+        <div class="modal-header">
+        </div>
+        <div class="modal-body">
+            <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+            [hideToster]="showToaster"></app-toaster> 
+            <h2 class="fontPoppin notextTransform fontBold font24 color000">Configure columns to import</h2>
+            <p>Match the reserved attributes on import {{ItemToImport}} to the columns header in your CSV</p>
+            <p>Please note that you may not be importing all of these attributes. Feel free to "Skip" the ones that are not
+                present in your file.</p>
+            <div class="merge-columns scrollmenu">
+                <carousel [noWrap]="!noWrap" [interval]="false" [startFromIndex]="0">
+                    <slide *ngFor="let field of itemsFields; let i = index;" class="">
+                        <div class="column-box">
+                            <div class="bottom">
+                                <div *ngIf="field.selectedBox && !field.skip" class="selectedBox text-center">
+                                    <div class="selectedData">
+                                        <p class="fontBold fontPoppin font12">{{field.name }}<span
+                                                class="dBlock fontRegular">Merge Field</span></p>
+                                    </div>
+                                    <div class="mergeAction">
+                                        <a class="dInlineBlock colorGreen" (click)="editCol(i)">Edit</a>
+                                        <a class="dInlineBlock colorGreen" *ngIf="checkSkipAble(i)" (click)="skipItemSlide(i)">Skip</a>
+                                    </div>
+                                </div>
+                                <div *ngIf="field.skip && !field.selectionBox" class="selectedBox text-center">
+                                    <div class="selectedData">
+                                        <p class="fontBold fontPoppin font12"><span class="dBlock fontRegular">Will not be
+                                                imported</span></p>
+                                    </div>
+                                    <div class="mergeAction">
+                                        <a class="dInlineBlock colorGreen" (click)="editCol(i)">Edit</a>
+                                    </div>
+                                </div>
+                                <div *ngIf="field.selectionBox" class="selectionBox text-center">
+                                    <div class="btn-group" dropdown>
+                                        <button id="button-animated" dropdownToggle type="button"
+                                            class="btn btn-primary dropdown-toggle"
+                                            aria-controls="dropdown-animated">{{colItem[i]}}
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                                            aria-labelledby="button-animated">
+                                            <li *ngFor="let m_col of mappedColumns; let k = index;"
+                                                (click)="changeColItemName(m_col,i)" role="menuitem">
+                                                <a class="dropdown-item">{{m_col}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="saveAction">
+                                        <a *ngIf='field.name!="" &&  field.name!=Undefined' class="dInlineBlock"
+                                            (click)="changeValueOfMapColumns('mappedColumn',i)">Save</a>
+                                        <a *ngIf='field.name=="" ||  field.name==Undefined' class="dInlineBlock"
+                                            (click)="saveUnkownCol(i)">Add</a>
+                                        <a *ngIf='field.name!="" &&  field.name!=Undefined' class="dInlineBlock"
+                                            (click)="skipEditedCol(i)">Skip</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="view-column">
+                                <label>{{field.name || field.csvName |titlecase }}</label>
+                                <div class="scroll-content">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr *ngFor="let data of itemDataList;let j = index;" colspan="2">
+                                                <td>{{j+1}}</td>
+                                                <td>{{itemDataList[j][fileFieldsName[i]]}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </slide>
+                </carousel>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button (click)="ngOnDestroy()" type="button"
+                class="btn btn-default fontSemiBold fontPoppin notextTransform padding5px font13">Cancel</button>
+          <button (click)="doneMappingItems()" 
+            type="button" class="btn btn-default fontSemiBold fontPoppin notextTransform padding5px font13">Done</button>
+        </div>
+    </div>
+</ng-template>
+

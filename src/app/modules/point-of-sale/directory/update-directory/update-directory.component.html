@@ -1,0 +1,464 @@
+<div
+  class="tab-pane fade active show"
+  id="tab-s-one"
+  role="tabpanel"
+  aria-labelledby="pills-tab-s-two"
+>
+  <div class="container-fluid container-view-directory" [formGroup]="directoryForm" novalidate>
+
+    <div class="row">
+      <div class="col-md-12">
+        <h2 class="title-view">General Information</h2>
+      </div>
+    </div>
+
+    <div class="row sub-container">
+      <div class="col-md-3">
+        <div class="slideshow-container">
+          <div class="slidesUpdate">
+            <!--<div class="numbertext">1 / 3</div>-->
+            <img
+              src="../../../../../assets/images/upload-image-test/upload-image.png"
+              style="width:100%"
+            />
+            <!--<div class="text">Caption Text</div>-->
+          </div>
+
+          <div class="slidesUpdate">
+            <!-- <div class="numbertext">2 / 3</div>-->
+            <img
+              src="../../../../../assets/images/upload-image-test/upload-image1.png"
+              style="width:100%"
+            />
+            <!--<div class="text">Caption Two</div>-->
+          </div>
+
+          <div class="slidesUpdate">
+            <!-- <div class="numbertext">3 / 3</div>-->
+            <img
+              src="../../../../../assets/images/upload-image-test/upload-image2.png"
+              style="width:100%"
+            />
+            <!--<div class="text">Caption Three</div>-->
+          </div>
+
+          <!--<a class="prev" (click)="plusSlides(-1)">&#10094;</a>
+              <a class="next" (click)="plusSlides(1)">&#10095;</a>-->
+        </div>
+        <br />
+
+        <div style="text-align:center">
+          <span class="dotUpdate" (click)="currentSlide(1)"></span>
+          <span class="dotUpdate" (click)="currentSlide(2)"></span>
+          <span class="dotUpdate" (click)="currentSlide(3)"></span>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <form autocomplete="off" [formGroup]="directoryForm" novalidate>
+          <div class="row">
+            <div class="col form-group">
+              <label class="store-label">Store name:</label>
+              <h1 class="store-name">{{ storeData.name }}</h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col form-group">
+              <label class="store-label"><span class="required-information">*
+              </span>Phone number:</label>
+              <input class="form-control" formControlName="phone" type="tel">
+            </div>
+            <div class="col form-group">
+              <label class="store-label"><span class="required-information">*
+              </span>Email:</label>
+              <input class="form-control" formControlName="email" type="email">
+              <span
+                >(This information is only for us to contact you. This email
+                will not be shown in the directory public website.)
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col form-group">
+              <label class="store-label">About us:</label>
+              <input class="form-control" formControlName="aboutUs" type="text">
+            </div>
+            <!--<p>Form value: {{ directoryForm.value | json }}</p>
+        <p>Form status: {{ directoryForm.status | json }}</p>-->
+          </div>
+        </form>
+        <!--<form autocomplete="off" [formGroup]="directoryForm" novalidate>
+              <div class="form-group">
+                  <label>Name:</label>
+                  <input class="form-control" formControlName="name" type="text">
+              </div>
+              <div *ngIf="directoryForm.controls['name'].invalid && (directoryForm.controls['name'].dirty || directoryForm.controls['name'].touched)" class="alert alert-danger">
+                  <div *ngIf="directoryForm.controls['name'].errors.required">
+                    Name is required.
+                  </div>
+              </div>
+               <div class="form-group">
+                  <label>Address:</label>
+                  <input class="form-control" formControlName="address" type="text">
+              </div>
+               <div class="form-group">
+                <label class="form-check-label">
+                  <input class="checkbox checkbox-position" type="checkbox" [checked]="storeData.schedule.monday.active" formControlName="monday"/>
+                  <span>Monday</span>
+                </label>
+                <label class="form-check-label">
+                  <input class="checkbox checkbox-position" type="checkbox" [checked]="storeData.schedule.tuesday.active" formControlName="tuesday"/>
+                  <span>Tuesday</span>
+                </label>
+                <label class="form-check-label">
+                  <input class="checkbox checkbox-position" type="checkbox" [checked]="storeData.schedule.wednesday.active" formControlName="wednesday"/>
+                  <span>Wednesday</span>
+                </label>
+
+                <div class="invalid-feedback" *ngIf="directoryForm.controls['scheduleDays'].errors && directoryForm.controls['scheduleDays'].errors.requireOneCheckboxToBeChecked">At least one checkbox is required to check</div>
+              </div>
+              <div *ngIf="directoryForm.controls['address'].invalid && (directoryForm.controls['address'].dirty || directoryForm.controls['address'].touched)" class="alert alert-danger">
+                  <div *ngIf="directoryForm.controls['address'].errors.required">
+                    email is required.
+                  </div>
+              </div>
+              <button type="submit"
+                  [disabled]="directoryForm.pristine || directoryForm.invalid" class="btn btn-success">
+                  Save
+              </button>
+        </form>
+        <br />
+        <p>Form value: {{ directoryForm.value | json }}</p>
+        <p>Form status: {{ directoryForm.status | json }}</p>-->
+      </div>
+    </div>
+    <div class="row sub-container">
+      <div class="col-md-4">
+        <label class="store-label">Addres:</label>
+        <h5 class="store-name">{{ storeData.address }}</h5>
+      </div>
+      <div class="col-md-8">
+        <h2 class="title-view">Google Maps</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="divider custom-divider"></div>
+
+      <div class="col-md-12">
+        <h2 class="title-view">Schedule</h2>
+      </div>
+    </div>
+    <div class="row sub-container schedule-content" formGroupName="scheduleDays">
+      <div class="col-md-12">
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+                  [checked]="storeData.schedule.monday.active"
+                  formControlName="monday"
+                />
+                <span>Monday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.monday.allDay"
+
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.monday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Open:</label>
+              <timepicker class="position-float" [formControlName]="'mondayOpen'"></timepicker>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.monday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Close:</label>
+              <timepicker class="position-float" [formControlName]="'mondayOpen'"></timepicker>
+            </div>
+
+            <div *ngIf="!this.directoryForm.get('scheduleDays.monday').value" class="col">
+              <label>Closed</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.tuesday.active"
+                  formControlName="tuesday"
+                />
+                <span>Tuesday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.tuesday.allDay"
+
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.tuesday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Open:</label>
+              <timepicker class="position-float" [formControlName]="'tuesdayOpen'"></timepicker>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.tuesday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Close:</label>
+              <timepicker class="position-float" [formControlName]="'tuesdayOpen'"></timepicker>
+            </div>
+
+            <div *ngIf="!this.directoryForm.get('scheduleDays.tuesday').value" class="col">
+              <label>Closed</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.wednesday.active"
+                  formControlName="wednesday"
+                />
+                <span>Wednesday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.wednesday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.wednesday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Open:</label>
+              <timepicker class="position-float" [formControlName]="'wednesdayOpen'"></timepicker>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.wednesday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Close:</label>
+              <timepicker class="position-float" [formControlName]="'wednesdayOpen'"></timepicker>
+            </div>
+
+            <div *ngIf="!this.directoryForm.get('scheduleDays.wednesday').value" class="col">
+              <label>Closed</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.thursday.active"
+                  formControlName="thursday"
+                />
+                <span>Thursday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.thursday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.thursday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Open:</label>
+              <timepicker class="position-float" [formControlName]="'thursdayOpen'"></timepicker>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.thursday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Close:</label>
+              <timepicker class="position-float" [formControlName]="'thursdayOpen'"></timepicker>
+            </div>
+
+            <div *ngIf="!this.directoryForm.get('scheduleDays.thursday').value" class="col">
+              <label>Closed</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.friday.active"
+                  formControlName="friday"
+                />
+                <span>Friday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.friday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.friday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Open:</label>
+              <timepicker class="position-float" [formControlName]="'fridayOpen'"></timepicker>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.friday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Close:</label>
+              <timepicker class="position-float" [formControlName]="'fridayOpen'"></timepicker>
+            </div>
+
+            <div *ngIf="!this.directoryForm.get('scheduleDays.friday').value" class="col">
+              <label>Closed</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.saturday.active"
+                  formControlName="saturday"
+                />
+                <span>Saturday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.saturday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.saturday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Open:</label>
+              <timepicker class="position-float" [formControlName]="'saturdayOpen'"></timepicker>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.saturday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Close:</label>
+              <timepicker class="position-float" [formControlName]="'saturdayOpen'"></timepicker>
+            </div>
+
+            <div *ngIf="!this.directoryForm.get('scheduleDays.saturday').value" class="col">
+              <label>Closed</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row row-week-day">
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.sunday.active"
+                  formControlName="sunday"
+                />
+                <span>Sunday</span>
+              </label>
+            </div>
+            <div class="col">
+              <label class="form-check-label">
+                <input
+                  class="checkbox checkbox-position"
+                  type="checkbox"
+
+                  [checked]="storeData.schedule.sunday.allDay"
+                />
+                <span>Open 24 hours</span>
+              </label>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.sunday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Open:</label>
+              <timepicker class="position-float" [formControlName]="'sundayOpen'"></timepicker>
+            </div>
+            <div *ngIf="this.directoryForm.get('scheduleDays.sunday').value" class="col form-group" [formGroup]="directoryForm">
+              <label class="store-label">Close:</label>
+              <timepicker class="position-float" [formControlName]="'sundayOpen'"></timepicker>
+            </div>
+
+            <div *ngIf="!this.directoryForm.get('scheduleDays.sunday').value" class="col">
+              <label>Closed</label>
+            </div>
+          </div>
+          <span class="required-information">* <span class="required-information" style="font-size: 15px;">Please selected least one
+          </span>
+          </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="divider custom-divider"></div>
+      <div class="col-md-12">
+        <h2 class="title-view">Social links</h2>
+      </div>
+    </div>
+    <div class="row sub-container social-link-content">
+      <div class="col-md-12">
+        <form autocomplete="off" [formGroup]="directoryForm" novalidate>
+          <div class="row">
+            <div class="col form-group">
+              <label class="store-label">Website:</label>
+              <input class="form-control" formControlName="website" type="text">
+            </div>
+            <div class="col form-group">
+              <label class="store-label">Twitter:</label>
+              <input class="form-control" formControlName="twitter" type="text">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col form-group">
+              <label class="store-label">Facebook:</label>
+              <input class="form-control" formControlName="facebook" type="text">
+            </div>
+            <div class="col form-group">
+              <label class="store-label">Instagram:</label>
+              <input class="form-control" formControlName="instagram" type="text">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 container-options">
+        <div class="options-button" >
+          <button type="button" class="btn"  (click)="emitState.emit('view')">Cancel</button>
+          <button type="button" class="btn" [disabled]="directoryForm.invalid" (click)="save()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,734 @@
+mutation addCustomer($input: customerInput) {
+  createCustomer(input: $input) {
+    _id
+    email
+    first_name
+    last_name
+    phone
+    address_1
+    address_2
+    city
+    state
+    zip_code
+    can_email
+    can_sms
+    marketing_question
+    location_id {
+      _id
+      store_name
+    }
+    is_linked
+     linkedStores{
+        _id
+        store_name
+        store_nick_name
+        location_keeping_unit
+      }
+    CustomerStoreWiseRecord {
+      net_term{
+        pay_term_number
+        pay_term_type
+        credit_limit
+        interest_rate
+      }
+      store_credit{
+        credit_amount
+      }
+      can_sms
+      can_email
+      is_active
+      }
+    tags
+  }
+}
+
+query getCustomersWithSearch( $input: inputSearchCustomer) {
+  getCustomersWithSearch(
+    input: $input
+  ){
+    customers{
+      _id
+      email
+      first_name
+      last_name
+      phone
+      address_1
+      address_2
+      city
+      state
+      zip_code
+      can_email
+      can_sms
+      marketing_question
+      location_id {
+        _id
+        store_name
+      }
+      is_linked
+      linkedStores{
+        _id
+        store_name
+        store_nick_name
+        location_keeping_unit
+      }
+      CustomerStoreWiseRecord {
+      net_term{
+        pay_term_number
+        pay_term_type
+        credit_limit
+        interest_rate
+      }
+      store_credit{
+        credit_amount
+      }
+      can_sms
+      can_email
+      is_active
+      }
+      tags
+  }
+    total_customer
+  }
+}
+mutation deleteCustomer($customer_id: [ID],$username: String!
+$password: String!) {
+  deleteCustomer(customer_id: $customer_id , username : $username ,password :$password )
+}
+
+mutation updateCustomer($customer_id: ID!, $input: customerInput) {
+  updateCustomer(customer_id: $customer_id, input: $input)
+}
+
+query customerByLocationID($locationId: ID!) {
+  customersByLocationId(locationId: $locationId) {
+    _id
+    email
+    first_name
+    last_name
+    phone
+    address_1
+    address_2
+    state
+    city
+    zip_code
+    can_sms
+    can_email
+    marketing_question
+    location_id {
+      _id
+      store_name
+    }
+    is_linked
+     linkedStores{
+        _id
+        store_name
+        store_nick_name
+        location_keeping_unit
+      }
+  CustomerStoreWiseRecord {
+      net_term{
+        pay_term_number
+        pay_term_type
+        credit_limit
+        interest_rate
+      }
+      store_credit{
+        credit_amount
+      }
+      can_sms
+      can_email
+      is_active
+      }
+    tags
+  }
+}
+
+query getCustomerDetail($customerID: ID!) {
+  customerNetTerm(customerId: $customerID) {
+    credit_limit
+    used_credit
+    available_credit
+  }
+  getAllCustomerDocuments(customer_id: $customerID){
+    _id
+    customer_document_name
+    document_file_path
+    Customer{
+      _id
+      email
+      first_name
+      last_name
+    }
+    is_email
+    id_download
+    created_at
+    document_extension
+  }
+}
+
+query getDevicesByCustomer($input: searchDeviceInput){
+  getDevicesByCustomer(input: $input) {
+     _id
+    deviceBrand{
+      _id
+      brand_name
+      description
+      _id
+    }
+    deviceModel{
+      _id
+      name
+    }
+    device_color
+    imei_ssn
+    Customer{
+      _id
+      first_name
+      last_name
+      phone
+      address_1
+    }
+    device_image
+    device_keeping_unit
+    business_id{
+      _id
+    }
+    location_id{
+      _id
+    }
+  }}
+
+query getDeviceById($device_id: ID!){
+ getDeviceById(device_id: $device_id){
+   _id
+    deviceBrand{
+      _id
+      brand_name
+      description
+    }
+    deviceModel{
+      _id
+      name
+    }
+    device_color
+    imei_ssn
+    Customer{
+      _id
+      first_name
+      last_name
+      phone
+      address_1
+    }
+    device_image
+    device_keeping_unit
+    business_id{
+      _id
+    }
+    location_id{
+      _id
+    }
+ }
+}
+
+
+query checkImeiSsnNo($imei_ssn: String!){
+   checkImeiSsnNo(imei_ssn:$imei_ssn){
+      _id
+    deviceBrand{
+      _id
+      brand_name
+      description
+    }
+    deviceModel{
+      _id
+      name
+    }
+    device_color
+    imei_ssn
+    Customer{
+      _id
+    }
+    device_image
+    device_keeping_unit
+    business_id{
+      _id
+    }
+    location_id{
+      _id
+    }
+   }
+}
+
+query getCustomerById($customerID: ID!,$location_id:ID!){
+   getCustomerById(id: $customerID,location_id:$location_id) {
+    _id
+    email
+    first_name
+    last_name
+    phone
+    address_1
+    address_2
+    city
+    state
+    zip_code
+    can_email
+    can_sms
+    marketing_question
+    location_id {
+      _id
+      store_name
+    }
+    is_linked
+     linkedStores{
+        _id
+        store_name
+        store_nick_name
+        location_keeping_unit
+      }
+    CustomerStoreWiseRecord {
+      net_term{
+        pay_term_number
+        pay_term_type
+        credit_limit
+        interest_rate
+      }
+      store_credit{
+        credit_amount
+      }
+      can_sms
+      can_email
+      is_active
+      }
+    tags
+  }
+}
+
+mutation deleteDevice($device_id: [ID]){
+ deleteDevice(device_id: $device_id)
+}
+mutation updateCustomerPhoneNumber ($customer_id: ID!, $phone: String , $location_id: ID!){
+  updateCustomerPhoneNumber(customer_id: $customer_id, phone: $phone, location_id: $location_id)
+}
+
+mutation permanentDeleteDevice($device_id: [ID]){
+permanentDeleteDevice(device_id: $device_id)
+}
+
+mutation linkCustomerToStore($customerID: ID!,$location_id: ID!){
+ linkCustomerToStore(customerID: $customerID,location_id: $location_id)
+}
+
+mutation unLinkCustomerToStore($customerID: ID!,$location_id: ID!){
+ unLinkCustomerToStore(customerID: $customerID,location_id: $location_id)
+}
+
+mutation MergeCustomer($primaryCustomerID: ID!,$secondaryCustomerID: ID!){
+ MergeCustomer(primaryCustomerID: $primaryCustomerID,secondaryCustomerID: $secondaryCustomerID)
+}
+
+mutation restoreCustomer($customer_id: [ID]){
+restoreCustomer(customer_id: $customer_id)
+}
+
+mutation TransferDevice($customerID: ID!,$deviceID: ID!){
+TransferDevice(customerID: $customerID,deviceID: $deviceID)
+  }
+
+mutation MergeDevices($primaryDeviceID: ID!,$secondaryDeviceID: ID!){
+ MergeDevices(primaryDeviceID: $primaryDeviceID,secondaryDeviceID: $secondaryDeviceID)
+}
+
+mutation permanentDeleteCustomer($customer_id: [ID!],$location_id: ID!,$username: String!,$password: String!){
+permanentDeleteCustomer(customer_id: $customer_id,location_id: $location_id,username: $username,password: $password){
+  deletedCustomers{
+    _id
+    email
+    first_name
+    last_name
+    phone
+  } 
+  notDeletedCustomers{
+     _id
+    email
+    first_name
+    last_name
+    phone
+  }
+}
+}
+
+query getDeviceHistory($device_id: ID!,$location_id: ID){
+  getDeviceHistory(device_id: $device_id,location_id: $location_id){
+    date
+    device{
+      _id
+      deviceBrand{
+        _id
+      brand_name
+      description
+    }
+    deviceModel{
+      _id
+      name
+    }
+      device_color
+      imei_ssn
+    }
+    store_id
+    client_id
+    invoice_store_name
+    inovice_no
+    services_detail{
+      TransactionService{
+        Product{
+          _id
+          product_name
+        }
+        serviceProduct{
+          _id
+          serviceProductType
+          serviceProductSKU
+          serviceProductQuantity
+          serviceProductSupplier
+          serviceReason
+          serviceSerialNo
+          serviceNotes
+          service_repair_room_item_type
+          serviceProductId{
+            _id
+            product_name
+          }
+          serviceCustomProductId{
+            _id
+            name
+          }
+        }
+      }
+      technicionRepair{
+        Technicion{
+          id
+          first_name
+          last_name
+        }
+        log_time
+      }
+    }
+ }
+}
+
+mutation restoreDevice($device_id: [ID]){
+restoreDevice(device_id: $device_id)
+}
+
+query getStoreCreditLogs($customerId: ID! , $locationId: ID , $limit: Int , $skip: Int) {
+  getStoreCreditLogs(customerId : $customerId , locationId : $locationId , limit : $limit , skip : $skip) {
+    User {
+      id
+      email
+      first_name
+      last_name
+      phone
+    }
+    Customer {
+      _id
+      email
+      first_name
+      last_name
+      phone
+    }
+    Supplier {
+      _id
+      supplier_company
+      supplier_company_phone
+      supplier_company_email
+      website
+    }
+    from_storeId {
+      _id
+      store_name
+      store_nick_name
+      location_keeping_unit
+    }
+    to_storeId {
+      _id
+      store_name
+      store_nick_name
+      location_keeping_unit
+    }
+    date
+    is_increase
+    transaction_no
+    order_id
+    store_credit_keeping_unit
+    amount
+    balance
+    note
+    reason
+    created_at
+  }
+}
+
+mutation createFolder($input: folderInput){
+  createFolder(input: $input){
+    _id
+    name
+    model_type
+    model_id: 
+    location_id{
+      _id
+      store_name
+    }
+    SourceFile{
+      _id
+      name
+      path
+      model_type
+      model_id
+    }
+ }
+}
+
+mutation fileUpload($file: [Upload!],$input: inputTypefile!){
+fileUpload(file: $file,input: $input)
+}
+
+query getfoldersWithFiles($location_id: ID!,$model_type: AllowedModel,$model_id: ID!){
+  getfoldersWithFiles(location_id: $location_id,model_type: $model_type,model_id: $model_id){
+  _id
+  name
+  model_type
+  model_id
+  SourceFile{
+    _id
+    name
+    path
+    model_type
+    model_id
+    created_by{
+      id
+      email
+      first_name
+      last_name
+      phone
+    }
+    created_at
+  }
+  }
+}
+
+mutation createStoreCredit($customerStoreCreditInput: customerStoreCreditInput) {
+  createStoreCredit(input: $customerStoreCreditInput) {
+    User {
+      id
+      email
+      first_name
+      last_name
+      phone
+    }
+    Customer {
+      _id
+      email
+      first_name
+      last_name
+      phone
+    }
+    is_increase
+    amount
+    balance
+    note
+    reason
+    created_at
+  }
+}
+
+mutation importCustomer($input: [customerImportInput]){
+  importCustomer(input: $input){
+     alreadyExistCustomers{_id}
+     InvalidDataCustomers{_id}
+     newlyAddedCustomers{_id}
+  }
+}
+
+mutation importDevices($customer_id: ID!,$input: [deviceImportInput!]){
+ importDevices(customer_id: $customer_id,input: $input){
+    customer_id
+    alreadyExistDevices{_id}
+    InvalidDataDevices{_id}
+    newlyAddedDevices{_id}
+  }
+}
+
+query getCustomerNetDetail($customerId: ID!,$locationId: ID){
+  getCustomerNetDetail(customerId: $customerId,locationId: $locationId){
+    credit_limit
+    used_credit
+    available_credit
+    over_dues
+  }
+}
+
+query CustomerPurchaseHistory($customerID: ID!,$location_id: ID!){
+  CustomerPurchaseHistory(customerID: $customerID,location_id: $location_id){
+    total_amount_spend
+    total_number_of_visits
+    average_purchase_per_visit
+    average_number_of_items_per_visit
+  }
+}
+
+mutation createTransferCredit($customerTransferStoreCreditInput: customerTransferStoreCreditInput) {
+  createTransferCredit(input: $customerTransferStoreCreditInput) {
+    amount
+    note
+    reason
+    store_credit_keeping_unit
+    balance
+    is_increase
+    order_id
+    created_at
+    User {
+      id
+      email
+      first_name
+      last_name
+      phone
+    }
+  }
+}
+
+query customerNetTermRecord($customer_id: ID!,$location_id: ID!,$limit: Int!,$skip: Int!){
+    customerNetTermRecord(customer_id: $customer_id,location_id: $location_id,limit: $limit,skip: $skip){
+        transactionID
+        date
+        day_left
+        order_no
+        total
+        amount_owed
+        amount_pay
+        balance
+        is_overdue
+        dynamic_status{
+            status_name
+            status_font_color
+            status_background_color
+            status_icon
+        }
+    }
+}
+
+mutation createCustomerDocument($input: CustomerDocumentInput, $file: Upload!){
+  createCustomerDocument(input: $input, file: $file){
+    _id
+  }
+}
+
+mutation deleteCustomerDocument($_id:  [ID!]){
+ deleteCustomerDocument(_id: $_id)
+}
+
+query sendCustomerDocumentByEmail($customerId: ID!,$documentURL: String!,$file_name: String!){
+  sendCustomerDocumentByEmail(customerId: $customerId,documentURL: $documentURL,file_name:$file_name)
+}
+
+
+mutation createNetTermPayment($input: netTermPaymentProcessInput)
+{  createNetTermPayment(input: $input)
+  }
+
+
+mutation createDevice($input: deviceInput) {
+  createDevice(input: $input) {
+    _id
+    deviceBrand{
+      _id
+      brand_name
+      description
+    }
+    deviceModel{
+      _id
+      name
+    }
+    device_color
+    imei_ssn
+    Customer{
+      _id
+    }
+    device_image
+    device_keeping_unit
+    business_id{
+      _id
+    }
+    location_id{
+      _id
+    }
+  }
+}
+
+mutation updateDevice($device_id: ID!, $input: deviceInput) {
+  updateDevice(device_id: $device_id, input: $input)
+}
+
+mutation createSystemBrand($input: systemBrandInput){
+  createSystemBrand(input: $input){
+    _id
+    brand_name
+    description
+  }  
+}
+mutation createSystemDevice($input: systemDeviceInput){
+  createSystemDevice(input: $input){
+     _id
+    product_name
+    product_price
+    quantity
+    description
+    BusinessLocation{
+      _id
+    }
+    is_system_created
+    product_brand{
+      _id
+    }
+  }
+}
+
+query getAllBrandWiseModels($brand_id: ID!){
+  getAllBrandWiseModels(brand_id:$brand_id){
+    _id
+    product_name
+    product_price
+    quantity
+    product_brand{
+      _id
+      brand_name
+      description
+    }
+    description
+    is_system_created
+  }
+}
+
+query getAllBrands{
+  getAllBrands{
+    _id
+    name
+    description
+    brand_type
+  }
+}
+
+mutation updateSystemBrand($id: ID!,$input: systemBrandInput){
+  updateSystemBrand(id: $id,input: $input) 
+}
+
+mutation updateSystemDevice($ID: ID! , $input: systemDeviceInput) {
+  updateSystemDevice(id: $ID , input: $input)
+}
+
+query getAllSystemBrands {
+  getAllSystemBrands {
+    _id
+    brand_name
+    description
+  }
+}

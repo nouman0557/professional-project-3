@@ -1,0 +1,1122 @@
+<div [ngSwitch]="product.product_type">
+    <accordion-group *ngSwitchCase="'giftCard'">
+        <ul accordion-heading>
+            <li>
+                <div class="outer">
+                    <div class="inner wd70percent">
+                        <a href="JavaScript:void(0);">
+                            <span class="left">
+                                <span class="gift-icon">
+                                    <i class="icon-giftcard_tickets"></i>
+                                </span>
+                            </span>
+                            <span class="right font12 fontPoppin notextTransform ">Gift Card</span>
+                        </a>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input placeholder="$25.00" type="text" numeric decimals="2" negative="0"
+                            class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            [ngClass]="{'is-invalid':submitGiftCard && amount < 1 }"
+                            (focusout)="giftCardFromControl['amount'].setValue(amount); calculateOrder()"
+                            [(ngModel)]="amount" type="text">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">{{amount | currency }}</span>
+                    </div>
+                    <div class="inner wd4percent">
+                        <a (click)="onRemoveFromCart()" class="close-icon" href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <p class="font11 color808080 mb5 pl10 pr10 mtMin10">The gift card will not be activated untill payment comes
+            through</p>
+        <ul id="sub" class="giftListInner">
+            <li class="inner">
+                <form autocomplete="off" [formGroup]="giftCardForm">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="color000 mb0 fontPoppin font12 fontSemiBold"
+                                [ngClass]="{'is-invalid':submitGiftCard  && giftCardFromControl.from.errors}"
+                                for="phone-number">From</label>
+                            <input type="text" *ngIf="giftCardFromControl.from.errors" type="text"
+                                placeholder="Type customer name" readonly name="phone-number"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                            <input type="text" *ngIf="!giftCardFromControl.from.errors" type="text"
+                                value="{{cumtomerSelected.first_name + ' ' + cumtomerSelected.last_name}}" readonly
+                                type="text" placeholder="Please select customer" name="phone-number"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="color000 mb0 fontPoppin font12 fontSemiBold"
+                                [ngClass]="{'is-invalid':submitGiftCard  && giftCardFromControl.send_gift_card.errors}"
+                                for="email" class="lable-textField-right">Send
+                                on</label>
+                            <input type="text" placeholder="Select To Date"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                formControlName="send_gift_card" bsDatepicker [bsConfig]="{ isAnimated: true }">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="color000 mb0 fontPoppin font12 fontSemiBold"
+                                [ngClass]="{'is-invalid':submitGiftCard  && giftCardFromControl.to.errors}"
+                                for="phone-number">To</label>
+                            <input formControlName="to" placeholder="Type the recipient's name"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="color000 mb0 fontPoppin font12 fontSemiBold"
+                                [ngClass]="{'is-invalid':submitGiftCard  && giftCardFromControl.email.errors}"
+                                for="email">Recipient email</label>
+                            <input type="email" name="email" formControlName="email"
+                                placeholder="Type the recipient's email"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="color000 mb0 fontPoppin font12 fontSemiBold"
+                                [ngClass]="{'is-invalid':submitGiftCard  && giftCardFromControl.subject.errors}"
+                                for="phone-number">Subject:</label>
+                            <input type="text" name="phone-number" placeholder="Type the subject of the message"
+                                formControlName="subject"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="color000 mb0 fontPoppin font12 fontSemiBold" for="message">Message:</label>
+                            <input formControlName="message" type="text" name="phone-number"
+                                placeholder="Type your message" formControlName="subject"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="fr mb5 mt5">
+                                <button type="button" class="btn giftcardBtn">Clear all</button>
+                                <button type="button" (click)="onSubmit(i)" class="btn giftcardBtn ml5">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </accordion-group>
+
+    <!--  When Device is added first and all type items added in it-->
+    <accordion-group *ngSwitchCase="'device'">
+        <ul accordion-heading>
+            <li *ngIf="!device['isProduct']" (click)="deviceSelectedForCart(d,device)">
+                <div class="outer">
+                    <div class="inner wd70percent">
+                        <span class="right font12 fontPoppin notextTransform ">
+                            {{device?.device_keeping_unit +'  '+ device?.model?.name}}
+                        </span>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">{{device.total | currency}}</span>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">{{device.total | currency}}</span>
+                    </div>
+                    <div class="inner wd4percent">
+                        <a class="close-icon"
+                            (click)="openRemoveDeviceModal(open_removeDevice,'custModal wd210',device)"
+                            href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul id="sub">
+            <li>
+                <div class="dtable wd100Percent">
+                    <div class="dtableCell wd40percent">
+                        <div [ngClass]="{'btn-disable':device['checkInID'] != '' }" class="checkin-device">
+                            <a href="JavaScript:void(0);"
+                                (click)="openCheckinSession(open_checkinDevice, 'box-checkin-device',device)">Check
+                                in Device</a>
+                        </div>
+                    </div>
+                    <div class="dtableCell wd45percent">
+                        <div class="checkin-status">
+                            <p>Status:
+                                <span class="bgcolorOrange">Working on it</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="dtableCell wd15percent">
+                        <div class="print-device">
+                            <a href="JavaScript:void(0); "
+                                (click)="openDeviceLableModal(open_printLabel, 'box-printLabel custModal wd700',device)">Print
+                                label</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="sub-content ">
+                    <div class="bottom">
+                        <div class="device-icons">
+                            <ul>
+                                <li class="dropdown imie-sn">
+                                    <a href="JavaScript:void(0);" class="added dropbtn">
+                                        <i class="icon-imei"></i>
+                                        IMIE/ SN
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <p>IMIE/ SN:</p>
+                                        <span>
+                                            1231313
+                                        </span>
+                                    </div>
+                                </li>
+                                <li class="fetch-image">
+                                    <a href="JavaScript:void(0);" class="added dropbtn">
+                                        <i class="icon-fetch_image"></i>
+                                        Fetch Image
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <a href="JavaScript:void(0);">Link
+                                            1</a>
+                                        <a href="JavaScript:void(0);">Link
+                                            2</a>
+                                        <a href="JavaScript:void(0);">Link
+                                            3</a>
+                                    </div>
+                                </li>
+                                <li class="dropdown water-damage">
+                                    <a href="JavaScript:void(0);" class="dropbtn">
+                                        <i class="icon-water_damage"></i>
+                                        Water Damage
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <p> Device has water damage</p>
+                                    </div>
+                                </li>
+                                <li class="dropdown patterns">
+                                    <a href="JavaScript:void(0);" class="added dropbtn">
+                                        <i class="icon-pattern"></i>
+                                        Patterns
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <p>123123</p>
+                                    </div>
+                                </li>
+                                <li class="dropdown accessories">
+                                    <a href="JavaScript:void(0);" class="dropbtn">
+                                        <i class="icon-accesories"></i>
+                                        Accessories
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <p>Accessories left with device:
+                                        </p>
+                                        <ul>
+                                            <li *ngFor="let Assas of currentOrder[d]?.accessories">
+                                                <i *ngIf="Assas!=''" class="fa fa-check-square"></i>{{Assas}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="dropdown issues">
+                                    <a href="JavaScript:void(0);" class="added dropbtn">
+                                        <i class="icon-issue"></i>
+                                        Issues
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <p>Present issues with the
+                                            device:
+                                        </p>
+                                        <ul>
+                                            <li *ngFor="let Issue of currentOrder[d]?.issues">
+                                                <i *ngIf="Issue!=''" class="fa fa-check-square"></i>{{Issue}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="clear-device">
+                            <a (click)='clearAllDeviceCheckInDetail(device)'>Clear all</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <accordion id="accSub" class="addingItemstoDevice" [isAnimated]="true" [closeOthers]="true">
+            <!-- When a Product is added to the device (it have one level) -->
+            <accordion-group>
+                <div accordion-heading>
+                    <h5 class="mb-0">
+                        <div class="inner wd33percentfull text-left pl10">
+                            <span class="font11 dtableCell valignMiddle text-left"><i class="icon-product"></i></span>
+                            <!-- <span class="font11 fontPoppin dtableCell valignMiddle text-left">R1 - </span> -->
+                            <span class="font11 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                Tempered Glass 6S Plus
+                            </span>
+                        </div>
+                        <div class="inner wd15percent">
+                            <div class="serial-no dropdown custPos">
+                                <a href="JavaScript:void(0);" class="dropbtn" (click)="openserialNo(device)">
+                                    <i class="icon-code_bar pr5"></i> Add serial No.
+                                </a>
+                                <div class="dropdown-content" *ngIf="device.serialnumEnable" style="display: block;">
+                                    <a class="close-icon" (click)="serialSessionOff(device)" href="JavaScript:void(0);">
+                                        <i class="icon-close"></i>
+                                    </a>
+                                    <div class="insert-serial-number">
+                                        <p>Add Serial Number</p>
+                                        <p class="font10 fontRegular color808080">New part serial number</p>
+                                        <div class="input-group">
+                                            <input type="text" [(ngModel)]="device.serialnumber"
+                                                class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                                placeholder="Enter Serial Number">
+                                            <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                    class="icon-scan1"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input
+                                class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input
+                                class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                appTwoDigitDecimaNumber (focusout)="changeSingleItemDiscount($event,dOrder)"
+                                placeholder="0" type="text">
+                            <span class="cartSideIcon dInlinetable font12">%</span>
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                (focusout)="changeSingleItemPrice($event,dOrder)" appTwoDigitDecimaNumber value="0">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <span class="fontPoppin fontSemiBold">$3,000</span>
+                        </div>
+                        <div class="inner wd5percent">
+                            <a class="close-icon" href="JavaScript:void(0);">
+                                <i class="icon-close"></i>
+                            </a>
+                        </div>
+                    </h5>
+                </div>
+            </accordion-group>
+            <!-- When Manufactured Product is added to the device (it have one level)-->
+            <accordion-group>
+                <div accordion-heading>
+                    <h5 class="mb-0">
+                        <div class="inner wd33percentfull text-left pl10">
+                            <span class="font11 dtableCell valignMiddle text-left"><i
+                                    class="icon-manufacture_bundle_product"></i></span>
+                            <span class="font11 fontPoppin dtableCell valignMiddle text-left pl5 pr5">
+                                iPhone 6s plus screen White Refurbished
+                            </span>
+                        </div>
+                        <div class="inner wd15percent">
+                            <div class="serial-no dropdown custPos">
+                                <a href="JavaScript:void(0);" class="dropbtn">
+                                    <i class="icon-code_bar pr5"></i> Add serial No.
+                                </a>
+                                <div class="dropdown-content" style="display: none;">
+                                    <a class="close-icon" href="JavaScript:void(0);">
+                                        <i class="icon-close"></i>
+                                    </a>
+                                    <div class="insert-serial-number">
+                                        <p>Add Serial Number</p>
+                                        <p class="font10 fontRegular color808080">New part serial number</p>
+                                        <div class="input-group">
+                                            <input type="text"
+                                                class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                                placeholder="Enter Serial Number">
+                                            <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                    class="icon-scan1"></i></a>
+                                        </div>
+                                        <!-- <div class="serial-action">
+                                                                                <button type="button" class="btn btn-default"
+                                                                                    (click)="serialSessionOff(device);">Cancel</button>
+                                                                                <button type="button" class="btn btn-default"
+                                                                                    (click)="addSerialNo(device);">Save</button>
+                                                                            </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input
+                                class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input
+                                class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                appTwoDigitDecimaNumber (focusout)="changeSingleItemDiscount($event,dOrder)"
+                                placeholder="0" type="text">
+                            <span class="cartSideIcon dInlinetable font12">%</span>
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                (focusout)="changeSingleItemPrice($event,dOrder)" appTwoDigitDecimaNumber value="0">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <span class="fontPoppin fontSemiBold">$3,000</span>
+                        </div>
+                        <div class="inner wd5percent">
+                            <a class="close-icon" href="JavaScript:void(0);">
+                                <i class="icon-close"></i>
+                            </a>
+                        </div>
+                    </h5>
+                </div>
+            </accordion-group>
+            <!-- When Bundle Product is added to the device (it have two level)-->
+            <accordion-group>
+                <div accordion-heading>
+                    <h5 class="mb-0">
+                        <div class="inner wd33percentfull text-left pl10">
+                            <span class="font11 dtableCell valignMiddle text-left"><i
+                                    class="icon-bundle_product"></i></span>
+                            <span class="font11 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                Basic package for iPhone 6s Plus
+                            </span>
+                        </div>
+                        <div class="inner wd15percent">
+                            <div class="serial-no dropdown custPos">
+                                <a href="JavaScript:void(0);" class="dropbtn">
+                                    <i class="icon-code_bar pr5"></i> Add serial No.
+                                </a>
+                                <div class="dropdown-content" style="display: none;">
+                                    <a class="close-icon" href="JavaScript:void(0);">
+                                        <i class="icon-close"></i>
+                                    </a>
+                                    <div class="insert-serial-number">
+                                        <p>Add Serial Number</p>
+                                        <p class="font10 fontRegular color808080">New part serial number</p>
+                                        <div class="input-group">
+                                            <input type="text"
+                                                class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                                placeholder="Enter Serial Number">
+                                            <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                    class="icon-scan1"></i></a>
+                                        </div>
+                                        <!-- <div class="serial-action">
+                                                                                <button type="button" class="btn btn-default"
+                                                                                    (click)="serialSessionOff(device);">Cancel</button>
+                                                                                <button type="button" class="btn btn-default"
+                                                                                    (click)="addSerialNo(device);">Save</button>
+                                                                            </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input
+                                class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input
+                                class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                appTwoDigitDecimaNumber (focusout)="changeSingleItemDiscount($event,dOrder)"
+                                placeholder="0" type="text">
+                            <span class="cartSideIcon dInlinetable font12">%</span>
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                (focusout)="changeSingleItemPrice($event,dOrder)" appTwoDigitDecimaNumber value="0">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <span class="fontPoppin fontSemiBold">$3,000</span>
+                        </div>
+                        <div class="inner wd5percent">
+                            <a class="close-icon" href="JavaScript:void(0);">
+                                <i class="icon-close"></i>
+                            </a>
+                        </div>
+                    </h5>
+                </div>
+                <div class="thirdLevel card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <div class="inner wd31percent text-left pl10">
+                                <span class="font11 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                    R1 - iPhone 6s Plus Screen Replacement HQ white
+                                </span>
+                            </div>
+                            <div class="inner wd15percent">
+                                <div class="serial-no dropdown custPos">
+                                    <a href="JavaScript:void(0);" class="dropbtn">
+                                        <i class="icon-code_bar pr5"></i> Add serial No.
+                                    </a>
+                                    <div class="dropdown-content" style="display: none;">
+                                        <a class="close-icon" href="JavaScript:void(0);">
+                                            <i class="icon-close"></i>
+                                        </a>
+                                        <div class="insert-serial-number">
+                                            <p>Add Serial Number</p>
+                                            <p class="font10 fontRegular color808080">New part serial number</p>
+                                            <div class="input-group">
+                                                <input type="text"
+                                                    class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                                    placeholder="Enter Serial Number">
+                                                <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                        class="icon-scan1"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inner wd11Percent">
+                                <input
+                                    class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                    (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                            </div>
+                            <div class="inner wd11Percent">
+                            </div>
+                            <div class="inner wd11Percent">
+                                <span class="fontPoppin fontSemiBold">$3,000</span>
+                            </div>
+                            <div class="inner wd11Percent">
+                            </div>
+                            <div class="inner wd5percent">
+                                <a class="close-icon" href="JavaScript:void(0);">
+                                    <i class="icon-close"></i>
+                                </a>
+                            </div>
+                        </h5>
+                    </div>
+                </div>
+                <div class="thirdLevel card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <div class="inner wd31percent text-left pl10">
+                                <!-- <span class="font11 fontPoppin dtableCell valignMiddle text-left">R2-</span> -->
+                                <span class="font11 fontPoppin dtableCell valignMiddle text-left pl5 pr5">
+                                    R2 - Tempered Glass 5s Plus
+                                </span>
+                            </div>
+                            <div class="inner wd15percent">
+                                <div class="serial-no dropdown custPos">
+                                    <a href="JavaScript:void(0);" class="dropbtn">
+                                        <i class="icon-code_bar pr5"></i> Add serial No.
+                                    </a>
+                                    <div class="dropdown-content" style="display: none;">
+                                        <a class="close-icon" href="JavaScript:void(0);">
+                                            <i class="icon-close"></i>
+                                        </a>
+                                        <div class="insert-serial-number">
+                                            <p>Add Serial Number</p>
+                                            <p class="font10 fontRegular color808080">New part serial number</p>
+                                            <div class="input-group">
+                                                <input type="text"
+                                                    class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                                    placeholder="Enter Serial Number">
+                                                <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                        class="icon-scan1"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inner wd11Percent">
+                                <input
+                                    class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                    (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                            </div>
+                            <div class="inner wd11Percent">
+                            </div>
+                            <div class="inner wd11Percent">
+                                <span class="fontPoppin fontSemiBold">$3,000</span>
+                            </div>
+                            <div class="inner wd11Percent">
+                            </div>
+                            <div class="inner wd5percent">
+                                <a class="close-icon" href="JavaScript:void(0);">
+                                    <i class="icon-close"></i>
+                                </a>
+                            </div>
+                        </h5>
+                    </div>
+                </div>
+            </accordion-group>
+            <!-- When a Service is added to the device (it have one level)-->
+            <accordion-group>
+                <div accordion-heading>
+                    <h5 class="mb-0">
+                        <div class="inner wd33percentfull text-left pl10">
+                            <span class="font11 dtableCell valignMiddle text-left"><i class="icon-service"></i></span>
+                            <span class="font11 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">Diagnostic</span>
+                        </div>
+                        <div class="inner wd15percent">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input
+                                class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 wd35px"
+                                (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input
+                                class="form-control dInlinetable height25px cust-field font12 borderColorcbcbcb borderRadius5 wd35px"
+                                appTwoDigitDecimaNumber (focusout)="changeSingleItemDiscount($event,dOrder)"
+                                placeholder="0" type="text">
+                            <span class="cartSideIcon dInlinetable font12">%</span>
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                (focusout)="changeSingleItemPrice($event,dOrder)" appTwoDigitDecimaNumber value="0">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <span class="fontPoppin fontSemiBold">$45.00</span>
+                        </div>
+                        <div class="inner wd5percent">
+                            <a class="close-icon" href="JavaScript:void(0);">
+                                <i class="icon-close"></i>
+                            </a>
+                        </div>
+                    </h5>
+                </div>
+            </accordion-group>
+            <!-- When Bundle Service is added to the device (it have two level)-->
+            <accordion-group>
+                <div accordion-heading>
+                    <h5 class="mb-0">
+                        <div class="inner wd33percentfull text-left pl10">
+                            <span class="font11 dtableCell valignMiddle text-left"><i
+                                    class="icon-bundle_service"></i></span>
+                            <span class="font11 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                                Water damage teatment package
+                            </span>
+                        </div>
+                        <div class="inner wd15percent">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input
+                                class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input
+                                class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                appTwoDigitDecimaNumber (focusout)="changeSingleItemDiscount($event,dOrder)"
+                                placeholder="0" type="text">
+                            <span class="cartSideIcon dInlinetable font12">%</span>
+                        </div>
+                        <div class="inner wd11Percent">
+                            <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                (focusout)="changeSingleItemPrice($event,dOrder)" appTwoDigitDecimaNumber value="0">
+                        </div>
+                        <div class="inner wd11Percent">
+                            <span class="fontPoppin fontSemiBold">$3,000</span>
+                        </div>
+                        <div class="inner wd5percent">
+                            <a class="close-icon" href="JavaScript:void(0);">
+                                <i class="icon-close"></i>
+                            </a>
+                        </div>
+                    </h5>
+                </div>
+                <div class="thirdLevel card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <div class="inner wd31percent text-left pl10">
+                                <span class="font11 dtableCell valignMiddle text-left"><i
+                                        class="icon-service"></i></span>
+                                <span
+                                    class="font11 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">Diagnostic</span>
+                            </div>
+                            <div class="inner wd15percent">
+                            </div>
+                            <div class="inner wd11Percent">
+                                <input
+                                    class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                    (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                            </div>
+                            <div class="inner wd11Percent">
+                            </div>
+                            <div class="inner wd11Percent">
+                                <span class="fontPoppin fontSemiBold">$3,000</span>
+                            </div>
+                            <div class="inner wd11Percent">
+                            </div>
+                            <div class="inner wd5percent">
+                                <a class="close-icon" href="JavaScript:void(0);">
+                                    <i class="icon-close"></i>
+                                </a>
+                            </div>
+                        </h5>
+                    </div>
+                </div>
+                <div class="thirdLevel card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <div class="inner wd31percent text-left pl10">
+                                <span class="font11 dtableCell valignMiddle text-left"><i
+                                        class="icon-service"></i></span>
+                                <span class="font11 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">Water
+                                    damage
+                                    treatment</span>
+                            </div>
+                            <div class="inner wd15percent">
+                            </div>
+                            <div class="inner wd11Percent">
+                                <input
+                                    class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                                    (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                            </div>
+                            <div class="inner wd11Percent">
+                            </div>
+                            <div class="inner wd11Percent">
+                                <span class="fontPoppin fontSemiBold">$3,000</span>
+                            </div>
+                            <div class="inner wd11Percent">
+
+                            </div>
+                            <div class="inner wd5percent">
+                                <a class="close-icon" href="JavaScript:void(0);">
+                                    <i class="icon-close"></i>
+                                </a>
+                            </div>
+                        </h5>
+                    </div>
+                </div>
+            </accordion-group>
+        </accordion>
+    </accordion-group>
+
+    <!-- When a Product is added to the cart (it have one level)-->
+    <accordion-group *ngSwitchCase="'product'">
+        <ul accordion-heading>
+            <li>
+                <div class="outer">
+                    <div class="inner wd33percentfull text-left pl10">
+                        <span class="font11 dtableCell valignMiddle text-left"><i class="icon-product"></i></span>
+                        <!-- <span class="font11 fontPoppin dtableCell valignMiddle text-left">R1 - </span> -->
+                        <span class="font11 fontSemiBold Poppin dtableCell valignMiddle text-left  pl5 pr5">
+                            Tempered Glass 6S Plus
+                        </span>
+                    </div>
+                    <div class="inner wd15percent">
+                        <div class="serial-no dropdown custPos">
+                            <a href="JavaScript:void(0);" class="dropbtn">
+                                <i class="icon-code_bar pr5"></i> Add serial No.
+                            </a>
+                            <div class="dropdown-content" style="display: none;">
+                                <a class="close-icon" href="JavaScript:void(0);">
+                                    <i class="icon-close"></i>
+                                </a>
+                                <div class="insert-serial-number">
+                                    <p>Add Serial Number</p>
+                                    <p class="font10 fontRegular color808080">New part serial number</p>
+                                    <div class="input-group">
+                                        <input type="text"
+                                            class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                            placeholder="Enter Serial Number">
+                                        <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                class="icon-scan1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input
+                            class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            appTwoDigitDecimaNumber (focusout)="changeSingleItemDiscount($event,dOrder)" placeholder="0"
+                            type="text">
+                        <span class="cartSideIcon dInlinetable font12">%</span>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (focusout)="changeSingleItemPrice($event,dOrder)" appTwoDigitDecimaNumber value="0">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">$3,000</span>
+                    </div>
+                    <div class="inner wd5percent">
+                        <a class="close-icon" href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </accordion-group>
+
+    <!-- When Manufactured Product is added to the cart (it have one level)-->
+    <accordion-group *ngSwitchCase="'manufacturedBundleProduct'">
+        <ul accordion-heading>
+            <li>
+                <div class="outer">
+                    <div class="inner wd33percentfull text-left pl10">
+                        <span class="font11 dtableCell valignMiddle text-left"><i
+                                class="icon-manufacture_bundle_product"></i></span>
+                        <span class="font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left pl5 pr5">
+                            iPhone 6s plus screen White Refurbished
+                        </span>
+                    </div>
+                    <div class="inner wd15percent">
+                        <div class="serial-no dropdown custPos">
+                            <a href="JavaScript:void(0);" class="dropbtn">
+                                <i class="icon-code_bar pr5"></i> Add serial No.
+                            </a>
+                            <div class="dropdown-content" style="display: none;">
+                                <a class="close-icon" href="JavaScript:void(0);">
+                                    <i class="icon-close"></i>
+                                </a>
+                                <div class="insert-serial-number">
+                                    <p>Add Serial Number</p>
+                                    <p class="font10 fontRegular color808080">New part serial number</p>
+                                    <div class="input-group">
+                                        <input type="text"
+                                            class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                            placeholder="Enter Serial Number">
+                                        <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                class="icon-scan1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input
+                            class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            appTwoDigitDecimaNumber (focusout)="changeSingleItemDiscount($event,dOrder)" placeholder="0"
+                            type="text">
+                        <span class="cartSideIcon dInlinetable font12">%</span>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (focusout)="changeSingleItemPrice($event,dOrder)" appTwoDigitDecimaNumber value="0">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">$3,000</span>
+                    </div>
+                    <div class="inner wd5percent">
+                        <a class="close-icon" href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </accordion-group>
+
+    <!-- When Bundle Product is added to the Cart (it have two level)-->
+    <accordion-group *ngSwitchCase="'bundleProduct'">
+        <ul accordion-heading>
+            <li>
+                <div class="outer">
+                    <div class="inner wd33percentfull text-left pl10">
+                        <span class="font11 dtableCell valignMiddle text-left"><i
+                                class="icon-bundle_product"></i></span>
+                        <span class="font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                            Basic package for iPhone 6s Plus
+                        </span>
+                    </div>
+                    <div class="inner wd15percent">
+                        <div class="serial-no dropdown custPos">
+                            <a href="JavaScript:void(0);" class="dropbtn">
+                                <i class="icon-code_bar pr5"></i> Add serial No.
+                            </a>
+                            <div class="dropdown-content" style="display: none;">
+                                <a class="close-icon" href="JavaScript:void(0);">
+                                    <i class="icon-close"></i>
+                                </a>
+                                <div class="insert-serial-number">
+                                    <p>Add Serial Number</p>
+                                    <p class="font10 fontRegular color808080">New part serial number</p>
+                                    <div class="input-group">
+                                        <input type="text"
+                                            class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                            placeholder="Enter Serial Number">
+                                        <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                class="icon-scan1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input
+                            class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            appTwoDigitDecimaNumber (focusout)="changeSingleItemDiscount($event,dOrder)" placeholder="0"
+                            type="text">
+                        <span class="cartSideIcon dInlinetable font12">%</span>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (focusout)="changeSingleItemPrice($event,dOrder)" appTwoDigitDecimaNumber value="0">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">$3,000</span>
+                    </div>
+                    <div class="inner wd5percent">
+                        <a class="close-icon" href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul class="thirdLevel card">
+            <li class="card-header">
+                <div class="outer">
+                    <div class="inner wd31percent text-left pl10">
+                        <span class="font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                            R1 - iPhone 6s Plus Screen Replacement HQ white
+                        </span>
+                    </div>
+                    <div class="inner wd15percent">
+                        <div class="serial-no dropdown custPos">
+                            <a href="JavaScript:void(0);" class="dropbtn">
+                                <i class="icon-code_bar pr5"></i> Add serial No.
+                            </a>
+                            <div class="dropdown-content" style="display: none;">
+                                <a class="close-icon" href="JavaScript:void(0);">
+                                    <i class="icon-close"></i>
+                                </a>
+                                <div class="insert-serial-number">
+                                    <p>Add Serial Number</p>
+                                    <p class="font10 fontRegular color808080">New part serial number</p>
+                                    <div class="input-group">
+                                        <input type="text"
+                                            class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                            placeholder="Enter Serial Number">
+                                        <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                class="icon-scan1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                    </div>
+                    <div class="inner wd11Percent">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">$3,000</span>
+                    </div>
+                    <div class="inner wd11Percent">
+                    </div>
+                    <div class="inner wd5percent">
+                        <a class="close-icon" href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul class="thirdLevel card">
+            <li class="card-header">
+                <div class="outer">
+                    <div class="inner wd31percent text-left pl10">
+                        <!-- <span class="font11 fontPoppin dtableCell valignMiddle text-left">R2-</span> -->
+                        <span class="font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left pl5 pr5">
+                            R2 - Tempered Glass 5s Plus
+                        </span>
+                    </div>
+                    <div class="inner wd15percent">
+                        <div class="serial-no dropdown custPos">
+                            <a href="JavaScript:void(0);" class="dropbtn">
+                                <i class="icon-code_bar pr5"></i> Add serial No.
+                            </a>
+                            <div class="dropdown-content" style="display: none;">
+                                <a class="close-icon" href="JavaScript:void(0);">
+                                    <i class="icon-close"></i>
+                                </a>
+                                <div class="insert-serial-number">
+                                    <p>Add Serial Number</p>
+                                    <p class="font10 fontRegular color808080">New part serial number</p>
+                                    <div class="input-group">
+                                        <input type="text"
+                                            class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 text-left"
+                                            placeholder="Enter Serial Number">
+                                        <a class="input-group-addon scanDevice" href="JavaScript:void(0)"><i
+                                                class="icon-scan1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                    </div>
+                    <div class="inner wd11Percent">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">$3,000</span>
+                    </div>
+                    <div class="inner wd11Percent">
+                    </div>
+                    <div class="inner wd5percent">
+                        <a class="close-icon" href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </accordion-group>
+
+    <!-- When a Service is added to the Cart (it have one level)-->
+    <accordion-group *ngSwitchCase="'service'">
+        <ul accordion-heading>
+            <li>
+                <div class="outer">
+                    <div class="inner wd33percentfull text-left pl10">
+                        <span class="font11 dtableCell valignMiddle text-left"><i class="icon-service"></i></span>
+                        <span
+                            class="font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left  pl5 pr5">Diagnostic</span>
+                    </div>
+                    <div class="inner wd15percent">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5 wd35px"
+                            (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input
+                            class="form-control dInlinetable height25px cust-field font12 borderColorcbcbcb borderRadius5 wd35px"
+                            appTwoDigitDecimaNumber (focusout)="changeSingleItemDiscount($event,dOrder)" placeholder="0"
+                            type="text">
+                        <span class="cartSideIcon dInlinetable font12">%</span>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (focusout)="changeSingleItemPrice($event,dOrder)" appTwoDigitDecimaNumber value="0">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">$45.00</span>
+                    </div>
+                    <div class="inner wd5percent">
+                        <a class="close-icon" href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </accordion-group>
+
+    <!-- When Bundle Service is added to the Cart (it have two level)-->
+    <accordion-group *ngSwitchCase="'bundleService'">
+        <ul accordion-heading>
+            <li>
+                <div class="outer">
+                    <div class="inner wd33percentfull text-left pl10">
+                        <span class="font11 dtableCell valignMiddle text-left"><i
+                                class="icon-bundle_service"></i></span>
+                        <span class="font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                            Water damage teatment package
+                        </span>
+                    </div>
+                    <div class="inner wd15percent">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input
+                            class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            appTwoDigitDecimaNumber (focusout)="changeSingleItemDiscount($event,dOrder)" placeholder="0"
+                            type="text">
+                        <span class="cartSideIcon dInlinetable font12">%</span>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (focusout)="changeSingleItemPrice($event,dOrder)" appTwoDigitDecimaNumber value="0">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">$3,000</span>
+                    </div>
+                    <div class="inner wd5percent">
+                        <a class="close-icon" href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul class="thirdLevel card">
+            <li class="card-header">
+                <div class="outer">
+                    <div class="inner wd31percent text-left pl10">
+                        <span class="font11 dtableCell valignMiddle text-left"><i class="icon-service"></i></span>
+                        <span
+                            class="font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left  pl5 pr5">Diagnostic</span>
+                    </div>
+                    <div class="inner wd15percent">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                    </div>
+                    <div class="inner wd11Percent">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">$3,000</span>
+                    </div>
+                    <div class="inner wd11Percent">
+                    </div>
+                    <div class="inner wd5percent">
+                        <a class="close-icon" href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul class="thirdLevel card">
+            <li class="card-header">
+                <div class="outer">
+                    <div class="inner wd31percent text-left pl10">
+                        <span class="font11 dtableCell valignMiddle text-left"><i class="icon-service"></i></span>
+                        <span class="font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left  pl5 pr5">Water
+                            damage treatment</span>
+                    </div>
+                    <div class="inner wd15percent">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <input class="wd35px form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                            (keypress)="numberOnly($event)" (change)="calculateOrder()">
+                    </div>
+                    <div class="inner wd11Percent">
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">$3,000</span>
+                    </div>
+                    <div class="inner wd11Percent">
+
+                    </div>
+                    <div class="inner wd5percent">
+                        <a class="close-icon" href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </accordion-group>
+</div>

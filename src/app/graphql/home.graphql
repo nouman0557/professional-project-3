@@ -1,0 +1,27 @@
+mutation saveOpenCashDrawerLog($input: openCashDrawerInput) {
+    saveOpenCashDrawerLog(input: $input) {
+        CashRegisters { 
+            _id
+        }
+    }
+}
+
+mutation saveTillCount($input: TillCountInput) {
+    saveTillCount(input: $input) {
+        CashRegisters {
+            _id
+        }
+        expected_amount
+    }
+}
+
+query getAllAlerts($location_id: ID!,$alert_type: AlertTypeEnum){
+ getAllAlerts(location_id: $location_id,alert_type:$alert_type){
+    _id
+    alert_title
+    alert_message
+    alert_type
+    alert_timer
+    created_at
+ }
+}

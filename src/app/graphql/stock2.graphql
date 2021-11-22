@@ -1,0 +1,393 @@
+query searchSupplier(
+    $search:String!,
+    $location_id: ID,
+    $active:String!,
+    $is_verify_supplier: Boolean!,
+    $unlink_product: Boolean!,
+    $limit: Int,$skip: Int
+    ){
+  searchSupplier(
+    search:$search,
+    location_id:  $location_id,
+    active:$active,
+    is_verify_supplier:  $is_verify_supplier,
+    unlink_product: $unlink_product,
+    limit:  $limit,skip: $skip
+    ){
+    _id
+    supplier_company
+    supplier_company_phone
+    supplier_company_email
+    website
+    address_1
+    address_2
+    city
+    state
+    zip_code
+    supplier_keeping_unit
+    supplier_store_credit {
+        supplier_credit_amount
+        storeLocation {
+          _id
+          store_name
+        }
+    }
+    Country{
+        _id
+        name
+        short_name
+        is_active
+    }
+    supplier_first_name
+    supplier_last_name
+    supplier_phone
+    supplier_mobile
+    supplier_email
+    BusinessLocation{
+        _id
+        store_name
+        store_nick_name
+        location_keeping_unit
+    }
+    Business{
+        _id
+    }
+    Product{
+        _id
+        product_name
+        description
+        image
+        is_bundle_product
+    }
+    is_verify_supplier
+    is_buyback
+    payment_settings{
+        paymentType {
+              _id
+              name
+              icon
+          }
+          isActive
+    }
+    Order
+  }
+}
+
+
+
+query supplierById($id:ID!,$location_id: ID,){
+  supplierById(id:$id, location_id:  $location_id,){
+    _id
+    supplier_company
+    supplier_company_phone
+    supplier_company_email
+    website
+    address_1
+    address_2
+    city
+    state
+    zip_code
+    supplier_keeping_unit
+    supplier_store_credit {
+        supplier_credit_amount
+        storeLocation {
+          _id
+          store_name
+        }
+    }
+    Country{
+        _id
+        name
+        short_name
+        is_active
+    }
+    supplier_first_name
+    supplier_last_name
+    supplier_phone
+    supplier_mobile
+    supplier_email
+    BusinessLocation{
+        _id
+        store_name
+        store_nick_name
+        location_keeping_unit
+    }
+    Business{
+        _id
+    }
+    Product{
+        _id
+        product_name
+        description
+        image
+        is_bundle_product
+    }
+    is_verify_supplier
+    is_buyback
+    payment_settings{
+        paymentType {
+              _id
+              name
+              icon
+          }
+          isActive
+    }
+    supplier_net_term{
+        supplier_pay_term_number
+        supplier_pay_term_type
+        supplier_credit_limit
+        supplier_interest_rate
+    }
+    supplier_store_credit{
+        supplier_credit_amount
+        storeLocation{
+            _id
+            store_name
+        }
+    }
+    Order
+  }
+}
+
+
+
+mutation archiveToActiveSupplier($id: [ID!]){
+    archiveToActiveSupplier(id: $id)
+}
+
+mutation permanentDeleteSupplier($id: [ID!]){
+    permanentDeleteSupplier(id: $id)
+}
+
+query supplierSummary($supplier_id: ID!){
+    supplierSummary(supplier_id: $supplier_id){
+        total_amount_spent
+        total_number_of_po
+        average_purchase_per_order
+        average_items_per_po
+        total_number_of_rma
+        total_number_of_buyback
+        store_credits
+        net_terms
+    }
+}
+
+ query getSupplierNettermLogs($supplierId: ID!,$locationId: ID,$limit: Int,$skip: Int){
+ getSupplierNettermLogs(supplierId: $supplierId,locationId: $locationId,limit: $limit,skip: $skip){
+    User{
+        id
+        email
+        first_name
+    }
+    transactionNo
+    Supplier{
+        _id
+        supplier_company
+    }
+    is_increase
+    pay_term_number
+    pay_term_type
+    credit_amount
+    debit_amount
+    interest_rate
+    note
+    created_at
+    balance
+    BusinessLocation{
+        _id
+        store_name
+        store_nick_name
+    }
+    date
+    is_overdue
+ }
+}
+
+mutation createSupplierNetterm($input: SupplierNettermInput){
+ createSupplierNetterm(input: $input){
+      User{
+        id
+        email
+        first_name
+    }
+    transactionNo
+    Supplier{
+        _id
+        supplier_company
+    }
+    is_increase
+    pay_term_number
+    pay_term_type
+    credit_amount
+    debit_amount
+    interest_rate
+    note
+    created_at
+    balance
+    BusinessLocation{
+        _id
+        store_name
+        store_nick_name
+    }
+    date
+    is_overdue
+ }
+}
+
+query supplierNetTerm($supplier_id: ID!,$location_id: ID!,$limit: Int!,$skip: Int!){
+    supplierNetTerm(supplier_id: $supplier_id,location_id: $location_id,limit: $limit,skip: $skip){
+    creditLimit
+    usedCredit
+    overDue
+    supplierNetTerms{
+        date
+        day_left
+        transaction_detail
+        debit
+        credit
+        ledger_balance
+    }
+ }
+}
+
+query supplierNetTermRecord($supplier_id: ID!,$location_id: ID!,$limit: Int!,$skip: Int!){
+    supplierNetTermRecord(supplier_id: $supplier_id,location_id: $location_id,limit: $limit,skip: $skip){
+        transactionID
+        date
+        day_left
+        order_no
+        total
+        amount_owed
+        amount_pay
+        balance
+        is_overdue
+        dynamic_status{
+            status_name
+            status_font_color
+            status_background_color
+            status_icon
+        }
+    }
+}
+
+query SuppliersVerificationWithSystem($input: [systemSupplierInput]){
+ SuppliersVerificationWithSystem(input: $input){
+     supplier{
+         supplier_company
+         supplier_company_phone
+         supplier_company_email
+         website
+         address_1
+         address_2
+         city
+         state
+         zip_code
+         Country
+         supplier_first_name
+         supplier_last_name
+         supplier_phone
+         supplier_mobile
+         supplier_email
+     }
+     postVerifyData{
+         supplier_company
+         supplier_company_phone
+         supplier_company_email
+         website 
+         address_1
+         address_2
+         city
+         state
+         zip_code
+         Country{
+             _id
+             name
+         }
+         supplier_first_name
+         supplier_last_name
+         supplier_phone
+         supplier_mobile
+         supplier_email
+     }
+ }
+}
+
+query suppliersCheckDuplicationData($input: [importSupplierInput]){
+    suppliersCheckDuplicationData(input: $input){
+        alreadyExistSuppliers{
+         supplier_company
+         supplier_company_phone
+         supplier_company_email
+         website
+         address_1
+         address_2
+         city
+         state
+         zip_code
+         Country
+         supplier_first_name
+         supplier_last_name
+         supplier_phone
+         supplier_mobile
+         supplier_email
+        }
+        suppliersInvalidData{
+         supplier_company
+         supplier_company_phone
+         supplier_company_email
+         website
+         address_1
+         address_2
+         city
+         state
+         zip_code
+         Country
+         supplier_first_name
+         supplier_last_name
+         supplier_phone
+         supplier_mobile
+         supplier_email
+        }
+        newlyAddedSuppliers{
+         supplier_company
+         supplier_company_phone
+         supplier_company_email
+         website
+         address_1
+         address_2
+         city
+         state
+         zip_code
+         Country
+         supplier_first_name
+         supplier_last_name
+         supplier_phone
+         supplier_mobile
+         supplier_email
+        }
+    }
+}
+
+mutation createSupplierNetTermPayment($input: inputSupplierNetTermPayment){
+    createSupplierNetTermPayment(input: $input)
+}
+
+mutation importProductsData($input: [productImportInput]){
+    importProductsData(input: $input){
+        productsInvalidData{
+          
+          product_name
+          description
+        }
+        newlyAddedProducts{
+          
+          product_name
+          description
+        }
+        alreadyExistProducts{
+             
+          product_name
+          description
+        }
+    }
+}

@@ -1,0 +1,133 @@
+mutation createDiscount($input: DiscountInput) {
+  createDiscount(input: $input) {
+    _id
+  }
+}
+
+query getDiscountsAndSearch($input: searchDiscountInput) {
+  getDiscountsAndSearch(input: $input) {
+   _id
+    name
+    start_date
+    end_date
+    is_active
+    updated_at
+  }
+}
+
+mutation updateDiscount($id: ID!, $input: DiscountInput) {
+  updateDiscount(id: $id, input: $input)
+}
+
+mutation deleteDiscount($id: ID!) {
+  deleteDiscount(id: $id)
+}
+
+query searchInDiscounts(
+  $limit: Int!
+  $skip: Int!
+  $status: Status
+  $search: String
+) {
+  searchInDiscounts(
+    limit: $limit
+    skip: $skip
+    status: $status
+    search: $search
+  ) {
+    _id
+  }
+}
+
+query getAllCampaigns {
+  getCampaigns {
+    _id
+    name
+    start_date
+    end_date
+    is_active
+  }
+}
+
+mutation createCampaign($input: campaignInput) {
+  createCampaign(input: $input) {
+    _id
+    name
+    start_date
+    end_date
+    is_active
+  }
+}
+
+query searchCampaigns($search: String) {
+  searchCampaigns(search: $search) {
+    _id
+    name
+    start_date
+    end_date
+    is_active
+  }
+}
+
+query getAllTagsOfDiscount($type: String!) {
+  tagsByType(type: $type) {
+    _id
+    name
+  }
+}
+
+mutation createTag($input: tagInput) {
+  createTag(input: $input) {
+    _id
+    name
+  }
+}
+
+query createCouponCode {
+  createCouponCode {
+    code
+  }
+}
+
+query searchTagsByType($type: String!, $search: String) {
+  searchTagsByType(type: $type, search: $search) {
+    _id
+    name
+  }
+}
+
+query getCampaignswithDiscounts($limit: Int, $skip: Int, $search: String) {
+  getCampaignswithDiscounts(limit: $limit, skip: $skip, search: $search) {
+    _id
+    name
+    start_date
+    end_date
+    is_active
+  }
+}
+
+
+query sendEmailGiftCard($id:ID!){
+  sendEmailGiftCard(id:$id)
+}
+
+query searchDiscountTags($search: String) {
+  searchDiscountTags(search: $search) {
+    _id
+    name
+  }
+}
+
+query searchCustomerTags($search: String) {
+  searchCustomerTags(search: $search) {
+    _id
+    name
+  }
+}
+
+query effectDiscountToCustomer($input: progressBarInput) {
+  effectDiscountToCustomer(input: $input) {
+    Total_customer
+    effect_customer
+  }
+}

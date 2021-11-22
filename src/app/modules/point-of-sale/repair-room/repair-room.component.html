@@ -1,0 +1,38 @@
+<section id="create-order-section">
+    <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+        [hideToster]="hideToaster"></app-toaster>
+        <div class="row">
+            <div class="col-lg-6 p0">
+                <div class="outer-wrapper">
+                    <div class="summary-title">
+                        <h2 class="text-left pl25">{{tabTitle.leftTabTitle}}</h2>
+                    </div>
+                    <div class="inner-wrapper repairRoom">
+                        <task-list></task-list>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 p0">
+                <!-- Minimizer Actions (click) = "goToComponent('device-checkin')" -->
+                <div class="iconActions">
+                    <a (click)="minOrder()"><i class="icon-minimized font16"></i></a>
+                    <a><i class="icon-close font16"></i></a>
+                </div>
+                <div class="switchable-wrapper">
+                    <div class="summary-title">
+                        <ul class="nav nav-pills" id="pills-s-tab">
+                            <li [ngClass]="{'nav-item':true, 'active':activeTab.rightTab1}"  class="nav-item">
+                                <a (click)="goToComponent('extra-item')"  class="nav-link" id="pills-tab-s-one"> {{tabTitle.rightTabTitle1}}</a>
+                            </li>
+                            <li [ngClass]="{'nav-item':true, 'active':activeTab.rightTab2}" class="nav-item">
+                                <a (click)="goToComponent('device-comment')" class="nav-link" id="pills-tab-s-three">{{tabTitle.rightTabTitle2}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content" id="pills-s-tabContent">
+                        <router-outlet ></router-outlet>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>

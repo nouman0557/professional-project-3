@@ -1,0 +1,133 @@
+<ng-template #payWithCardModal>
+    <div class="modal-header"></div>
+    <div class="modal-body">
+        <div class="cardWrapper">
+            <div class="scene">
+                <div class="creditCard" [ngClass]="{'is-flipped' : CCardFlip}">
+                    <div class="card__face cardFornt">
+                        <div class="cardBG" style="background-image: url('../../../../assets/images/cardBg.png');">
+                            <div class="top">
+                                <div class="left">
+                                    <h3>Bank</h3>
+                                    <img src="../../../../assets/images/cardChip.png" alt="">
+                                </div>
+                                <div class="right">
+                                    <h4>{{cardType}}</h4>
+                                </div>
+                            </div>
+                            <div class="center" [ngClass]="{'selected' : sNumber}">
+                                <span>{{ccNumber.substring(0, 4) || '####'}}</span>
+                                <span>{{ccNumber.substring(4, 8) || '####'}}</span>
+                                <span>{{ccNumber.substring(8, 12) || '####'}}</span>
+                                <span>{{ccNumber.substring(12, 16) ||'####'}}</span>
+                            </div>
+                            <div class="bottom">
+                                <div class="left" [ngClass]="{'selected' : sName}">
+                                    <label>Card Holder</label>
+                                    <span>{{ccName || 'Muhammad Tayyab'}}</span>
+                                </div>
+                                <div class="right" [ngClass]="{'selected' : sDate}">
+                                    <label>Expires</label>
+                                    <div class="month"><span>{{selectMonth}}/</span></div>
+                                    <div class="year"><span>{{selectYear}}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card__face cardBack cardFornt">
+                        <div class="cardBG" style="background-image: url('../../../../assets/images/cardBg.png');">
+                            <div class="top">
+                            </div>
+                            <div class="center">
+                                <span class="ccvNum">{{ccCCV || '***'}}</span>
+                            </div>
+                            <div class="bottom">
+                                <div class="right">
+                                    <h4>Visa</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <img class="creditCrdimg" src="../../../../assets/images/credit_card.png" alt=""> -->
+        <p>Credit Card</p>
+        <div class="items-form-content">
+            <div class="row">
+                <div class="col-md-12 p0">
+                    <div class="text-field">
+                        <label>Card Number</label>
+                        <input type="text" (focus)="sNumberAdd()" (focusout)="sNumberAdd()" (keyup)="checkCardType()" onlyNumber
+                            [(ngModel)]="ccNumber" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Type card number" maxlength="16">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 p0">
+                    <div class="text-field">
+                        <label>Card Holder</label>
+                        <input type="text" (focus)="sNameAdd()" (focusout)="sNameAdd()" maxlength="30" [(ngModel)]="ccName"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Type card holder name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 pl0">
+                    <div class="text-field">
+                        <label>Expiration Month</label>
+                        <div class="assign-to-device">
+                            <div class="btn-group" dropdown>
+                                <button id="button-animated" dropdownToggle type="button"
+                                    class="btn dropdown-toggle cust-field font12 borderColorcbcbcb borderRadius5" aria-controls="dropdown-animated"
+                                    (focus)="sDateAdd()" (focusout)="sDateAdd()">{{selectMonth}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                                    aria-labelledby="button-animated">
+                                    <li *ngFor="let m of months" (click)="changeExpire('selectMonth',m)" role="menuitem"><a
+                                            class="dropdown-item">{{m}}</a>
+                                    </li> 
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 p0">
+                    <div class="text-field ">
+                        <label>Expiration Year</label>
+                        <div class="assign-to-device">
+                            <div class="btn-group" dropdown>
+                                <button id="button-animated" dropdownToggle type="button"
+                                    class="btn dropdown-toggle cust-field font12 borderColorcbcbcb borderRadius5" aria-controls="dropdown-animated"
+                                    (focus)="sDateAdd()" (focusout)="sDateAdd()">{{selectYear}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                                    aria-labelledby="button-animated">
+                                    <li *ngFor="let year of years;" (click)="changeExpire('selectYear',year)"
+                                        role="menuitem"><a class="dropdown-item">{{year}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 pr0">
+                    <div class="text-field">
+                        <label>CVV</label>
+                        <input type="text" [(ngModel)]="ccCCV" (focus)="flipCard()" onlyNumber
+                            (focusout)="flipCard()" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="***" maxlength="4">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb20">
+        <button [ngClass]="{'disabled': ccNumber.length < 16 || selectMonth == '' || selectYear == '' || ccCCV.length < 3}" 
+        (click)="payWithCard()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 m0 bgBlack colorWhite wd140px">Pay</button>
+        <button (click)="discardEverything()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>

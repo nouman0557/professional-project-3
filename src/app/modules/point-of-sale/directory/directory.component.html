@@ -1,0 +1,301 @@
+<section id="create-order-section">
+  <div class="row">
+      <div class="col-lg-12 p0">
+          <div class="switchable-wrapper customer-wrapper franchise-wrapper">
+              <div class="summary-title">
+                  <ul class="nav nav-pills" id="pills-s-tab" role="tablist">
+                      <li [ngClass]="{'nav-item':true, 'active':tabSelected == 'info' ? true : false}">
+                          <a (click)="selectTab('info')" class="nav-link" id="pills-tab-s-one" data-toggle="pill" role="tab" aria-controls="tab-one" aria-selected="false">WEBPAGE INFO</a>
+                      </li>
+                      <li [ngClass]="{'nav-item':true, 'active':tabSelected == 'leads' ? true : false}">
+                          <a (click)="selectTab('leads')" class="nav-link" id="pills-tab-s-two" data-toggle="pill" role="tab" aria-controls="tab-two" aria-selected="true">LEADS</a>
+                      </li>
+                      <li [ngClass]="{'nav-item':true, 'active':tabSelected == 'reviews' ? true : false}">
+                          <a (click)="selectTab('reviews')" class="nav-link" id="pills-tab-s-three" data-toggle="pill" role="tab" aria-controls="tab-three" aria-selected="true">REVIEWS</a>
+                      </li>
+                  </ul>
+              </div>
+              <div class="iconActions">
+                  <a><i class="icon-minimized font16"></i></a>
+                  <a><i class="icon-close font16"></i></a>
+                  <!-- <a><img src="../../../../assets/images/close.png" alt="" width="14"></a> -->
+              </div>
+
+              <div class="tab-content" id="pills-s-tabContent">
+                <app-view-directory *ngIf="directoryState == 'view' && tabSelected == 'info' ? true : false" (emitState)="assignState($event)" ></app-view-directory>
+                <app-update-directory *ngIf="directoryState == 'edit' && tabSelected == 'info' ? true : false" (emitState)="assignState($event)" ></app-update-directory>
+                <app-view-review *ngIf="tabSelected == 'reviews' ? true : false"></app-view-review>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+<ng-template #open_importCustomers>
+  <div class="modal-header"></div>
+  <div class="modal-body">
+      <h2>Import Customers</h2>
+      <p>Upload your customer as a .CSV, .XSL or .PDF files.</p>
+      <div class="download-sample"><a href="../../../../assets/ImportCustomers.csv" download>Download sample csv</a>
+      </div>
+      <div class="import-file">
+          <div class="input-group input-file" name="add-importPO">
+              <label *ngIf="fileName != ''" for="add-importPO"><span>{{fileName}}</span></label>
+              <label *ngIf="fileName == ''" for="add-importPO"><span>please select csv file</span></label>
+              <input type="file" accept=".csv" #uploads (change)="onFileChanged(uploads.files)" multiple value="process" name="add-importPO" id="add-importPO" class="form-control cust-field" placeholder="Example: filename.csv">
+              <span class="input-group-btn">
+                <button class="btn btn-default btn-choose" type="button">Browse</button>
+            </span>
+          </div>
+      </div>
+
+  </div>
+  <div class="modal-footer">
+      <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <button (click)="closeModel()" (click)="openModal(open_mapColumn, 'box-importPO box-width')" type="button" class="btn btn-default" data-dismiss="modal">Upload</button>
+  </div>
+</ng-template>
+<ng-template #open_uploadDoc>
+  <div *ngIf='docUploadLoader==true' class="luna-loading"></div>
+  <div class="modal-header"></div>
+  <div class="modal-body">
+      <img src="../../../../assets/images/box-removecustomer.png" alt="" width="40">
+      <h2>Upload New Document</h2>
+      <p>Upload your document as a .CSV, .XSL or .PDF files.</p>
+      <div class="import-file">
+          <div class="input-group input-file" name="add-docfile">
+              <label *ngIf="documentFilename != ''" for="add-docfile"><span>{{documentFilename}}</span></label>
+              <label *ngIf="documentFilename == ''" for="add-docfile"><span>please select document</span></label>
+              <input type="file" accept=".docx, .pptx , .xlsx , .pdf , .csv" #uploads (change)="onFileUpload($event)" name="add-docfile" id="add-docfile" class="form-control cust-field">
+              <span class="input-group-btn">
+                <button class="btn btn-default btn-choose" type="button">Browse</button>
+            </span>
+          </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+      <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <button type="button" (click)="updatedDocumentFile()" class="btn btn-default" data-dismiss="modal">Upload</button>
+  </div>
+</ng-template>
+<ng-template #open_mapColumn>
+  <div class="modal-header"></div>
+  <div class="modal-body">
+      <h2>Configure columns to import</h2>
+      <p>Match the reserved attributes on import customers to the columns header in your CSV</p>
+      <p>Please note that you may not be importing all of these attributes. Feel free to "Skip" the ones that are not present in your file.</p>
+      <div class="merge-columns">
+          <carousel [itemsPerSlide]="itemsPerSlide" [singleSlideOffset]="singleSlideOffset" [noWrap]="!noWrap" [interval]="false" [startFromIndex]="0">
+              <slide *ngFor="let field of fields; let i = index;" class="animated fadeIn">
+                  <div class="column-box">
+                      <div class="top">
+                          <div class="left">
+                              <p>Attribute: <span>{{field}}</span></p>
+                          </div>
+                          <div class="right">
+                              <a (click)="skipSlide(i)">Skip</a>
+                          </div>
+                      </div>
+                      <div class="bottom">
+                          <label>Mapped Column</label>
+                          <div class="btn-group" dropdown>
+                              <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle" aria-controls="dropdown-animated">{{col[i]}}
+                                <span class="caret"></span>
+                            </button>
+                              <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
+                                  <li *ngFor="let m_col of mappedColumns; let k = index;" (click)="changeValueOfMapColumns('mappedColumn',m_col,field,i)" role="menuitem">
+                                      <a class="dropdown-item">{{m_col}}</a>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                      <div class="view-column">
+                          <label>{{field}}</label>
+                          <div class="scroll-content">
+                              <table class="table">
+                                  <tbody>
+                                      <tr *ngFor="let data of dataList;let j = index;" colspan="2">
+                                          <td>{{j+1}}</td>
+                                          <td>{{dataList[j][field]}}</td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+              </slide>
+          </carousel>
+      </div>
+  </div>
+  <div class="modal-footer">
+      <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <button (click)="doneMapping()" (click)="openModal(open_importCustDone, 'box-importPO')" type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+  </div>
+</ng-template>
+<ng-template #open_importPODone>
+  <div class="modal-header"></div>
+  <div class="modal-body">
+      <div *ngIf='importCustLoader==true' class="luna-loading"></div>
+      <h2>{{custAlreadyEx}} Customers are already exist</h2>
+      <h6>All customers in your CSV file are import except {{custAlreadyEx}}</h6>
+      <br>
+  </div>
+  <div class="modal-footer">
+      <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+  </div>
+</ng-template>
+<ng-template #open_importCustDone>
+  <div class="modal-header"></div>
+  <div class="modal-body">
+      <div *ngIf='importCustLoader==true' class="luna-loading"></div>
+      <h2 *ngIf='someCustAlredyEx ==true'>{{custAlreadyEx}} customer(s) already exist</h2>
+      <h6 *ngIf='someCustAlredyEx ==true'>All customers except the existing ones have been imported</h6>
+
+      <h2 *ngIf='allCustAlredyEx ==true'>All customers already exist</h2>
+      <h6 *ngIf='allCustAlredyEx ==true'>None of the customers have been imported because they already exist</h6>
+
+      <h2 *ngIf='allCustimport ==true'>All customers imported</h2>
+      <h6 *ngIf='allCustimport ==true'>All customers listed in the CSV have been successfully imported</h6>
+      <br>
+  </div>
+  <div class="modal-footer">
+      <button (click)="closeModel()" type="button" class="btn btn-default center" data-dismiss="modal">Ok</button>
+  </div>
+</ng-template>
+<ng-template #open_removeDoc>
+  <div class="modal-header"></div>
+  <div class="modal-body">
+      <img src="../../../../assets/images/box-removecustomer.png" alt="" width="40">
+      <h2>Remove Document</h2>
+      <p>Remove Document from the list?</p>
+  </div>
+  <div class="modal-footer">
+      <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <button type="button" (click)="removeDocument()" class="btn btn-default" data-dismiss="modal">Yes</button>
+  </div>
+</ng-template>
+<ng-template #open_removeClient>
+  <div class="modal-header"></div>
+  <div class="modal-body">
+      <img src="../../../../assets/images/box-removecustomer.png" alt="" width="40">
+      <h2>Remove Client</h2>
+      <p>Remove Client from the list?</p>
+  </div>
+  <div class="modal-footer">
+      <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <button type="button" (click)="deleteClient(clientSelected._id)" class="btn btn-default" data-dismiss="modal">Yes</button>
+  </div>
+</ng-template>
+<ng-template #open_importDoc>
+  <div class="modal-header"></div>
+  <div class="modal-body">
+      <h2>Choose Your File</h2>
+      <div class="import-file">
+          <div class="input-group input-file" name="add-importPO">
+              <label for="add-importPO"><span>{{fileName}}</span></label>
+              <label for="add-importPO"><span>please select csv file</span></label>
+              <input type="file" accept=".csv" #uploads (change)="onFileChanged(uploads.files)" multiple value="process" name="add-importPO" id="add-importPO" class="form-control cust-field" placeholder="Example: filename.csv">
+              <span class="input-group-btn">
+                <button class="btn btn-default btn-choose" type="button">Browse</button>
+            </span>
+          </div>
+      </div>
+
+  </div>
+  <div class="modal-footer">
+      <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <button (click)="closeModel()" (click)="openModal(open_mapColumn, 'box-importPO box-width')" type="button" class="btn btn-default" data-dismiss="modal">Upload</button>
+  </div>
+</ng-template>
+<ng-template #open_downloadDoc>
+  <div class="modal-header"></div>
+  <div class="modal-body">
+      <img src="../../../../assets/images/share-icon.png" style="transform: rotate(180deg);" alt="" width="40">
+      <h2>Download File</h2>
+      <p>Shure you want to download this file?</p>
+  </div>
+  <div class="modal-footer">
+      <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <a target="_blank" href="http://3.227.161.233:5001/upload{{modelDocument?.file_path}}">
+          <button type="button" (click)="closeModel()" class="btn btn-default" data-dismiss="modal">
+            Yes
+        </button>
+      </a>
+  </div>
+</ng-template>
+
+<ng-template #open_changeStatus>
+  <div *ngIf='statusLoader==true' class="luna-loading"></div>
+  <div class="modal-body">
+      <div class="labelSelection">
+          <ul>
+              <li *ngFor="let status of allStatusData; let i = index">
+                  <a *ngIf="!afterClick" (click)='changeStatus(status.status_name,status.status_background_color)' class="label {{status.status_background_color}}"> {{status.status_name}}</a>
+              </li>
+              <li *ngIf="afterClick">
+                  <a class="label {{newStatusColor}}">
+                      <input [(ngModel)]="newStatusText" type="text" name="new-status" id="new-status" class="form-control" placeholder="Enter Text">
+                  </a>
+              </li>
+          </ul>
+          <div class="addNewLabel">
+              <div *ngIf="beforeClick" class="beforeClick">
+                  <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  <button (click)="loadaddLabel()" type="button" class="btn btn-default" data-dismiss="modal">Add labels {{" "}}<i class="fa fa-plus"></i></button>
+                  <!-- <a (click)="loadaddLabel()" >Add labels<i class="fa fa-plus"></i></a> -->
+              </div>
+              <div *ngIf="afterClick" class="afterClick">
+                  <ul>
+                      <li>
+                          <a (click)='createNewStatusColor("brown")' class="colorBox brown"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("pink")' class="colorBox pink"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("darkOrange")' class="colorBox darkOrange"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("lightPurple")' class="colorBox lightPurple"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("seeGreen")' class="colorBox seeGreen"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("navyBlue")' class="colorBox navyBlue"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("lightOrange")' class="colorBox lightOrange"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("deepblue")' class="colorBox deepblue"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("darkBlue")' class="colorBox darkBlue"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("lightBrown")' class="colorBox lightBrown"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("darkPurple")' class="colorBox darkPurple"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("darkPink")' class="colorBox darkPink"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("grey")' class="colorBox grey"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("green")' class="colorBox green"></a>
+                      </li>
+                      <li>
+                          <a (click)='createNewStatusColor("purple")' class="colorBox purple"></a>
+                      </li>
+                  </ul>
+                  <a (click)="createNewStatus()" href="javascript:void(0);" class="doneLabel">Done</a>
+                  <button (click)="loaddoneLabel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template>

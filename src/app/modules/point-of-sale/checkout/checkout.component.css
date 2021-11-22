@@ -1,0 +1,94 @@
+/* Table scroll */
+
+.table-scroll thead{
+    background-color: #f1f1f1;  
+    position:relative;
+    display: block;
+    width:102%;
+    overflow-y: scroll;
+  }
+  
+  .table-scroll tbody{
+    /* Position */
+    display: block; position:relative;
+    width:100%; overflow-y:overlay;
+    height: 55px;
+    /* Decoration */
+  }
+  #section-checkout.stockCheckout .checkout-left-wrapper .mid-info {
+    height: calc(100vh - 450px);
+}
+  #section-checkout.stockCheckout table#checkout-order-table tbody {
+    height: calc(100vh - 480px);
+}
+  .bottom-info.paymenttypeInfo span {
+    margin-bottom: 5px;
+}
+  .bottom-info.paymenttypeInfo tfoot tr {
+    margin-bottom: 0px;
+}
+  .table-scroll tfoot{
+    width: 100%;
+    display:flex;
+  }
+  
+  
+  .table-scroll tr{
+    width: 100%;
+    display:flex;
+  }
+  
+  .table-scroll td,.table-scroll th{
+    flex-basis:100%;
+    flex-grow:2;
+    display: block;
+    padding: 1rem;
+    text-align:left;
+  }
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .cash-btns a:nth-child(2) {
+    margin-left: -5px;
+    transform: skew(-5deg);
+}
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .cash-btns a:nth-child(2) .cash {
+    transform: skew(0deg);
+    margin-left: -5px;
+}
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .cash-btns a:nth-child(3) {
+    margin-left: -5px;
+    transform: skew(5deg);
+}
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .cash-btns a:nth-child(3) .check {
+    transform: skew(-5deg);
+    margin-left: -5px;
+}
+#section-checkout .checkout-right-wrapper .mid.createSale .cash-btns.right a:nth-child(2) {
+    margin-left: 30px;
+    transform: skew(5deg);
+}
+#section-checkout .checkout-right-wrapper .mid.createSale .cash-btns.right a:nth-child(2) .check {
+    transform: skew(-5deg);
+}
+#section-checkout .checkout-right-wrapper .mid.createSale .cash-btns.right a:nth-child(3) {
+    transform: skew(-5deg);
+    margin-left: 30px;
+}
+#section-checkout .checkout-right-wrapper .mid.createSale .cash-btns.right a:nth-child(3) .cash {
+    transform: skew(5deg);
+    margin-left: 5px;
+}
+.scrollPayment {
+    height: 120px;
+}
+
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .inner#box-cash .checkout-action,
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .inner#box-check .checkout-action,
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .inner#box-Paypal .checkout-action,
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .inner#box-net-term .checkout-action, 
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .inner#box-store-credit .checkout-action,
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .inner#box-coupons .checkout-action,
+#section-checkout.stockCheckout .checkout-right-wrapper .mid.createSale .inner#box-Payinvoice .checkout-action {
+    bottom: -100px;
+}
+.topInfo {
+    top: 0px;
+}

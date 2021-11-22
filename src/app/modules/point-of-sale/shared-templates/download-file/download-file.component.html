@@ -1,0 +1,16 @@
+<ng-template #downloadFileModal>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt20 wd250">
+            <i class="fas fa-download font42 color000"></i>
+            <h2 class="fontPoppin font20 fontSemiBold mt15 color000">
+                How do you want to download your file?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb30">
+        <button type="button" (click)="workDone('pdf')" 
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">PDF</button>
+        <button type="button" (click)="workDone('csv')"
+            class="btn modalSaveBtnReceive mb5 fontPoppin borderRadius20">CSV</button>
+        <button (click)="ngOnDestroy()" type="button" class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>

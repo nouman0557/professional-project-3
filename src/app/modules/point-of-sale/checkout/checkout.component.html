@@ -1,0 +1,726 @@
+<!-- Checkout Section Start from here -->
+<section id="section-checkout" class="stockCheckout">
+    <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+        [hideToster]="showToaster"></app-toaster>
+    <div *ngIf="loadOrder" class="luna-loading checkOutloading"></div>
+    <div class="row">
+        <div class="col-lg-4 p0">
+            <div class="checkout-left-wrapper">
+                <div class="top-info">
+                    <div class="left">
+                        <div *ngIf="currendOrder?.TransactionPayment?.length == 0" class="back-icon d-click-wrap">
+                            <a (click)="closeCheckout(false)" class="d-click-btn" href="JavaScript:void(0)">Back</a>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <table class="table" style="width:100%">
+                            <tbody>
+                                <tr colspan="2">
+                                    <td>Customer:</td>
+                                    <td>{{currendOrder?.Customer?.first_name + ' ' + currendOrder?.Customer?.last_name}}</td>
+                                </tr>
+                                <tr colspan="2">
+                                    <td>Order:</td>
+                                    <td>{{currendOrder?.transaction_keeping_unit}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="mid-info table-responsive m0">
+                    <div class="paidStatus">
+                        <div class="paid">
+                            <img *ngIf="totalAmount - priorAmount <= 0" src="../../../../assets/images/paid.png" alt="" width="300">
+                        </div>
+                        <div *ngIf="priorAmount > 0 && totalAmount - priorAmount > 0 " class="partialpaid">
+                            <img src="../../../../assets/images/partialpaid.png" alt="" width="300">
+                        </div>
+                    </div>
+                    <table id="checkout-order-table" class="table m0" style="width:calc(100% + 1px)">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Qty.</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr [ngClass]="{'withDevice': pro?.is_device}" *ngFor="let pro of sellLines;">
+                                <td *ngIf="pro?.is_device" colspan="3">
+                                    <div class="top"> 
+                                        <span>{{pro?.Device?.device_keeping_unit + '-' + pro?.Device?.deviceBrand?.brand_name + ' ' + pro?.Device?.deviceModel?.name + ' Repair'}}</span>
+                                        <span>...</span>
+                                        <span>...</span>
+                                        <span>...</span>
+                                    </div>
+                                    <div class="bottom">
+                                        <ul>
+                                            <li *ngFor="let deviceProducts of pro?.products">
+                                                <div class="inner">{{deviceProducts?.Product?.product_name || deviceProducts?.customProduct?.name }}
+                                                    <span class="color808080 font10"> {{deviceProducts?.supplier_sku}}
+                                                    </span>
+                                                </div>
+                                                <div class="inner">{{deviceProducts?.quantity}}</div>
+                                                <div class="inner">{{deviceProducts?.sub_total_amount | currency}}</div>
+                                                <div class="inner">{{deviceProducts?.total_amount | currency}}</div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td *ngIf="pro?.product_type == 'giftCard'">Giftcard</td>
+                                <td *ngIf="pro?.product_type == 'custom'">{{pro?.customProduct?.name || 'N/A'}}</td>
+                                <td *ngIf="pro?.product_type == 'product'">{{pro?.Product?.product_name || 'N/A'}}
+                                    <span class="color808080 font10"> {{pro?.supplier_sku}} 
+                                    </span>
+                                </td>
+                                <td *ngIf="!pro?.is_device">{{pro?.quantity}}</td>
+                                <td *ngIf="!pro?.is_device">{{pro?.product_sale_price | currency}}</td>
+                                <td *ngIf="!pro?.is_device">{{pro?.total_amount | currency}}</td>
+                            </tr>
+                            <!-- <tr class="withDevice">
+                                <td colspan="3">
+                                    <div class="top">
+                                        <span>Bundle Product</span>
+                                        <span>1</span>
+                                        <span>$300.00</span>
+                                        <span>$300.00</span>
+                                    </div>
+                                    <div class="bottom">
+                                        <ul>
+                                            <li>
+                                                <div class="inner">iPhone 6s Screen Cover</div>
+                                                <div class="inner">5</div>
+                                                <div class="inner">$20.00</div>
+                                                <div class="inner">$100.00</div>
+                                            </li>
+                                            <li>
+                                                <div class="inner">iPhone 6s Screen repair</div>
+                                                <div class="inner">1</div>
+                                                <div class="inner">$180.00</div>
+                                                <div class="inner">$180.00</div>
+                                            </li>
+                                            <li>
+                                                <div class="inner">Diagnostic Service</div>
+                                                <div class="inner">1</div>
+                                                <div class="inner">$15.00</div>
+                                                <div class="inner">$15.00</div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bottom-info accountDetails">
+                    <table class="table totals" style="width:calc(100% + 1px)">
+                        <thead>
+                            <tr class="sub-total">
+                                <td>Sub Total</td>
+                                <td>{{subTotalAmount | currency}}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="discount-total">
+                                <td>Discount 
+                                    <div class="addDiscount">
+                                        <a *ngIf="!isDiscountApplied" class="addDiscountbtn"
+                                            (click)="openModal(apply_discount,'custModal wd300 disCode')"
+                                            href="JavaScript:void(0)">Add Discount</a>
+                                        <a *ngIf="isDiscountApplied"class="addDiscountbtn" href="JavaScript:void(0)">Discount Added</a>
+                                    </div>
+                                </td>
+                                <td>{{currendOrder?.discount_amount | currency}}</td>
+                            </tr>
+                            <tr class="discount-total">
+                                <td>Tax Charges ({{ currendOrder?.is_apply_sale_tax ? currendOrder?.tax_value : '0' }} %)</td>
+                                <td>{{ currendOrder?.is_apply_sale_tax ? currendOrder?.tax_amount : '0' | currency}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Total</td>
+                                <td>{{totalAmount | currency}}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="bottom-info paymenttypeInfo">
+                    <span class="fontSemiBold color000 dBlock pt5 pb5 pt5 pl10">Payment(s)</span>
+                    <table class="table totals table-scroll small-first-col" style="width:calc(100% + 1px)">
+                        <tfoot>
+                            <tr>
+                                <td class="flex2">Date</td>
+                                <td class="flex4">Payment Method</td>
+                                <td class="flex1">Amount</td>
+                                <!-- <td class="flex1">Delete</td> -->
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr *ngFor="let pay of paymentLines;" class="discount-total">
+                                <td class="flex2">{{pay?.paid_on | customDateFormat }}</td>
+                                <td class="flex4">
+                                    <span class=" ml15 mr15">
+                                        <i *ngIf="pay?.method == 'cash'" class="icon-cash pr5 dtableCell"></i>
+                                        <i *ngIf="pay?.method == 'cheque'" class="icon-check pr5 dtableCell"></i>
+                                        <i *ngIf="pay?.method == 'paypal'" class="icon-paypal pr5 dtableCell"></i>
+                                        <i *ngIf="pay?.method == 'net_term'" class="icon-net_terms pr5 dtableCell"></i>
+                                        <i *ngIf="pay?.method == 'store_credit'" class="icon-store_credit pr5 dtableCell"></i>
+                                        <i *ngIf="pay?.method == 'credit_card' || pay?.method == 'stripe'" class="icon-credit_card pr5 dtableCell"></i>
+                                        <i *ngIf="pay?.method == 'paypal_transaction_id'" class="icon-paypal_invoice pr5 dtableCell"></i>
+                                        <i *ngIf="pay?.method == 'gift_card'" class="icon-giftcard_tickets pr5 dtableCell"></i>
+                                        <i *ngIf="pay?.method == 'discount_card'" class="icon-discount_tickets pr5 dtableCell"></i>
+
+                                        <i *ngIf="pay?.method != 'credit_card' && pay?.method != 'stripe' && pay?.method != 'paypal_transaction_id'" 
+                                            class="dtableCell fontStyleNormal">{{pay?.method.replace("_", " ") | titlecase}}
+                                        </i>
+                                        <i *ngIf="pay?.method == 'credit_card' || pay?.method == 'stripe' " class="dtableCell fontStyleNormal">Credit Card</i>
+                                        <i *ngIf="pay?.method == 'paypal_transaction_id'" class="dtableCell fontStyleNormal">Paypal Transaction</i>
+                                    </span>
+                                </td>
+                                <td class="flex1">{{pay?.amount || 0 | currency}}</td>
+                                <!-- <td class="flex1"> 
+                                    <a href="JavaScript:void(0)" (click)="openDeletePaymentPopup(open_deletePay,'custModal wd300',pay)" class="color000 font12">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 p0">
+            <div class="checkout-right-wrapper">
+                <div *ngIf="paymentLoader" class="luna-loading checkOutloading CreateSale"></div>
+                <div *ngIf="loadingCreditCard" class="luna-loading"></div>
+                <div class="checktop">
+                    <div class="title text-center">
+                        <h2>Record Payment Information</h2>
+                    </div>
+                    <div class="iconActions">
+                        <a (click)="minOrder()"><i class="icon-minimized font16"></i></a>
+                        <a (click)="openModal(open_clearPaymentProcess,'box-removedevice',device)"><i class="icon-close font16"></i></a>
+                    </div>
+                </div>
+                <div class="inner-contetnt">
+                    <div class="top">
+                        <p>Due Payment:</p>
+                        <h2>{{remainingAmount | currency}}</h2>
+                        <p>Prior Payment: {{priorAmount | currency}}</p>
+                       <div class="payLater"><a (click)="payLater()" href="JavaScript:void(0);">Pay Later</a></div>
+                    </div>
+                    <div class="mid createSale">
+                        <div class="cash-btns">
+                            <a [ngClass]="{'active':boxCredit}" id="btn-credit" class="active"
+                                (click)="changePay('boxCredit')">
+                                <div class="credit">
+                                    <i class="icon-credit_card font32px"></i>
+                                    <span>Credit Card</span>
+                                </div>
+                            </a>
+                            <a [ngClass]="{'active':boxCash}" id="btn-cash" (click)="changePay('boxCash')">
+                                <div class="cash">
+                                    <i class="icon-cash font32px"></i>
+                                    <span>Cash</span>
+                                </div>
+                            </a>
+                            <a [ngClass]="{'active':boxCheck}" id="btn-check" (click)="changePay('boxCheck')">
+                                <div class="check">
+                                    <i class="icon-check font32px"></i>
+                                    <span>Check</span>
+                                </div>
+                            </a>
+                            <a [ngClass]="{'active':boxPaypal}" id="btn-Paypal" (click)="changePay('boxPaypal')">
+                                <div class="cash">
+                                    <i class="icon-paypal font32px"></i>
+                                    <span>Paypal</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="cash-btns right">
+                            <a [ngClass]="{'active':boxNetterm}" id="btn-net-term" (click)="changePay('boxNetterm')">
+                                <div class="credit">
+                                    <i class="icon-net_terms font32px"></i>
+                                    <span>Net terms</span>
+                                </div>
+                            </a>
+                            <a [ngClass]="{'active':boxStorecredit}" id="btn-store-credit"
+                                (click)="changePay('boxStorecredit')">
+                                <div class="check">
+                                    <i class="icon-store_credit font32px"></i>
+                                    <span>Store Credit</span>
+                                </div>
+                            </a>
+                            <a [ngClass]="{'active':boxCoupons}" id="btn-coupons" (click)="changePay('boxCoupons')">
+                                <div class="cash">
+                                    <!-- icon-giftcard_checkout -->
+                                    <i class="icon-giftcard_tickets font32px"></i>
+                                    <span>Giftcard</span>
+                                </div>
+                            </a>
+                            <a [ngClass]="{'active':boxPayinvoice}" id="btn-Payinvoice"
+                                (click)="changePay('boxPayinvoice')">
+                                <div class="cash">
+                                    <i class="icon-paypal_invoice font32px"></i>
+                                    <span>PayPal Invoice</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div *ngIf="boxCredit" class="inner" id="box-credit">
+                            <div class="ifEnable">
+                                <div class="topInfo">
+                                    <i class="icon-credit_card font42px color000"></i>
+                                    <p>Credit Card</p>
+                                </div>
+                                <div class="scrollPayment">
+                                    <div class="text-field">
+                                        <label for="checkout-payment">Payment</label>
+                                        <input type="text" [(ngModel)]="creditCardInput" name="checkout-payment"
+                                            appTwoDigitDecimaNumber id="quick-line-item1" class="form-control cust-field"
+                                            placeholder="$0.00">
+                                    </div>
+                                    <div class="add-manulbtn">
+                                        <a href="JavaScript:void(0);"
+                                            (click)="openCreditCardModal(open_creditCard,'box-custom-product wd400')">Add data
+                                            manually</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="boxCash" class="inner" id="box-cash">
+                            <div class="ifEnable">
+                                <div class="topInfo">
+                                    <i class="icon-cash font42px color000"></i>
+                                    <p>Cash</p>
+                                </div>
+                                <div class="scrollPayment">
+                                    <div class="text-field">
+                                        <label for="checkout-payment">Payment</label>
+                                        <input (focusout)="verifyCash()" [(ngModel)]="cashInput" appTwoDigitDecimaNumber type="text"
+                                            name="checkout-payment" id="quick-line-item6" class="form-control cust-field"
+                                            placeholder="$0.00">
+                                    </div>
+                                    <div class="text-field">
+                                        <label for="checkout-cashDrawer" class="valignMiddle">Cash drawer</label>
+                                        <div class="btn-group wd100Percent" dropdown>
+                                            <button id="button-animated" dropdownToggle type="button"
+                                                class="paymentDropBtn btn bgWhite cust-field font11 borderColorcbcbcb borderRadius10 color000 dropdown-toggle"
+                                                aria-controls="dropdown-animated">{{changeCashDrawer}}
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu paymentDropUL"
+                                                role="menu" aria-labelledby="button-animated">
+                                                <li *ngFor="let reg of cashRegisterars;"
+                                                    (click)="selectCashRegisterar(reg)" role="menuitem"><a
+                                                        class="dropdown-item">{{reg?.name}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                   
+                                    <div *ngIf="cashChange > 0" class="text-field wd50percent mx-auto">
+                                        <div class="change">
+                                            <p>Change return to customer:</p>
+                                            <p>
+                                                {{cashChange | currency}}
+                                            </p>
+                                        </div>
+                                        <div id="discount-cat-btn" class="btn-group dInlineBlock height30px wd100Percent">
+                                            <a (click)="changeReturnChnageMethod(true)" [ngClass]="{'active':returnChange , 'notActive':!returnChange}" class="btn wd50percent font11 lineHeight28 active">Retrun Change</a>
+                                            <a (click)="changeReturnChnageMethod(false)" [ngClass]="{'active':!returnChange , 'notActive':returnChange}" class="btn wd50percent font11 lineHeight28 notActive">Add to store credit</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="checkout-action">
+                                    <!--(click)="openModal(extraChangeLeft, 'custModal wd300')"-->
+                                    <div   (click)="payByCash(recordAnotherPayment, 'custModal wd300')"  class="right">
+                                        <a class="checkout-btn-pay">Record Payment</a> </div>
+                                    <!-- <div  class="right"><a class="checkout-btn-pay">Record Payment</a></div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="boxCheck" class="inner" id="box-check">
+                            <div class="ifEnable">
+                                <div class="topInfo">
+                                    <i class="icon-check font42px color000"></i>
+                                    <p>Check</p>
+                                </div>
+                                <div class="scrollPayment">
+                                    <div class="text-field">
+                                        <label for="checkout-payment">Amount</label>
+                                        <input type="text" [(ngModel)]="checqueInput" name="checkout-payment"
+                                            appTwoDigitDecimaNumber id="quick-line-item5" class="form-control cust-field"
+                                            placeholder="$0.00">
+                                    </div>
+                                    <div class="text-field">
+                                        <label for="checkout-payment">Checque Number</label>
+                                        <input type="text" [(ngModel)]="checqueNo" name="checkout-payment" numeric maxlength="25"
+                                            id="quick-line-item5" class="form-control cust-field" placeholder="21212132323">
+                                    </div>
+                                </div>
+                                <div class="checkout-action">
+                                    <div [ngClass]="{'non-click' : paymentProcessing}"
+                                        (click)="payByChecque(recordAnotherPayment, 'custModal wd300')" class="right">
+                                        <a class="checkout-btn-pay">Record Payment</a> </div>
+                                    <!-- <div  class="right"><a class="checkout-btn-pay">Record Payment</a></div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="boxPaypal" class="inner" id="box-Paypal">
+                            <div class="ifEnable">
+                                <div class="topInfo">
+                                    <i class="icon-paypal font42px color000"></i>
+                                    <p>Paypal Payment</p>
+                                </div>
+                                <div class="scrollPayment">
+                                    <div class="text-field">
+                                        <label>Amount</label>
+                                        <input [(ngModel)]="paypalTransactionInput" type="text" class="form-control cust-field"
+                                            placeholder="$0.00">
+                                    </div>
+                                    <div class="text-field">
+                                        <label>Transaction ID</label>
+                                        <input [(ngModel)]="paypalTransactionID" type="text" class="form-control cust-field"
+                                            placeholder="8YY8319237114091V">
+                                    </div>
+                                </div>
+                                <div class="checkout-action">
+                                    <div (click)="payByPaypalTransactioID(recordAnotherPayment, 'custModal wd300')" class="right">
+                                        <a class="checkout-btn-pay">Record Payment</a> </div>
+                                    <!-- <div  class="right"><a class="checkout-btn-pay">Record Payment</a></div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="boxNetterm" class="inner" id="box-net-term">
+                            <div class="ifEnable">
+                                <div class="topInfo">
+                                    <i class="icon-net_terms font42px color000"></i>
+                                    <p>Net terms</p>
+                                </div>
+                                <div class="scrollPayment">
+                                    <div class="text-field">
+                                        <label for="checkout-payment">Payment</label>
+                                        <input type="text" [(ngModel)]="netTermInput" name="checkout-payment"
+                                            appTwoDigitDecimaNumber id="quick-line-item7" class="form-control cust-field"
+                                            placeholder="$0.00">
+                                    </div>
+                                    <div class="terms-net">
+                                        <div class="inner-terms">
+                                            <div class="top">
+                                                <span>Credit Limit</span>
+                                            </div>
+                                            <div class="bottom">
+                                                <span>{{customerNetTermDetail[0]['net_term']['credit_limit'] | currency}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="inner-terms">
+                                            <div class="top">
+                                                <span>Used Credit Limit</span>
+                                            </div>
+                                            <div class="bottom">
+                                                <span> {{customerNetTermDetail[0]['net_term']['used_credit'] | currency}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="inner-terms">
+                                            <div class="top">
+                                                <span>Available Credit Limit</span>
+                                            </div>
+                                            <div class="bottom">
+                                                <span>{{customerNetTermDetail[0]['net_term']['credit_limit'] - customerNetTermDetail[0]['net_term']['used_credit'] | currency}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="checkout-action">
+                                    <div (click)="payByNetTerms(recordAnotherPayment, 'custModal wd300')" class="right">
+                                        <a class="checkout-btn-pay">Record Payment</a> </div>
+                                    <!-- <div  class="right"><a class="checkout-btn-pay">Record Payment</a></div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="boxStorecredit" class="inner" id="box-store-credit">
+                            <div class="ifEnable">
+                                <div class="topInfo">
+                                    <i class="icon-store_credit font42px color000"></i>
+                                    <p>Store Credit</p>
+                                </div>
+                                <div class="scrollPayment">
+                                    <div class="text-field">
+                                        <label for="checkout-payment">Payment</label>
+                                        <input [(ngModel)]="storeCreditInput" type="text" name="checkout-payment"
+                                            appTwoDigitDecimaNumber id="quick-line-item8" class="form-control cust-field"
+                                            placeholder="$0.00">
+                                    </div>
+                                    <div class="change">
+                                        <p>Credit Available:</p>
+                                        <p> {{customerNetTermDetail[0]['store_credit']['credit_amount'] | currency}}</p>
+                                    </div>
+                                </div>
+                                <div class="checkout-action">
+                                    <div (click)="payByStoreCredit(recordAnotherPayment, 'custModal wd300')" class="right">
+                                        <a class="checkout-btn-pay">Record Payment</a> </div>
+                                    <!-- <div  class="right"><a class="checkout-btn-pay">Record Payment</a></div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="boxCoupons" class="inner" id="box-coupons">
+                            <div class="ifEnable">
+                                <div class="topInfo">
+                                    <i class="icon-giftcard_tickets font42px color000"></i>
+                                    <p>Gift Card</p>
+                                </div>
+                                <div class="scrollPayment">
+                                    <div class="text-field">
+                                        <label for="checkout-payment">Gift Card Number</label>
+                                        <input type="text" [(ngModel)]="giftCardNumber" name="checkout-payment"
+                                            id="quick-line-item9" class="form-control cust-field" placeholder="A113 325HRS 2">
+                                    </div>
+                                </div>
+                                <div class="checkout-action">
+                                    <div (click)="validateGiftCard(recordAnotherPayment, 'custModal wd300')" class="right">
+                                        <a class="checkout-btn-pay">Record Payment</a> </div>
+                                    <!-- <div  class="right"><a class="checkout-btn-pay">Record Payment</a></div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="boxPayinvoice" class="inner" id="box-Payinvoice">
+                            <div class="ifEnable">
+                                <div class="topInfo">
+                                    <i class="icon-paypal_invoice font42px color000"></i>
+                                    <p>Paypal Invoice</p>
+                                </div>
+                                <div class="scrollPayment">
+                                    <div class="text-field">
+                                        <label>Amount</label>
+                                        <input type="text" [(ngModel)]="paypalCashInput" appTwoDigitDecimaNumber
+                                            class="form-control cust-field" placeholder="$0.00">
+                                    </div>
+                                    <div class="text-field">
+                                        <label>Email</label>
+                                        <input type="text" [(ngModel)]="paypalEmail" class="form-control cust-field"
+                                            placeholder="example@gmail.com">
+                                    </div>
+                                </div>
+                                <div class="checkout-action">
+                                    <div (click)="payByPaypalInvoice(recordAnotherPayment, 'custModal wd300')" class="right">
+                                        <a class="checkout-btn-pay">Record Payment</a> </div>
+                                    <!-- <div  class="right"><a class="checkout-btn-pay">Record Payment</a></div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Checkout Section End here -->
+
+<!-- Modals -->
+<ng-template #open_creditCard>
+    <div class="modal-header"></div>
+    <div class="modal-body">
+        <div class="cardWrapper">
+            <div class="scene">
+                <div class="creditCard" [ngClass]="{'is-flipped' : CCardFlip}">
+                    <div class="card__face cardFornt">
+                        <div class="cardBG" style="background-image: url('../../../../assets/images/cardBg.png');">
+                            <div class="top">
+                                <div class="left">
+                                    <h3>Bank</h3>
+                                    <img src="../../../../assets/images/cardChip.png" alt="">
+                                </div>
+                                <div class="right">
+                                    <h4>{{cardType}}</h4>
+                                </div>
+                            </div>
+                            <div class="center" [ngClass]="{'selected' : sNumber}">
+                                <span>{{ccNumber.substring(0, 4) || '####'}}</span>
+                                <span>{{ccNumber.substring(4, 8) || '####'}}</span>
+                                <span>{{ccNumber.substring(8, 12) || '####'}}</span>
+                                <span>{{ccNumber.substring(12, 16) ||'####'}}</span>
+                            </div>
+                            <div class="bottom">
+                                <div class="left" [ngClass]="{'selected' : sName}">
+                                    <label>Card Holder</label>
+                                    <span>{{ccName || 'Muhammad Tayyab'}}</span>
+                                </div>
+                                <div class="right" [ngClass]="{'selected' : sDate}">
+                                    <label>Expires</label>
+                                    <div class="month"><span>{{selectMonth}}/</span></div>
+                                    <div class="year"><span>{{selectYear}}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card__face cardBack cardFornt">
+                        <div class="cardBG" style="background-image: url('../../../../assets/images/cardBg.png');">
+                            <div class="top">
+                            </div>
+                            <div class="center">
+                                <span class="ccvNum">{{ccCCV || '***'}}</span>
+                            </div>
+                            <div class="bottom">
+                                <div class="right">
+                                    <h4>Visa</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <img class="creditCrdimg" src="../../../../assets/images/credit_card.png" alt=""> -->
+        <p>Credit Card</p>
+        <div class="items-form-content">
+            <div class="row">
+                <div class="col-md-12 p0">
+                    <div class="text-field">
+                        <label>Card Number</label>
+                        <input type="text" (focus)="sNumberAdd()" (focusout)="sNumberAdd()" (keyup)="checkCardType()" onlyNumber
+                            [(ngModel)]="ccNumber" class="form-control cust-field" placeholder="4212 8272 1233 9831" maxlength="16">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 p0">
+                    <div class="text-field">
+                        <label>Card Holder</label>
+                        <input type="text" (focus)="sNameAdd()" (focusout)="sNameAdd()" [(ngModel)]="ccName"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Catherin Williams">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 pl0">
+                    <div class="text-field">
+                        <label>Expiration Month</label>
+                        <div class="assign-to-device">
+                            <div class="btn-group" dropdown>
+                                <button id="button-animated" dropdownToggle type="button"
+                                    class="btn dropdown-toggle cust-field font12 borderColorcbcbcb borderRadius5" aria-controls="dropdown-animated"
+                                    (focus)="sDateAdd()" (focusout)="sDateAdd()">{{selectMonth}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                                    aria-labelledby="button-animated">
+                                    <li *ngFor="let m of months" (click)="changeExpire('selectMonth',m)" role="menuitem"><a
+                                            class="dropdown-item">{{m}}</a>
+                                    </li> 
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 p0">
+                    <div class="text-field ">
+                        <label>Expiration Year</label>
+                        <div class="assign-to-device">
+                            <div class="btn-group" dropdown>
+                                <button id="button-animated" dropdownToggle type="button"
+                                    class="btn dropdown-toggle cust-field font12 borderColorcbcbcb borderRadius5" aria-controls="dropdown-animated"
+                                    (focus)="sDateAdd()" (focusout)="sDateAdd()">{{selectYear}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                                    aria-labelledby="button-animated">
+                                    <li *ngFor="let year of years;" (click)="changeExpire('selectYear',year)"
+                                        role="menuitem"><a class="dropdown-item">{{year}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 pr0">
+                    <div class="text-field">
+                        <label>CVV</label>
+                        <input type="text" [(ngModel)]="ccCCV" (focus)="flipCard()" onlyNumber
+                            (focusout)="flipCard()" class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="***" maxlength="4">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb20">
+        <button [ngClass]="{'disabled': ccNumber.length < 16 || selectMonth == '' || selectYear == '' || ccCCV.length < 3}" 
+        (click)="payByCard(recordAnotherPayment, 'custModal wd300')" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 m0 bgBlack colorWhite wd140px">Pay</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_clearPaymentProcess>
+    <div class="modal-header"></div>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30 mb20">
+            <h2 class="fontPoppin font18 fontSemiBold color000">Close Payment Process</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button (click)="discardOrder(true)" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite wd140px">Yes,
+            close it</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 wd140px">No,
+            go back</button>
+    </div>
+</ng-template>
+<ng-template #apply_discount>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30 mb20">
+            <h2 class="fontPoppin font18 fontSemiBold color000">Add Dicount Coupon</h2>
+        </div>
+        <div class="items-form-content">
+            <div class="text-field">
+                <label for="discount-code" class="color000 mb0 fontPoppin font12 fontSemiBold">Discount Coupon</label>
+                <input type="text" [(ngModel)]="discountCoupon" name="discount-code" id="discount-code"
+                class="form-control cust-field font12 borderColorcbcbcb borderRadius5 text-center" placeholder="type discount code here">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button (click)="applyDiscount(recordAnotherPayment, 'custModal wd300')" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite wd140px">Yes,
+            appy code</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 wd140px">No,
+            go back</button>
+    </div>
+</ng-template>
+<ng-template #recordAnotherPayment>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt20 wd250">
+            <i class="fa fa-exclamation-triangle font42 color000"></i>
+            <h2 class="fontPoppin font20 fontSemiBold mt15 color000">
+                Would you like to record another payment?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20">
+            Yes
+        </button>
+        <button (click)="closeCheckout(true)" type="button" class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">
+            No
+        </button>
+    </div>
+</ng-template>
+<ng-template #extraChangeLeft>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font42 fontSemiBold mt15 color000">$0.30</h2>
+            <p class="fontPoppin font12 mb0 color808080">change left against customer</p>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb30">
+        <button type="button" (click)="closeModel()" 
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Return Change</button>
+            <button type="button" (click)="closeModel()" 
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Add to store credit</button>
+        <button (click)="closeModel()" type="button" class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<!-- Modals ends here -->

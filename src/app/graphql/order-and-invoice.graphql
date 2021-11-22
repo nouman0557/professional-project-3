@@ -1,0 +1,441 @@
+query searchOrderByDifferentTypes($type: String!, $search: String!, $locationId: ID) {
+  searchOrderByDifferentTypes(type: $type, search: $search, locationId: $locationId) {
+    _id
+  }
+}
+
+query ordersWithPagination($limit: Int, $skip: Int, $locationId: ID) {
+  orders(limit: $limit, skip: $skip, locationId: $locationId) {
+    _id
+  }
+}
+
+query getOrdersAndSearch($input: searchOrderInput) {
+  getOrdersAndSearch(input: $input) {
+    _id
+  }
+}
+
+query getTicketswithfilter($input: inputTicketsFilter) {
+  getTicketswithfilter(input: $input) {
+    transaction {
+      _id
+      transaction_date
+      is_repair_done
+      is_checkout
+      invoice_for_repair_room
+      Customer {
+        first_name
+        last_name
+        phone
+      }
+      transaction_type
+      transaction_status
+      total_amount
+      remaining_amount
+      transaction_keeping_unit
+      repire_room_status {
+        status_name
+        status_font_color
+        status_background_color
+        status_icon
+      }
+      repair_room_color_pallet
+    }
+    count
+  }
+}
+
+query getTicketDetailById($orderID: ID, $businessLocation: ID) {
+  getTicketDetailById(orderID: $orderID, businessLocation: $businessLocation) {
+    _id
+    transaction_type
+    transaction_status
+    order_status
+    transaction_payment_status
+    transaction_keeping_unit
+    ref_no
+    supplier_order_number
+    transaction_date
+    transaction_hours
+    transaction_minutes
+    transaction_am_pm
+    sub_total_amount
+    is_apply_sale_tax
+    Tax {
+      _id
+      name
+      amount
+      tax_type
+      is_percentage
+    }
+    tax_amount
+    tax_value
+    is_tax_percentage
+    discount_amount
+    discount_value
+    is_discount_percentage
+    shipping_company_name
+    shipping_tracking_no
+    shipping_estimated_days
+    shipping_amount
+    delivery_address
+    total_amount
+    remaining_amount
+    is_private
+    additional_notes
+    received_note
+    receivedBy
+    receivedDate
+    arrival_Date
+    received_additional_cost
+    TransactionSellLine {
+      _id
+      is_device
+      is_attach_device
+      product_type
+      sell_line_product_type
+      Device {
+        _id
+        device_keeping_unit
+        deviceBrand {
+          _id
+          brand_name
+          description
+        }
+        deviceModel {
+          _id
+          name
+        }
+      }
+      Product {
+        _id
+        product_name
+        is_bundle_product
+        is_product
+        description
+        bundle_products {
+          total_selling_price
+          total_avg_cost
+          is_manufactured_qty
+          bundleProduct {
+            bundleProductID {
+              _id
+              product_name
+              sku
+            }
+            avg_cost
+            quantity
+            selling_price
+          }
+        }
+      }
+      product_sku
+      supplier_sku
+      products {
+        _id
+        product_type
+        sell_line_product_type
+        discount_amount
+        discount_value
+        Product {
+          _id
+          product_name
+          is_product
+          description
+        }
+        serviceProduct{
+          _id
+          serviceProductType
+          serviceProductId{
+            product_name
+          }
+          serviceProductSKU
+          serviceProductQuantity
+          serviceCustomProductId{
+            _id
+            name
+          }
+        }
+        product_sku
+        supplier_sku
+        quantity
+        product_purchase_price
+        product_sale_price
+        sub_total_amount
+        total_amount
+        serial_number
+        return_quantity
+        back_to_stock
+        reason
+        is_refund_item
+        customProduct {
+          _id
+          name
+        }
+      }
+      GiftCard {
+        _id
+        card_no
+        gift_card_keeping_unit
+        name
+      }
+      customProduct {
+        _id
+        name
+        quantity
+        cost_price
+        selling_price
+        note
+        is_taxable
+      }
+      quantity
+      product_purchase_price
+      product_sale_price
+      tax_amount
+      tax_value
+      is_tax_percentage
+      is_discount_percentage
+      discount_amount
+      discount_value
+      sub_total_amount
+      total_amount
+      serial_number
+      return_quantity
+      back_to_stock
+      reason
+      is_refund_item
+    }
+    TransactionPayment {
+      _id
+      amount
+      method
+      paid_on
+      card_used_no
+      is_paid_amount
+    }
+    Customer {
+      _id
+      email
+      first_name
+      last_name
+      CustomerStoreWiseRecord {
+        net_term {
+          pay_term_number
+          pay_term_type
+          credit_limit
+          interest_rate
+        }
+        store_credit {
+          credit_amount
+        }
+      }
+    }
+    tax_refund {
+      state
+      tax_certificate_id
+      document_path
+    }
+    is_tax_refund
+    TicketLogs {
+      _id
+      date
+      remarks
+    }
+    is_coupon_apply
+    coupon_code
+    filter_type
+    invoice_for_repair_room
+  }
+}
+
+query repairRoomStatus {
+  repairRoomStatus {
+    _id
+    status_name
+    status_background_color
+    status_font_color
+    status_icon
+    status_type
+  }
+}
+
+mutation createTaxRefund($input: inputUploadTaxDocument) {
+  createTaxRefund(input: $input) {
+    _id
+    total_amount
+    sub_total_amount
+    tax_refund {
+      state
+      tax_certificate_id
+      document_path
+    }
+    TicketLogs {
+      _id
+      date
+      remarks
+    }
+    is_tax_refund
+    filter_type
+    remaining_amount
+  }
+}
+
+query emailTicket($orderID: ID, $businessLocation: ID) {
+  emailTicket(orderID: $orderID, businessLocation: $businessLocation)
+}
+
+mutation InvoiceRefundByAmount($input: invoiceAmountRefundInput) {
+  InvoiceRefundByAmount(input: $input) {
+    _id
+    total_amount
+    sub_total_amount
+    tax_refund {
+      state
+      tax_certificate_id
+      document_path
+    }
+    TicketLogs {
+      _id
+      date
+      remarks
+    }
+    is_tax_refund
+    filter_type
+    remaining_amount
+  }
+}
+
+mutation InvoiceRefundByItems($transactionID: ID!, $location_id: ID!, $transactionReturnItems: [transactionReturnItemInput]) {
+  InvoiceRefundByItems(transactionID: $transactionID, location_id: $location_id, transactionReturnItems: $transactionReturnItems) {
+    _id
+    total_amount
+    sub_total_amount
+    tax_refund {
+      state
+      tax_certificate_id
+      document_path
+    }
+    TicketLogs {
+      _id
+      date
+      remarks
+    }
+    is_tax_refund
+    filter_type
+    remaining_amount
+    TransactionSellLine {
+      _id
+      is_device
+      is_attach_device
+      product_type
+      sell_line_product_type
+      Device {
+        _id
+        device_keeping_unit
+        deviceBrand {
+          _id
+          brand_name
+          description
+        }
+        deviceModel {
+          _id
+          name
+        }
+      }
+      Product {
+        _id
+        product_name
+        is_bundle_product
+        is_product
+        description
+        bundle_products {
+          total_selling_price
+          total_avg_cost
+          is_manufactured_qty
+          bundleProduct {
+            bundleProductID {
+              _id
+              product_name
+              sku
+            }
+            avg_cost
+            quantity
+            selling_price
+          }
+        }
+      }
+      product_sku
+      supplier_sku
+      products {
+        product_type
+        sell_line_product_type
+        Product {
+          _id
+          product_name
+          is_product
+          description
+        }
+        product_sku
+        supplier_sku
+        quantity
+        product_purchase_price
+        product_sale_price
+        sub_total_amount
+        total_amount
+        serial_number
+        return_quantity
+        back_to_stock
+        reason
+        is_refund_item
+      }
+      GiftCard {
+        _id
+        card_no
+        gift_card_keeping_unit
+        name
+      }
+      customProduct {
+        _id
+        name
+        quantity
+        cost_price
+        selling_price
+        note
+        is_taxable
+      }
+      quantity
+      product_purchase_price
+      product_sale_price
+      tax_amount
+      tax_value
+      is_tax_percentage
+      is_discount_percentage
+      discount_amount
+      discount_value
+      sub_total_amount
+      total_amount
+      serial_number
+      return_quantity
+      back_to_stock
+      reason
+      is_refund_item
+    }
+  }
+}
+
+mutation taskDeviceReOpen($transactionID: ID!, $location_id: ID!, $inputDevice: [deviceServicesInput]) {
+  taskDeviceReOpen(transactionID: $transactionID, location_id: $location_id, inputDevice: $inputDevice)
+}
+
+mutation checkOutTicket($transactionID: ID!, $location_id: ID!) {
+  checkOutTicket(transactionID: $transactionID, location_id: $location_id)
+}
+
+mutation chequePaymentVerify($input: chequePaymentVerifyInput) {
+  chequePaymentVerify(input: $input)
+}
+
+mutation payLaterInvoice($location_id: ID!, $transactionID: ID!) {
+  payLaterInvoice(location_id: $location_id, transactionID: $transactionID)
+}

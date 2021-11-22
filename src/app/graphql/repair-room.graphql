@@ -1,0 +1,861 @@
+
+query getRepairRoomTaskList($reapirRoomFilter: repairRoomFilter, $location_id: ID!, $limit: Int!, $skip: Int!){
+  repairRoomListing(filter: $reapirRoomFilter, location_id: $location_id, limit: $limit, skip:$skip){
+    total
+    repairRoomTransactions{
+      _id
+      Customer{
+        _id
+        email
+        first_name
+        last_name
+        phone
+        address_1
+      }
+      repair_room_color_pallet
+      transaction_keeping_unit
+      device_count
+      total_repair_time
+      is_repair_room_customer_alert
+    }
+  }
+}
+
+query getRepairRoomTaskDetail($location_id: ID!, $transactionID: ID!){ 
+  repairRoomInvoiceDetail(location_id: $location_id, transactionID: $transactionID){
+    Transaction{
+      _id
+      Customer{
+        _id
+        email
+        first_name
+        last_name
+        phone
+        address_1
+      }
+      repair_room_color_pallet
+      transaction_keeping_unit
+      device_count
+      total_repair_time
+      is_repair_room_customer_alert
+    }
+    Devices{
+      _id
+      device{
+        _id
+        deviceBrand{
+        _id
+        brand_name
+        description
+        }
+        deviceModel{
+          _id
+          name
+        }
+        device_color
+        imei_ssn
+        Customer{
+          _id
+          email
+          first_name
+          last_name
+          phone
+          address_1
+        }
+        device_image
+        device_keeping_unit
+      }
+      technicion{
+        id
+        email
+        first_name
+        last_name
+        phone
+        avatar_location
+        status
+        business_id {
+          _id
+        }
+        address_1
+        address_2
+        city
+        state
+        Country {
+          _id
+          name
+        }
+        zipcode
+        user_keeping_unit
+      }
+      device_color_pallet
+      repair_count
+      device_total_repair_time
+      deviceItems{
+        _id
+        product_type
+        sell_line_product_type
+        repair_room_item_type
+        customProduct{
+          _id
+          name
+          quantity
+          cost_price
+          selling_price
+          selling_price_include_tax
+          is_taxable
+        }
+        Product{
+          _id
+          product_name
+          is_bundle_product
+          bundle_products{
+            total_selling_price
+            total_avg_cost
+            is_manufactured_qty
+            bundleProduct {
+              avg_cost
+              quantity
+              selling_price
+              bundleProductID{
+                _id
+                product_name
+                description
+                image
+                is_bundle_product
+                is_product
+                is_track_stock
+                alert_qty
+                ideal_qty
+                sell_price
+                openingStock
+                sell_price_inc_tax
+                average_cost
+                last_cost
+                incoming_item
+                ProductStockPrice {
+                  shelf_qty
+                }
+                Brand{
+                  _id
+                  brand_name
+                }
+                DeviceModel {
+                  _id
+                  name
+                }
+                barcode
+                sku
+                is_serial_number
+                Suppliers{
+                  supplier_id{
+                    _id
+                    supplier_company
+                    supplier_company_phone
+                    supplier_company_email
+                    website
+                    address_1
+                    supplier_keeping_unit
+                    supplier_first_name
+                    supplier_last_name
+                    supplier_phone
+                    supplier_mobile
+                    supplier_email
+                    is_verify_supplier
+                    is_buyback
+                  }
+                  sku_number
+                  current_stock
+                  incoming_item
+                  instock
+                  ordered_qty
+                }
+              }
+            }
+          }
+          is_product
+          is_track_stock
+          sell_price
+          sell_price_inc_tax
+          average_cost
+          DeviceModel {
+            _id
+            name
+          }
+          sku
+          is_serial_number
+          Suppliers{
+            supplier_id{
+              _id
+              supplier_company
+              supplier_company_phone
+              supplier_company_email
+              website
+              address_1
+              supplier_keeping_unit
+              supplier_first_name
+              supplier_last_name
+              supplier_phone
+              supplier_mobile
+              supplier_email
+              is_verify_supplier
+              is_buyback
+            }
+            sku_number
+            current_stock
+          }
+          serviceProduct{
+            _id
+            serviceProductType
+            serviceProductId {
+              _id
+              product_name
+              is_bundle_product
+              bundle_products{
+                total_selling_price
+                total_avg_cost
+                is_manufactured_qty
+                bundleProduct{
+                  bundleProductID{
+                    _id
+                    product_name
+                    description
+                    image
+                    is_bundle_product
+                    is_product
+                    is_track_stock
+                    alert_qty
+                    ideal_qty
+                    sell_price
+                    openingStock
+                    sell_price_inc_tax
+                    average_cost
+                    last_cost
+                    incoming_item
+                    ProductStockPrice {
+                      shelf_qty
+                    }
+                    Brand {
+                      _id
+                      brand_name
+                    }
+                    DeviceModel {
+                      _id
+                      name
+                    }
+                    barcode
+                    sku
+                    compatilable_devices
+                    Suppliers {
+                      supplier_id{
+                        _id
+                        supplier_company
+                        supplier_keeping_unit
+                        supplier_first_name
+                        supplier_last_name
+                        is_verify_supplier
+                      }
+                      sku_number
+                      current_stock
+                      incoming_item
+                      instock
+                      ordered_qty
+                    }
+                    ProductStockPrice{
+                      _id
+                      ideal_quantity
+                      opening_stock
+                      qty_available
+                      alert_quantity
+                      shelf_qty
+                      order_qty
+                      bundle_order_qty
+                      is_profit_percentage
+                      profit_value
+                      profit_amount
+                      default_sell_price
+                      is_sell_tax_percentage
+                      sell_tax_value
+                      sell_tax_amount
+                      sell_price_inc_tax
+                      last_cost
+                      average_cost
+                      discount_amount
+                      price_without_bundle
+                      percentage_discount
+                    }
+                    tags
+                    is_serial_number
+                    sale_item
+                    total_sale
+                    incoming_item
+                    max_bundle
+                    is_completed_product
+                    is_add_product_with_device
+                  }
+                  avg_cost
+                  quantity
+                  selling_price
+                }
+              }
+              is_product
+              is_track_stock
+              alert_qty
+              ideal_qty
+              sell_price
+              sell_price_inc_tax
+              average_cost
+              last_cost
+              incoming_item
+              ProductStockPrice {
+                shelf_qty
+              }
+              Brand{
+                _id
+                brand_name
+                description
+              }
+              DeviceModel{
+                _id
+                name
+              }
+              sku
+              compatilable_devices
+              Suppliers{
+                supplier_id{
+                  _id
+                  supplier_company
+                  supplier_company_phone
+                  supplier_company_email
+                  website
+                  address_1
+                  address_2
+                  city
+                  state
+                  zip_code
+                  supplier_keeping_unit
+                  supplier_first_name
+                  supplier_last_name
+                  supplier_phone
+                  supplier_mobile
+                  supplier_email
+                  is_verify_supplier
+                  is_buyback
+                  Order
+                }
+                sku_number
+                current_stock
+                incoming_item
+                instock
+                ordered_qty
+                price_purchase
+              }
+              is_serial_number
+            }
+            serviceProductSKU
+            serviceProductSupplier
+            serviceProductQuantity
+            serviceCustomProductId{
+              _id
+              name
+              quantity
+              cost_price
+              selling_price
+              selling_price_include_tax
+              note
+              is_taxable
+            }
+            service_repair_room_item_type
+            serviceReason
+          }
+        }
+        service_status{
+          _id
+          status_name
+          status_background_color
+          status_font_color
+          status_icon
+          status_type
+        }
+        time_log
+      }
+    }
+    Total
+  }
+}
+
+
+query getRepairRoomTaskStatus{
+  repairRoomStatus{
+    _id
+    status_name
+    status_background_color
+    status_font_color
+    status_icon
+    status_type
+  }
+}
+
+mutation taskMarkAsDone($transactionIDs: [ID!], $location_id: ID!){
+  taskMarkAsDone(transactionIDs: $transactionIDs,location_id: $location_id)
+}
+mutation taskDeviceMarkAsDone($transactionID: ID!,$deviceID: ID!,$location_id: ID!){
+  taskDeviceMarkAsDone(transactionID: $transactionID, deviceID: $deviceID,location_id: $location_id)
+}
+
+mutation taskServiceMarkAsDone($transactionID:ID! , $deviceID: ID!, $sellID: ID!, $status: String!, $location_id: ID!){
+    taskServiceMarkAsDone(transactionID: $transactionID, deviceID: $deviceID,sellID: $sellID, status: $status, location_id: $location_id)
+}
+mutation technicianAssignToDevice($transactionID: ID!, $deviceID: ID!, $technicianID: ID!, $location_id: ID!){
+  technicianAssignToDevice(transactionID:$transactionID, deviceID: $deviceID,technicianID: $technicianID,location_id: $location_id){
+    id
+    email
+    first_name
+    last_name
+    phone
+    avatar_location
+    status
+    business_id {
+      _id
+    }
+    address_1
+    address_2
+    city
+    state
+    Country {
+      _id
+      name
+    }
+    zipcode
+    user_keeping_unit
+  }
+}
+
+mutation createTransactionAlert($input: PurchaseAlertInput){
+  createTransactionAlert(input: $input)
+}
+mutation SetServiceItemType($transactionID: ID!,$serviceID: ID!,$location_id: ID!,$service_item_type: ServiceItemEnum){
+  SetServiceItemType(transactionID: $transactionID,serviceID: $serviceID,location_id: $location_id,service_item_type: $service_item_type)
+}
+
+mutation SetServiceProductType($_id: ID!,$transactionID: ID!,$serviceID: ID!,$productID: ID!,$location_id: ID!,$service_item_type: ServiceItemEnum, $service_reasons: String!){
+  SetServiceProductType(_id:$_id,transactionID: $transactionID, serviceID: $serviceID,productID: $productID,location_id: $location_id,service_item_type: $service_item_type, service_reasons: $service_reasons)
+}
+
+
+mutation RepairRoomOrderPart($input: OrderPartInput){
+  RepairRoomOrderPart(input: $input)
+}
+
+mutation technicianTimeLog($transactionID: ID!,$deviceID: ID!,$serviceID: ID!,$technicianID: ID!,$location_id: ID!,$log_time: Float!){
+  technicianTimeLog(transactionID: $transactionID,deviceID: $deviceID,serviceID: $serviceID,technicianID: $technicianID,location_id: $location_id,log_time: $log_time)
+}
+
+query OrderPartSuppliers($location_id: ID!,$product_id: ID!,$search: String){
+  OrderPartSuppliers(location_id: $location_id,product_id: $product_id, search: $search){
+    Supplier{
+      _id
+      supplier_company
+      supplier_company_phone
+      supplier_company_email
+      website
+      address_1
+      supplier_keeping_unit
+      supplier_first_name
+      supplier_last_name
+      supplier_phone
+      supplier_mobile
+      supplier_email
+      is_verify_supplier
+      is_buyback
+    }
+    sku_number
+    order_qty
+    product_price
+  }
+}
+
+#Old Queries and mutation
+query getRepairOrders($locationId: ID, $limit: Int, $skip: Int) {
+  getRepairOrders(locationId: $locationId, limit: $limit, skip: $skip) {
+    ref_no
+    transactionId
+    count_devices
+    Customer {
+      first_name
+      last_name
+      email
+    }
+  }
+}
+
+query getRepairDevices($transactionId: ID!, $locationId: ID) {
+  getRepairDevices(transactionId: $transactionId, locationId: $locationId) {
+    Device {
+      _id
+    deviceBrand{
+      _id
+      brand_name
+      description
+    }
+    deviceModel{
+      _id
+      name
+    }
+    device_color
+    imei_ssn
+    Customer{
+      _id
+    }
+    device_image
+    device_keeping_unit
+    business_id{
+      _id
+    }
+    location_id{
+      _id
+    }
+    }
+    count_service
+  }
+}
+
+mutation createTransactionCustomerAlert($input: CustomerAlertInput){
+  createTransactionCustomerAlert(input: $input)
+}
+
+query getExtraItemLists($deviceID: ID,$transactionID: ID,$locationID: ID){
+ getExtraItemLists(deviceID: $deviceID,transactionID: $transactionID,locationID: $locationID){
+  _id
+  product_type
+  Product{
+   _id
+   product_name
+  }
+  sell_line_product_type
+  supplier_sku
+  quantity
+  serial_number
+  reason
+  Supplier{
+    _id
+  }
+ }
+}
+
+mutation addExtraItems($input: inputExtraItem){
+  addExtraItems(input: $input){
+    _id
+    product_type
+    sell_line_product_type
+    Product{
+      _id
+      product_name
+    }
+    supplier_sku
+    quantity
+    serial_number
+    Supplier{
+      _id
+    }
+    serviceProduct{
+            _id
+            serviceProductType
+            serviceProductId {
+              _id
+              product_name
+              is_bundle_product
+              bundle_products{
+                total_selling_price
+                total_avg_cost
+                is_manufactured_qty
+                bundleProduct{
+                  bundleProductID{
+                    _id
+                    product_name
+                    
+                    Brand {
+                      _id
+                      brand_name
+                    }
+                    DeviceModel {
+                      _id
+                      name
+                    }
+                    barcode
+                    sku
+                    compatilable_devices
+                    tags
+                    is_serial_number
+                    sale_item
+                    total_sale
+                    incoming_item
+                    max_bundle
+                    is_completed_product
+                    is_add_product_with_device
+                  }
+                  avg_cost
+                  quantity
+                  selling_price
+                }
+              }
+              is_product
+              is_track_stock
+              alert_qty
+              ideal_qty
+              sell_price
+              sell_price_inc_tax
+              average_cost
+              last_cost
+              incoming_item
+              ProductStockPrice {
+                shelf_qty
+              }
+              Brand{
+                _id
+                brand_name
+                description
+              }
+              DeviceModel{
+                _id
+                name
+              }
+              sku
+              compatilable_devices
+              
+              is_serial_number
+            }
+            serviceProductSKU
+            serviceProductSupplier
+            serviceProductQuantity
+            serviceCustomProductId{
+              _id
+              name
+              quantity
+              cost_price
+              selling_price
+              selling_price_include_tax
+              note
+              is_taxable
+            }
+            service_repair_room_item_type
+            serviceReason
+          }
+}
+}
+
+mutation editExtraItem($input: inputExtraItem){
+  editExtraItem(input: $input){
+    _id
+  }
+}
+
+mutation deleteExtraItem($deviceID: ID,$transactionID: ID,$sellLineID: ID,$sellLineServiceModelID:ID,$isDirectDevice: Boolean){
+  deleteExtraItem(deviceID: $deviceID,transactionID: $transactionID,sellLineID: $sellLineID,sellLineServiceModelID:$sellLineServiceModelID,isDirectDevice: $isDirectDevice)
+}
+
+query getSupplierProductsAndSearch($search: String,$locationId: ID){
+  getSupplierProductsAndSearch(search: $search,locationId: $locationId){
+    supplier{
+      _id
+      supplier_first_name
+      supplier_last_name
+      supplier_phone
+      supplier_company
+    }
+    ProductID
+    product_name
+    supplier_sku
+  }
+}
+
+query getRepairDeviceService(
+  $deviceId: ID!
+  $transactionId: ID!
+  $locationId: ID
+) {
+  getRepairDeviceService(
+    deviceId: $deviceId
+    transactionId: $transactionId
+    locationId: $locationId
+  ) 
+  {
+    _id
+    # serial_number
+    # DeviceCheckIns {
+    #   _id
+    #   check_in_date
+    #   carrier
+    #   password
+    #   problem_in_device
+    #   is_water_damage
+    #   is_warranty
+    #   device_status
+    # }
+    # Product {
+    #   _id
+    #   product_name
+    #   description
+    #   Brand
+    # }
+  }
+}
+
+query getDeviceProductAndService($deviceID: ID!,$location_id: ID!,$is_product: Boolean!){
+  getDeviceProductAndService(deviceID: $deviceID,location_id: $location_id,is_product: $is_product){
+      _id
+    product_name
+    incoming_item
+    max_bundle
+    is_bundle_product
+    is_product
+    is_track_stock
+    is_serial_number
+    sell_price_inc_tax
+    sku
+    alert_qty
+    ProductStockPrice {
+      _id
+      qty_available
+      alert_quantity
+      shelf_qty
+      sell_price_inc_tax
+      shelf_qty
+      order_qty
+    }
+    bundle_products {
+      total_selling_price
+      total_avg_cost
+      is_manufactured_qty
+      bundleProduct {
+        bundleProductID {
+          _id
+          product_name
+          incoming_item
+          max_bundle
+          is_bundle_product
+          is_product
+          is_track_stock
+          is_serial_number
+          ProductStockPrice {
+            _id
+            qty_available
+            alert_quantity
+            shelf_qty
+            sell_price_inc_tax
+            shelf_qty
+            order_qty
+          }
+        }
+        avg_cost
+        quantity
+        selling_price
+      }
+    }
+    Suppliers {
+      supplier_id{
+        _id
+        supplier_company
+        supplier_company_phone
+        supplier_company_email
+      }
+      sku_number
+      current_stock
+      incoming_item
+      instock
+      ordered_qty
+    }
+    servicesBrandModel{
+      ServiceBrand{
+        _id
+        brand_name
+        description
+        
+      }
+      ServiceDeviceModel{
+        _id
+        name
+        brand {
+          _id
+          brand_name
+          description
+         
+        }
+      }
+      service_max_price
+      service_min_price
+      ServiceItem{
+        _id
+        product_name
+        incoming_item
+        max_bundle
+        is_bundle_product
+        is_product
+        is_track_stock
+        is_serial_number
+        sell_price_inc_tax
+        sku
+        alert_qty
+        ProductStockPrice {
+          _id
+          qty_available
+          alert_quantity
+          shelf_qty
+          sell_price_inc_tax
+          shelf_qty
+          order_qty
+        }
+        bundle_products {
+          total_selling_price
+          total_avg_cost
+          is_manufactured_qty
+          bundleProduct {
+            bundleProductID {
+              _id
+              product_name
+              incoming_item
+              max_bundle
+              is_bundle_product
+              is_product
+              is_track_stock
+              is_serial_number
+              ProductStockPrice {
+                _id
+                qty_available
+                alert_quantity
+                shelf_qty
+                sell_price_inc_tax
+                shelf_qty
+                order_qty
+              }
+            }
+            avg_cost
+            quantity
+            selling_price
+          }
+        }
+        Suppliers {
+          supplier_id{
+            _id
+            supplier_company
+            supplier_company_phone
+            supplier_company_email
+          }
+          sku_number
+          current_stock
+          incoming_item
+          instock
+          ordered_qty
+        }
+      }
+    }
+    Brand{
+      _id
+      brand_name
+      description
+    }
+    DeviceModel{
+      _id
+      name
+    }
+  }
+}

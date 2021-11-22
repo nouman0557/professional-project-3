@@ -1,0 +1,5 @@
+/*Style from menu-tab*/
+.switchable-wrapper .summary-title ul {
+  display: table;
+  width: 50% !important;
+}

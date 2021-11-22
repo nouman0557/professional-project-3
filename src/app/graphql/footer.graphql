@@ -1,0 +1,28 @@
+mutation userPinCodeVerify( $pincode: String!) {
+  userPinCodeVerify(pincode: $pincode) {
+    oldClockHistoryId
+    clocked_in_time
+    status
+    UserClockInPin
+    User {
+      id
+      first_name
+      last_name
+    }
+  }
+}
+
+mutation userClockedIn($userId: ID!,$userClockInPin: ID!,$oldClockHistoryId: ID,$businessLocation: ID!) {
+  userClockedIn(userId: $userId , userClockInPin: $userClockInPin , oldClockHistoryId: $oldClockHistoryId , businessLocation: $businessLocation) {
+    _id
+    clock_in_time
+    clock_out_time
+    status
+    BusinessLocation
+    User {
+      id
+      first_name
+      last_name
+    }
+  }
+}

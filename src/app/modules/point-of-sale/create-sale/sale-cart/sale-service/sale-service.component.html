@@ -1,0 +1,142 @@
+<!-- When a Product is added to the cart (it have one level)-->
+<accordion-group [ngClass]="product.productTypeClass" (isOpenChange)="product.isOpen = $event; onSelectService($event)"
+    [isOpen]="product.isOpen">
+    <ul accordion-heading class="thirdLevel card">
+        <!--[ngClass]="{'thirdLevel card':isDeviceProduct}"-->
+        <li class="card-header">
+            <!--[ngClass]="{'card-header':isDeviceProduct}"-->
+            <div class="outer">
+                <div class="inner wd3percent">
+                    <a href="JavaScript:void(0)" class="font16 arrowIcon"><i class="fas fa-caret-right"></i></a>
+                </div>
+                <div class="inner wd30percent text-left pl10">
+                    <span class="font11 dtableCell valignMiddle text-left"><i [ngClass]="product.iconClass"></i></span>
+                    <!-- <span class="font11 fontPoppin dtableCell valignMiddle text-left">R1 - </span> -->
+                    <span tooltip="{{product.product_name}}" placement="bottom"
+                        class="textOverflow maxWidth160 font11 fontSemiBold Poppin dtableCell valignMiddle text-left  pl5 pr5">
+                        {{product.product_name}}
+                    </span>
+                </div>
+                <div class="inner wd15percent">
+
+                </div>
+                <div class="inner wd11Percent">
+                    <span class="fontPoppin fontSemiBold"></span>
+                </div>
+                <div class="inner wd11Percent">
+                    <input (click)="noOpenAccordianOnInput($event)"
+                        class="wd35px dInlinetable form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                        [(ngModel)]="product.discount_value" numeric decimals="2" (change)="onCalculateTotalAmount()"
+                        placeholder="0" type="text">
+                    <span class="cartSideIcon dInlinetable font12">%</span>
+                </div>
+                <div class="inner wd11Percent">
+                    <input (click)="noOpenAccordianOnInput($event)"
+                        class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                        [(ngModel)]="product.sell_price_inc_tax" numeric decimals="2"
+                        (change)="onCalculateTotalAmount()" value="0">
+                </div>
+                <div class="inner wd11Percent">
+                    <span class="fontPoppin fontSemiBold">{{product.total_amount | currency}}</span>
+                </div>
+                <div class="inner wd5percent">
+                    <a (click)="onRemoveFromCart()" class="close-icon" href="JavaScript:void(0);">
+                        <i class="icon-close"></i>
+                    </a>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <ul class="thirdLevel card" *ngIf="product.serviceProduct">
+        <li *ngFor="let serviceProduct of product.serviceProduct; let i = index" class="card-header">
+            <div class="outer">
+                <div class="inner wd31percent text-left pl10">
+                    <span tooltip="{{serviceProduct.product_name}}" placement="bottom"
+                        class="textOverflow maxWidth160 font11 fontSemiBold fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                        {{serviceProduct.product_name}}
+                    </span>
+                </div>
+                <div class="inner wd15percent">
+                </div>
+                <div class="inner wd11Percent">
+                    <span class="fontPoppin fontSemiBold">{{serviceProduct.quantity}}</span>
+                </div>
+                <div class="inner wd11Percent">
+                </div>
+                <div class="inner wd11Percent">
+                    <span class="fontPoppin fontSemiBold">--</span>
+                </div>
+                <div class="inner wd11Percent">
+                    --
+                </div>
+                <div class="inner wd5percent">
+                    <a class="close-icon" href="JavaScript:void(0);">
+                        <i (click)="onRemoveProductFromService(i)" class="icon-close"></i>
+                    </a>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <ul class="thirdLevel card" *ngIf="product.serviceProduct.length <= 0">
+        <li class="card-header">
+            <div class="outer">
+                <div class="inner wd100percent text-left">
+                    <span
+                        class="textOverflow maxWidth160 dBlock font12 fontSemiBold500 fontPoppin dtableCell valignMiddle text-left  pl5 pr5">
+                        Please attach an item from the item list (Optional)
+                    </span>
+                </div>
+            </div>
+        </li>
+    </ul>
+</accordion-group>
+
+<ng-template #open_selectSupplier>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font18 fontSemiBold color000">Select supplier</h2>
+            <p class="fontPoppin font12 mb0 mt5 color808080">This item have multiple suppliers, Please alteast select
+                one</p>
+        </div>
+    </div>
+    <div class="modal-body pl20 pr20 pt0">
+        <div class="selectCust selectSupp">
+            <div class="listHeader">
+                <div class="dtable wd100Percent">
+                    <div class="inner wd50percent dtableCell">
+                        <span class="headerList text-left">Supplier Name</span>
+                    </div>
+                    <div class="inner wd30percent dtableCell">
+                        <span class="headerList text-center">SKU</span>
+                    </div>
+                    <div class="inner wd20percent dtableCell">
+                        <span class="headerList text-center">Qty On Shelf</span>
+                    </div>
+                </div>
+            </div>
+            <div class="listBody pt10">
+                <ul>
+                    <li class="centerListSupp" *ngFor="let supplier of selectedProduct.Suppliers">
+                        <input type="radio" id="{{supplier.sku_number}}"
+                            [ngClass]="{'noClick':supplier.current_stock < 1}" [(ngModel)]="selectSupplier"
+                            name="{{supplier.sku_number}}" [value]="supplier">
+                        <label class="wd50percent dtableCell text-left"
+                            [ngClass]="{'noClick':supplier.current_stock < 1}"
+                            for="{{supplier.sku_number}}">{{supplier.supplier_id != null ?  supplier.supplier_id.supplier_company : 'Unknown'}}
+                        </label>
+                        <label class="wd30percent dtableCell text-center">{{supplier.sku_number}}</label>
+                        <label class="wd20percent dtableCell text-center">{{supplier.current_stock}}</label>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button type="button" (click)="assignSupplierToProduct(selectSupplier); _createSale.closeModel();"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20"
+            [ngClass]="{'noClick':selectSupplier == null}">Add</button>
+        <button (click)="_createSale.closeModel(); onRemoveProductFromService(productIndex)" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>

@@ -1,0 +1,48 @@
+/*Style stars*/
+.rating-list li {
+  float: right;
+  color: #ddd;
+  padding: 10px 5px;
+  cursor: pointer !important;
+
+}
+
+.rating-list li:hover,
+.rating-list li:hover ~ li, .rating-list li.selected {
+  color: #ffd700;
+}
+
+.rating-list {
+  display: inline-block;
+  list-style: none;
+}
+.rating-list-view li {
+  float: right;
+  color: #ddd;
+  padding: 10px 5px;
+
+}
+
+.rating-list-view li
+.rating-list-view li ~ li, .rating-list-view li.selected {
+  color: #ffd700;
+}
+
+.rating-list-view {
+  display: inline-block;
+  list-style: none;
+}
+/*Style stars*/
+
+
+.stars {
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+}
+.stars-selected {
+  position: absolute;
+  max-width: 100%;
+  height: 100%;
+  z-index: -1;
+}

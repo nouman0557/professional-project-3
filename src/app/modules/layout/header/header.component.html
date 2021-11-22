@@ -1,0 +1,809 @@
+<div class="dashboard" style="height:100vh;">
+    <nav class="navbar navbar-inverse" role='navigation'>
+        <div class="nav-overlay"></div>
+        <div class="dashboard-logo">
+            <div class="store-logo">
+                <span [ngStyle]="{'background-image':'url('+ [baseUrl+storeDetail?.logo] +')'}" ></span>
+                <!-- style="background-image: url('baseUrl+storeDetail?.logo')" -->
+                <!-- ../../../../assets/images/tb-icon.png -->
+                <!-- url('baseUrl+storeDetail?.logo'); -->
+            </div>
+            <div *ngIf="allStores?.length == 1" class="store-name">
+                <h2>{{storeDetail?.store_name | titlecase  }}</h2>
+            </div>
+            <div *ngIf="allStores?.length > 1" class="assign-to-device">
+                <div class="btn-group" dropdown>
+                    <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                        aria-controls="dropdown-animated"><span class="caret">{{chooseStore}}</span>
+                    </button>
+                    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                        aria-labelledby="button-animated">
+                        <li *ngFor="let store of allStores" (click)="changeStore(store,change_Store,'custModal wd300')"
+                            role="menuitem"><a class="dropdown-item">
+                                {{store?.store_name | titlecase}}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Minimized List -->
+        <div class="order-top-wrapper">
+            <ul class="order-list">
+                <!-- <li>
+                    <a>
+                        <div class="inner-text">Create<span>Order</span></div>
+                    </a>
+                </li> -->
+                <li class="">
+                    <div class="overlay">
+                        <h2>#001</h2>
+                    </div>
+                    <a>
+                        <div class="inner-text order">
+                            <span>Catherine Williams</span>
+                            <span>$300.00</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="">
+                    <div class="overlay">
+                        <h2>#002</h2>
+                    </div>
+                    <a>
+                        <div class="inner-text order">
+                            <span>Robert Desoza</span>
+                            <span>$300.00</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="">
+                    <div class="overlay">
+                        <h2>#003</h2>
+                    </div>
+                    <a>
+                        <div class="inner-text order">
+                            <span>Mark Twian</span>
+                            <span>$300.00</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="">
+                    <div class="overlay">
+                        <h2>#004</h2>
+                    </div>
+                    <a>
+                        <div class="inner-text order">
+                            <span>Michal Smith</span>
+                            <span>$300.00</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="">
+                    <div class="overlay">
+                        <h2>#005</h2>
+                    </div>
+                    <a>
+                        <div class="inner-text order">
+                            <span>Michal Smith</span>
+                            <span>$300.00</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="user-right one">
+            <div class="dropdown">
+                <a href="javascript:void(0);" class="dropbtn" (click)="openNotification();$event.stopPropagation()"><i
+                        class="fa fa-bell" aria-hidden="true"><span><sup>03</sup></span></i></a>
+                <div class="dropdown-content" *ngIf="commonService.getNotificationPopupValue()" style="display: block;">
+                    <div class="top">
+                        <div class="inner">
+                            <span>Notifications</span>
+                            <span>03 new</span>
+                        </div>
+                    </div>
+                    <div class='bottom'>
+                        <ul>
+                            <li>
+                                <a class="newNoti" href="javascript:void(0);">
+                                    <span>New Customer is registered</span>
+                                    <span>02 hrs ago</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="newNoti" href="javascript:void(0);">
+                                    <span>New Customer is registered</span>
+                                    <span>02 hrs ago</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a  class="newNoti" href="javascript:void(0);">
+                                    <span>New Customer is registered</span>
+                                    <span>02 hrs ago</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <span>New Customer is registered</span>
+                                    <span>02 hrs ago</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <span>New Customer is registered</span>
+                                    <span>02 hrs ago</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <span>New Customer is registered</span>
+                                    <span>02 hrs ago</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <span>New Customer is registered</span>
+                                    <span>02 hrs ago</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <span>New Customer is registered</span>
+                                    <span>02 hrs ago</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <span>New Customer is registered</span>
+                                    <span>02 hrs ago</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <span>New Customer is registered</span>
+                                    <span>02 hrs ago</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="user-right">
+            <div class="dropdown">
+                <a href="javascript:void(0);" class="dropbtn" (click)="openUserProfile();$event.stopPropagation()">
+                    <!-- <div class="user-img" style="background-image:url('../../../assets/images/userplaceholder.png')"> -->
+                    <div *ngIf="userDetail?.avatar_location != '' && userDetail?.avatar_location != null" class="user-img"
+                        [ngStyle]="{'background-image':'url('+ [baseUrl+userDetail?.avatar_location] +')'}">
+                        <span>Profile<i class="fa fa-caret-down" aria-hidden="true"></i> </span>
+                    </div>
+                    <div *ngIf="userDetail?.avatar_location == '' || userDetail?.avatar_location == null" class="user-img"
+                        style="background-image: url('../../../assets/images/userplaceholder.png');">
+                        <span>Profile<i class="fa fa-caret-down" aria-hidden="true"></i> </span>
+                    </div>
+                </a>
+                <div class="dropdown-content" *ngIf="commonService.getUserProfilePopupValue()" style="display: block;">
+                    <div class="top">
+                        <div class="left">
+                            <div *ngIf="userDetail?.avatar_location != '' && userDetail?.avatar_location != null"
+                                class="user-img"
+                                [ngStyle]="{'background-image':'url('+ [baseUrl+userDetail?.avatar_location] +')'}">
+                            </div>
+
+                            <div *ngIf="userDetail?.avatar_location == '' || userDetail?.avatar_location == null"
+                                class="user-img"
+                                style="background-image: url('../../../assets/images/userplaceholder.png');"></div>
+                            <!-- <div class="user-img" style="background-image:url('../../../assets/images/userplaceholder.png')">
+                            </div> -->
+                        </div>
+                        <div class="right">
+                            <!-- <div *ngIf='signOutLoader' class="luna-loader"></div> -->
+                            <h2>{{userDetail.first_name + ' ' + userDetail.last_name}}</h2>
+                            <a>{{userDetail.email}}</a>
+                            <p>User ID: <span>{{userDetail.user_keeping_unit}}</span></p>
+                           <a (click)="model_editUser(openProfileUpdated,'box-add-supplier',userDetail)" (click)="openUserProfile();$event.stopPropagation()">Update Profile</a>
+                        </div>
+                    </div>
+                    <div class='mid'>
+                        <a  *ngIf="cahReegisterData.length !=1" (click)="openUserProfile();$event.stopPropagation()" (click)="model_cashRegister(open_cashRegister,'custModal wd300')">Change Cash Register</a>
+                        <a  *ngIf="cahReegisterData.length==1" >{{cahReegisterData[0].name || 'Cash Register'}}</a>
+                        <a (click)="openSignOutModal(open_signOut,'custModal wd300')" (click)="openUserProfile();$event.stopPropagation()">Sign Out</a>
+                    </div>
+                    <div class='bottom'>
+                        <table class="table" style="width:100%">
+                            <tbody>
+                                <tr colspan="2">
+                                    <td>Store ID:</td>
+                                    <td>{{userDetail.storeID}}</td>
+                                </tr>
+                                <tr colspan="2">
+                                    <td>Store Name:</td>
+                                    <td>{{userDetail.storeName}}</td>
+                                </tr>
+                                <tr colspan="2">
+                                    <td>Status:</td>
+                                    <td>{{userDetail.status}}</td>
+                                </tr>
+                                <tr colspan="2">
+                                    <td>Cash Register:</td>
+                                    <td>Cash Register 1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="tabs-top text-center">
+        <carousel class="nav nav-pills justify-content-center dtable wd90Percent mx-auto" [itemsPerSlide]="itemsPerSlide"
+            [singleSlideOffset]="singleSlideOffset" [interval]="false" [noWrap]="noWrap">
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="Home">Home</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="CreateSale/Order">Create a
+                    Sale</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="RepairRoom">Repair Room</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="Tickets">Tickets</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="Customers/Listing">Customers</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="Stock">Stock</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="Discounts">Discounts</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="Franchise">Franchise</a>
+            </slide>
+            <slide class="animated fadeIn v">
+                <a class="nav-link" routerLinkActive="active" routerLink="Settings">System</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="Reports">Reports</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="TechbarAI">Techbar AI</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+              <a class="nav-link" routerLinkActive="active" routerLink="Directory">Directory</a>
+            </slide>
+            <slide class="animated fadeIn nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="Accounting">Accounting</a>
+            </slide>
+        </carousel>
+    </div>
+</div>
+<ng-template #change_Store>
+    <div class="modal-header noborder pt30 pb0">
+        <div class="modalTitle mx-auto text-center">
+            <img src="../../../../assets/images/switch.png" alt="" width="50">
+            <h2 class="fontPoppin font24 fontSemiBold mb10 color000">Change Store?</h2>
+            <p class="fontPoppin font12 mb10 color000">Temporary data will be lost?</p>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button (click)="yesChangeStore()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Yes</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_signOut>
+    <div *ngIf='signOutLoader2' class="luna-loading"></div>
+    <div class="modal-header noborder pt30 pb0">
+        <div class="modalTitle mx-auto text-center">
+            <img src="../../../../assets/images/logout.png" alt="" width="50">
+            <h2 class="fontPoppin font24 fontSemiBold mb10 color000">Sign out</h2>
+            <p class="fontPoppin font12 mb10 color000">Will clock out you. Are you sure?</p>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button (click)="signOutUser()" (click)="closeModel()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Yes, clock out</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_cashRegister>
+    <div *ngIf='getRegisterLoader' class="luna-loading"></div>
+    <div class="modal-header noborder pt30 pb0">
+        <div class="modalTitle mx-auto text-center">
+            <div class="color000 font64"><i class="fas fa-cash-register"></i></div>
+            <!-- <img class="mb15" src="../../../../assets/images/box-saveorder.png" alt="" width="40"> -->
+            <h2 class="fontPoppin font24 fontSemiBold mb10 color000">Select Cash Register</h2>
+        </div>
+    </div>
+    <div class="modal-body pl40 pr40">
+        <div class="selectCust">
+            <div class="row">
+                <div class="col-lg-12 centerList"  *ngFor="let register of cahReegisterData; let i = index">
+                    <input [checked]="selectedRegisterId==register['_id']" type="radio" id="cashRegister{{i}}" name="radio-group-cashRegister{{i}}">
+                    <label  (click)=chageRegister(register) for="cashRegister1{{i}}">{{register.name || 'Cash Register'}}</label>
+                </div>
+                <!-- <div class="col-lg-12">
+                    <input checked type="radio" id="cashRegister2" name="radio-group-cashRegister">
+                    <label for="cashRegister2">Cash Register 2</label>
+                </div>
+                <div class="col-lg-12">
+                    <input checked type="radio" id="cashRegister3" name="radio-group-cashRegister">
+                    <label for="cashRegister3">Cash Register 3</label>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button  (click)='selectCashRegister()' type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Save</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_profileUserPhoto>
+    <div *ngIf='userLogoDeleteLoader' class="luna-loading"></div>
+    <div class="modal-header">
+        <h4 *ngIf="photo == ''">Add your photo </h4>
+        <h4 *ngIf="photo != ''">Edit your photo</h4>
+        <div (click)="closePopup()" class="closePopup"><i class="fa fa-times"> </i></div>
+    </div>
+    <div class="modal-body">
+        <div class="uploadLogo">
+            <div class="profile">
+                <div class="photo">
+                    <input type="file" accept="image/*">
+                    <div class="photo__helper">
+                        <div class="photo__frame photo__frame--circle">
+                            <canvas class="photo__canvas"></canvas>
+                            <div class="message is-empty">
+                                <p class="message--desktop">Drop your photo here or browse your computer.</p>
+                                <p class="message--mobile">Tap here to select your picture.</p>
+                            </div>
+                            <div class="message is-loading">
+                                <i class="fa fa-2x fa-spin fa-spinner"></i>
+                            </div>
+                            <div class="message is-dragover">
+                                <i class="fa fa-2x fa-cloud-upload"></i>
+                                <p>Drop your photo</p>
+                            </div>
+                            <div class="message is-wrong-file-type">
+                                <p>Only images allowed.</p>
+                                <p class="message--desktop">Drop your photo here or browse your computer.</p>
+                                <p class="message--mobile">Tap here to select your picture.</p>
+                            </div>
+                            <div class="message is-wrong-image-size">
+                                <p>Your photo must be larger than 350px.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo__options hide">
+                        <div class="photo__zoom">
+                            <input type="range" class="zoom-handler">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div *ngIf='userlogo != ""' class="left">
+            <button (click)="userLogoDeleteFun()" type="button" class="btn btn-default" data-dismiss="modal">Delete
+            </button>
+        </div>
+        <div class="right">
+            <div class="changeImage">
+                <label for="add-logo" class="custom-file-upload">Change Photo</label>
+                <input type="file" #imageInput name="add-logo" id="add-logo" accept="image/png, image/jpeg"
+                    (change)="onPhotoChanged($event)">
+            </div>
+            <button (click)="saveUserPhoto()" id="previewBtn" type="button" class="btn btn-default"
+                data-dismiss="modal">Save Photo</button>
+        </div>
+    </div>
+</ng-template>
+<ng-template #openProfileUpdated >
+    <div class="modal-header noborder pt30 pb0">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold mb5 color000">Update Profile</h2>
+            <p class="fontPoppin font12 mb0 color808080">Edit the following data to update a user profile</p>
+        </div>
+    </div>
+    <div *ngIf='updateUserLoader' class="luna-loading"></div>
+    <div class="modal-body">
+        <div class="midWrapper updateProfile">
+            <tabset #staticTabs>
+                <tab heading="General">
+                    <div class="items-form-content">
+                        <form autocomplete="off" [formGroup]="editUserForm" >
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div>
+                                        <label class="fontPoppin mb0 font12 fontSemiBold500 color000" [ngClass]="{ 'is-invalid': editUserSubmitted && feditUser.first_name.errors}"
+                                            for="user_fname">First Name<sup>*</sup></label>
+                                        <input [ngClass]="{ 'bounce': editUserSubmitted && feditUser.first_name.errors}" type="text" formControlName="first_name" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                            placeholder="Example: Julian">
+                                    </div>
+                                    <div>
+                                        <label class="fontPoppin mb0 font12 fontSemiBold500 color000" style="margin-top: 10px;" [ngClass]="{ 'is-invalid': editUserSubmitted && feditUser.last_name.errors}"
+                                            for="user_lname">Last Name<sup>*</sup></label>
+                                        <input [ngClass]="{ 'bounce': editUserSubmitted && feditUser.last_name.errors}" type="text" formControlName="last_name" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                            placeholder="Example: Trump">
+                                    </div>
+                                </div>
+                                <div  style="margin-top: 10px;" class="col-lg-6">
+                                    <div class="addbusinessLogo">
+                                        <a  *ngIf="userDetail?.avatar_location == '' || userDetail?.avatar_location == null"
+                                            (click)="model_ProfilePhoto(open_profileUserPhoto,'box-saveorder profilepopUp wd600',userlogo)">
+                                            <div class="profileImage"
+                                                style="background-image: url('../../../assets/images/tb-icon.png')">
+                                                <span>Add</span>
+                                            </div>
+                                        </a>
+                                        <a *ngIf="userDetail?.avatar_location != '' && userDetail?.avatar_location != null"
+                                            (click)="model_ProfilePhoto(open_profileUserPhoto,'box-saveorder profilepopUp wd600',userlogo)">
+                                            <div class="profileImage">
+                                                <img src="{{userlogo}}" />
+                                                <span>Edit</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb15">
+                                <div class="col-lg-6">
+
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000" style="margin-top: 10px;" [ngClass]="{'is-invalid':editUserSubmitted && selectusrRole == 'Select Role'}"
+                                        for="usr_role">Role</label>
+                                    <div class="btn-group" dropdown>
+                                        <button id="button-animated1" dropdownToggle type="button"
+                                            class="btn dropdown-toggle form-control cust-field font11 borderColorcbcbcb borderRadius5"
+                                            aria-controls="dropdown-animated">{{selectusrRole}}
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                                            aria-labelledby="button-animated1">
+                                            <li (click)="changeUserRoleValue('Technician')" role="menuitem"><a
+                                                    class="dropdown-item">Technician</a>
+                                            </li>
+                                            <li (click)="changeUserRoleValue('HR Manager')" role="menuitem"><a
+                                                    class="dropdown-item">HR Manager</a>
+                                            </li>
+                                            <li (click)="changeUserRoleValue('IT Support')" role="menuitem"><a
+                                                    class="dropdown-item">IT Support</a>
+                                            </li>
+                                            <li (click)="changeUserRoleValue('Operations')" role="menuitem"><a
+                                                    class="dropdown-item">Operations</a>
+                                            </li>
+                                            <li (click)="changeUserRoleValue('Receptionist')" role="menuitem"><a
+                                                    class="dropdown-item">Receptionist</a>
+                                            </li>
+                                            <li (click)="changeUserRoleValue('Accountant')" role="menuitem"><a
+                                                    class="dropdown-item">Accountant</a>
+                                            </li>
+                                            <li (click)="changeUserRoleValue('Shop Owner')" role="menuitem"><a
+                                                    class="dropdown-item">Shop Owner</a>
+                                            </li>
+                                            <li (click)="changeUserRoleValue('Supper Admin')" role="menuitem"><a
+                                                    class="dropdown-item">Supper Admin</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000" style="margin-top: 10px;" [ngClass]="{'is-invalid':editUserSubmitted && selectusrStatus == 'Select Status'}"
+                                        for="store_address2">Status</label>
+                                    <div class="btn-group" dropdown>
+                                        <button id="button-animated2" dropdownToggle type="button"
+                                            class="btn dropdown-toggle form-control cust-field font11 borderColorcbcbcb borderRadius5"
+                                            aria-controls="dropdown-animated">{{selectusrStatus}}
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                                            aria-labelledby="button-animated2">
+                                            <li (click)="changeUserStatusValue('Active')" role="menuitem"><a
+                                                    class="dropdown-item">Active</a>
+                                            </li>
+                                            <li (click)="changeUserStatusValue('InActive')" role="menuitem"><a
+                                                    class="dropdown-item">In Active</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb15">
+                                <div class="col-lg-6">
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000" [ngClass]="{ 'is-invalid': editUserSubmitted && feditUser.address_1.errors}"
+                                        for="store_address1">Address 1</label>
+                                    <input type="text" formControlName="address_1" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                        placeholder="Example: Address 1">
+                                </div>
+                                <div class="col-lg-6">
+                                    <label [ngClass]="{ 'is-invalid': editUserSubmitted && feditUser.address_2.errors}"
+                                        for="store_address2">Address 2</label>
+                                    <input type="text" formControlName="address_2" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                        placeholder="Example: Address 2">
+                                </div>
+                            </div>
+                            <div class="row mb15">
+                                <div class="col-lg-6">
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000" [ngClass]="{ 'is-invalid': editUserSubmitted && feditUser.country.errors}"
+                                        for="store_country">Country<sup>*</sup></label>
+                                    <div  [ngClass]="{ 'bounce': editUserSubmitted && feditUser.country.errors}" class="btn-group" dropdown>
+                                        <button id="button-animated3" dropdownToggle type="button"
+                                            class="btn dropdown-toggle form-control cust-field font11 borderColorcbcbcb borderRadius5"
+                                            aria-controls="dropdown-animated">{{selectusrCountry}}
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                                            aria-labelledby="button-animated3">
+                                            <li *ngFor="let count of allCountries"
+                                                (click)="changeCountry(count.name,count._id,'editUserForm')" role="menuitem"><a
+                                                    class="dropdown-item">{{count.name}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000" [ngClass]="{ 'is-invalid': editUserSubmitted && feditUser.salaryHour.errors}"
+                                        for="salary">Salary per hour<sup></sup></label>
+                                    <input type="text" formControlName="salaryHour" appTwoDigitDecimaNumber
+                                        class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Example: $7.25">
+                                </div>
+                            </div>
+                            <div class="row mb15">
+                                <div class="col-lg-4">
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000" [ngClass]="{ 'is-invalid': editUserSubmitted && feditUser.state.errors}"
+                                        for="store_state">State</label>
+                                    <input type="text" formControlName="state" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                        placeholder="Eample: Statesville">
+                                </div>
+                                <div class="col-lg-4">
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000" [ngClass]="{ 'is-invalid': editUserSubmitted && feditUser.city.errors}"
+                                        for="store_city">City</label>
+                                    <input type="text" formControlName="city" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                        placeholder="Example: Taxas">
+                                </div>
+                                <div class="col-lg-4">
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000" [ngClass]="{ 'is-invalid': editUserSubmitted && feditUser.zipcode.errors}"
+                                        for="store_zipCode">Zip Code</label>
+                                    <input type="text" formControlName="zipcode" (keypress)="numberOnly($event)"
+                                        class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Eample: 3012">
+                                </div>
+                            </div>
+                            <div class="row  mb15">
+                                <div class="col-lg-6">
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000"
+                                        [ngClass]="{ 'is-invalid': addUserSubmitted && faddUser.email.errors,'is-invalid': emailError}"
+                                        for="sup_email">Email Address<sup>*</sup></label>
+                                    <input [ngClass]="{ 'bounce': addUserSubmitted && faddUser.email.errors,'is-invalid': emailError}" type="text" (focusout)="verifyUserEmail('editUserForm',userSelected.id)"
+                                        formControlName="email" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                        placeholder="Example: keith@mobilepartsint.com">
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000" [ngClass]="{ 'is-invalid': editUserSubmitted && feditUser.phone.errors}"
+                                        for="sup_phNo">Contact Number<sup>*</sup></label>
+                                    <input [ngClass]="{ 'bounce': editUserSubmitted && feditUser.phone.errors}" type="text" formControlName="phone" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                        placeholder="Example: 704-495-7746">
+                                </div>
+                            </div>
+                            <div class="row btop">
+                                <div class="col-lg-6 pt30">
+                                    <button (click)="closeUserModel()" type="button" class="btn btn-default"
+                                        data-dismiss="modal">Close</button>
+                                </div>
+                                <div class="col-lg-6 pt30 last">
+                                    <button type="button" class="btn btn-default" (click)="updateUser()">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </tab>
+                <tab heading="Change Password">
+                    <div class="mid">
+                    <div class="items-form-content">
+                        <form autocomplete="off" [formGroup]="passwordUpdateForm" (ngSubmit)="ownerPasswordUpdateFun()">
+                            <div *ngIf='passwordUpdateLoader' class="luna-loading"></div>
+                            <label class="fontPoppin mb0 font12 fontSemiBold500 color000" *ngIf="!oldPasswordNotCorrect" style="float:left"
+                                [ngClass]="{ 'is-invalid': passwordUpdateSubmitted && fPasswordUpdateForm.oldPassword.errors}">
+                                Enter Old Password <sup>*</sup></label>
+                            <label *ngIf="oldPasswordNotCorrect" class="is-invalid" style="float:left"> Old Password Does Not Match<sup>*</sup></label>
+                            <input  [ngClass]="{ 'bounce': passwordUpdateSubmitted && fPasswordUpdateForm.oldPassword.errors}" (click)='oldPasswordNotCorrectFun()' type="password" formControlName="oldPassword" name="old-password"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5 mb15" placeholder="Enter Old Password">
+                            <label class="fontPoppin mb0 font12 fontSemiBold500 color000" style="float:left"
+                                [ngClass]="{ 'is-invalid': passwordUpdateSubmitted && fPasswordUpdateForm.newPassword.errors}">Enter New
+                                Password <sup>*</sup></label>
+                            <input  [ngClass]="{ 'bounce': passwordUpdateSubmitted && fPasswordUpdateForm.newPassword.errors}" 
+                            type="password" formControlName="newPassword" name="new-password"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5 mb15" placeholder="Enter New Password">
+                            <span *ngIf="passwordUpdateSubmitted && fPasswordUpdateForm.newPassword.errors?.minlength"
+                                class="field-error-msg">
+                                New password must be at least 6
+                            </span>
+                            <label class="fontPoppin mb0 font12 fontSemiBold500 color000" style="float:left"
+                                [ngClass]="{ 'is-invalid': passwordUpdateSubmitted && fPasswordUpdateForm.newConfirmPassword.errors}">Re-enter
+                                New Password<sup>*</sup></label>
+                            <input  [ngClass]="{ 'bounce': passwordUpdateSubmitted && fPasswordUpdateForm.newConfirmPassword.errors}" type="password" formControlName="newConfirmPassword" name="re-new-password"
+                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5 mb15" placeholder="Re-enter New Password">
+                            <div *ngIf="passwordUpdateSubmitted && fPasswordUpdateForm.newConfirmPassword.errors">
+                                <span class="field-error-msg" *ngIf="fPasswordUpdateForm.newConfirmPassword.errors?.minlength">Confirm
+                                    Password must be at least 6</span>
+                                <span class="field-error-msg" *ngIf="fPasswordUpdateForm.newConfirmPassword.errors?.mustMatch">Passwords
+                                    must match</span>
+                            </div>
+                        </form>
+                        <div class="row btop">
+                            <div class="col-lg-6 pt30">
+                                <button (click)="closeUserModel()" type="button" class="btn btn-default"
+                                    data-dismiss="modal">Close</button>
+                            </div>
+                            <div class="col-lg-6 pt30 last">
+                                <button (click)="ownerPasswordUpdateFun()" type="submit" class="btn btn-default"
+                                data-dismiss="modal">Change</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </tab>
+                <tab heading="Pin Code">
+                    <div class="items-form-content">
+                        <div class="customer-form-content">
+                            <div *ngIf='userPincodeLoader' class="luna-loading"></div>
+                            <!-- <div *ngIf='userPincode2Loader' class="luna-loading"></div> -->
+                            <div *ngIf='userPincode2Loader' class="luna-loading"></div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <!-- <div *ngIf='userPincodeLoader' class="luna-loading"> -->
+                                    <!-- </div> -->
+                                    <div *ngIf='generatePinCode' class="pinGenerate">
+                                        <label class="fontPoppin mb0 font12 fontSemiBold500 color000">Add a new PIN Code</label>
+                                        <div class="row">
+                                            <div class="col-lg-9">
+                                                <input maxlength="6" minlength="6"  (keypress)="numberOnly($event)" #newpinCodefield id="newpinCode-field"
+                                                [(ngModel)]="newPinCode"
+                                                type="password" name="newPinCode"
+                                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                                placeholder="Generate Code">
+                                            <span style="right:20px !important" class="fa fa-fw fa-eye field-icon"
+                                                (click)="togglePassword(newpinCodefield,$event)"></span>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <button [disabled]="codeGenerate"
+                                                (click)="openSharePinCode()"
+                                                class="btn btn-default" type="button">
+                                                Generate Code
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf='resendPinCode' class="pinResend">
+                                        <!-- <div *ngIf='userPincode2Loader' class="luna-loading"></div> -->
+                                        <label class="fontPoppin mb0 font12 fontSemiBold500 color000">Current PIN Code</label>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                            <input   disabled  (keypress)="numberOnly($event)" name="new-Pin-Code"
+                                            #currentpinCodefield id="currentpinCode-field"
+                                                [(ngModel)]="newPinCode"
+                                                type="password"
+                                                class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                                placeholder="Generate Code">
+                                                <span style="right:20px !important" class="fa fa-fw fa-eye field-icon"
+                                                (click)="togglePassword(currentpinCodefield,$event)"></span>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="selectCust text-left" style="width: 100px">
+                                                    <div >
+                                                        <input type="radio"
+                                                            (click)="updatePinSahreMethod('email')"
+                                                            [checked]="pinShareType=='email'"
+                                                            id="sharePinRadio1"
+                                                            name="radio-group-sharePin">
+                                                        <label for="sharePinRadio1">Email</label>
+                                                    </div>
+                                                    <div class="col-lg-3 fl p0">
+                                                        <input type="radio" id="sharePinRadio2"
+                                                            (click)="updatePinSahreMethod('sms')"
+                                                            [checked]="pinShareType=='sms'"
+                                                            name="radio-group-sharePin">
+                                                        <label for="sharePinRadio2">SMS</label>
+                                                    </div>
+                                                </div>
+                                               </div>
+                                            <div class="col-lg-6">
+                                             <button (click)="reSendPinFun(open_confirmPassword4Pin,'box-removecustomer')"
+                                                class="btn btn-default" type="button">
+                                                Resend Code
+                                            </button>
+                                            <button style="width: 50%;" (click)="regenerateCode()"
+                                            class="btn btn-default" type="button">
+                                                Regenerate Code
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf='updatePinCode' class="pinUpdate">
+                                        <label class="fontPoppin mb0 font12 fontSemiBold500 color000">Update PIN Code</label>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                          <input  maxlength="6" minlength="6"  (keypress)="numberOnly($event)" name="new-Pin-Code"
+                                             #updatepinCodefield id="updatepinCode-field"
+                                             [(ngModel)]="newPinCode"
+                                             type="password"
+                                             class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                             placeholder="Generate Code">
+                                             <span style="right:20px !important" class="fa fa-fw fa-eye field-icon"
+                                             (click)="togglePassword(updatepinCodefield,$event)"></span>
+                                         </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf='sharePinCode' class="row">
+                                <div class="col-lg-9">
+                                    <label class="fontPoppin mb0 font12 fontSemiBold500 color000" *ngIf='!pinShareCheck && !pinLessThenSix'>Share PIN Code via</label>
+                                    <label style="color: red;" *ngIf='pinLessThenSix'>PinCode must have 6 digits</label>
+                                    <label *ngIf='pinShareCheck && !pinLessThenSix' style="color: red;">PinCode Already Exist. Try Another!</label>
+                                    <div class="selectCust text-left">
+                                        <div class="col-lg-6 fl p0">
+                                            <input type="radio"
+                                                (click)="updatePinSahreMethod('email')"
+                                                [checked]="pinShareType=='email'"
+                                                id="sharePinRadio1"
+                                                name="radio-group-sharePin">
+                                            <label for="sharePinRadio1">Email</label>
+                                        </div>
+                                        <div class="col-lg-3 fl p0">
+                                            <input type="radio" id="sharePinRadio2"
+                                                (click)="updatePinSahreMethod('sms')"
+                                                [checked]="pinShareType=='sms'"
+                                                name="radio-group-sharePin">
+                                            <label for="sharePinRadio2">SMS</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 mt15">
+                                    <button (click)="uniquePinCodeVerifyFun(open_confirmPassword4Pin,'box-removecustomer')"
+                                    class="btn btn-default" type="button">Save &
+                                        Share</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row btop">
+                            <div class="col-lg-6 pt30">
+                                <button (click)="closeUserModel()" type="button" class="btn btn-default"
+                                    data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+</ng-template>
+<ng-template #open_confirmPassword4Pin>
+    <div *ngIf='confirmPassword4PinLoader' class="luna-loading"></div>
+    <div class="modal-header">
+    </div>
+    <div class="modal-body">
+        <h2 style="color: black;">Authenticate yourself first </h2>
+            <label style="float:left"
+                [ngClass]="{ 'is-invalid': confirmPassword4PinEmpty==true}">Enter Password</label>
+            <input [ngClass]="{ 'bounce': confirmPassword4PinEmpty==true}" type="password" [(ngModel)]="confirmPassword4Pin" name="old-password" (click)='confirmPassword4PinErrorReset()'
+                class="input-code mb15 form-control" placeholder="Enter Your Password">
+            <span *ngIf="confirmPassword4PinError"  class="field-error-msg">
+                Password is incorrect
+            </span>
+    </div>
+    <div class="modal-footer">
+        <button (click)="closeSharePinModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button (click)="closeSharePinCode()" type="submit" class="btn btn-default"
+            data-dismiss="modal">Proceed</button>
+    </div>
+</ng-template>

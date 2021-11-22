@@ -1,0 +1,33 @@
+  <!--<div *ngIf="mode == 'rate' ? true : false" class="col-sm-12">
+      <ul class="list-inline rating-list"
+          *ngFor="let star of stars" style="display: inline-block" >
+            <li (click)="emitterRate(star)"
+                [ngClass]="{'selected': (star <= selectedValue)}">
+              <i class="fa fa-star"></i>
+            </li>
+      </ul>
+  </div>
+  <div *ngIf="mode == 'view' ? true : false" class="col-sm-12">
+      <ul class="list-inline rating-list-view"
+          *ngFor="let star of stars" style="display: inline-block" >
+            <li [ngClass]="{'selected': (star <= selectedValue)}">
+              <i class="fa fa-star"></i>
+            </li>
+      </ul>
+    </div>-->
+
+    <!--<div class="stars"
+            [ngStyle]="{'background-color': starBackColor}"
+            (click)="secureNewRating()"
+            (mouseleave)="leaveRating()"
+            (mousemove)="changeRating($event)">
+            <div class="stars-selected"
+                [ngStyle]="{'width': selectedWidth, 'background-color': selectedColor}"></div>
+            <star-item *ngFor="let i of itemsIterable" [type]="type" [backColor]="backColor" [radius]="radius"></star-item>
+        </div>-->
+    <div class="stars"
+            [ngStyle]="{'background-color': starBackColor}">
+            <div class="stars-selected"
+                [ngStyle]="{'width': selectedWidth, 'background-color': selectedColor}"></div>
+            <star-item *ngFor="let i of itemsIterable" [type]="type" [backColor]="backColor" [radius]="radius"></star-item>
+        </div>

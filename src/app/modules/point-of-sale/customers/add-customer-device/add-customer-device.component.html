@@ -1,0 +1,104 @@
+<ng-template #adddevice>
+    <div *ngIf="deviceLoader" class="luna-loading"> 
+ </div>
+ <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+    [hideToster]="showToaster"></app-toaster>
+    <div class="modal-header noborder pt40 pb0">
+        <div class="modalTitle mx-auto text-center">
+            <h2 *ngIf='deviceUpdateOrAdd=="Add"' class="fontPoppin font24 fontSemiBold color000">Add New Device</h2>
+            <h2 *ngIf='deviceUpdateOrAdd!="Add"' class="fontPoppin font24 fontSemiBold color000">Update Device</h2>
+            <p class="fontPoppin font12 mb10 color000">Fill in data to register a new device to this customer.</p>
+        </div>
+    </div>
+    <div class="modal-body" >
+        <div class="items-form-content pl30 pr30">
+            <!--  -->
+            <form autocomplete="off" [formGroup]="deviceForm" >
+                <div class="row mb15">
+                    <div class="col-lg-6">
+                        <label [ngClass]="{ 'is-invalid': deviceSubmitted && fDeviceForm.deviceBrand.errors}" 
+                         for="deviceBrand" class="color000 mb0 fontPoppin font12 fontSemiBold">Device Brand</label>
+                        <div class="btn-group cust-group wd100Percent" dropdown>
+                            <div class="custSelect dark ngDropSelect">
+                                 <ng-select [addTag]="addDeviceBrand" id="Devicebrand"  name="Devicebrand" 
+                                  [ngModelOptions]="{standalone: true}" (change)="getAllBrandWiseModels(deviceBrand)"
+                                  [(ngModel)]="deviceBrand" placeholder="Example: Apple iPhone 6S">
+                                    <ng-option  *ngFor="let brand of allSystemBrand" [value]="brand._id">{{brand?.brand_name}}</ng-option>
+                                    <ng-template ng-footer-tmp>
+                                        <div class="create-new" (click)="CreateNew()">Create New </div>
+                                     </ng-template>
+                                 </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label [ngClass]="{ 'is-invalid': deviceSubmitted && fDeviceForm.deviceModel.errors}" 
+                         for="deviceModel" class="color000 mb0 fontPoppin font12 fontSemiBold">Device Model</label>
+                        <div class="custSelect dark ngDropSelect">
+                            <ng-select  [addTag]="addDeviceBrandModel"   id="DeviceModel12" name="DeviceModel12" (change)="selectModel(deviceModel)" [ngModelOptions]="{standalone: true}" 
+                            [loading]="deviceModelLoading" [(ngModel)]="deviceModel" class=""  placeholder="Example: Apple iPhone 6S">
+                                <ng-option  *ngFor="let model of allDeviceModels" [value]="model._id">{{model.name}}</ng-option>
+                                <ng-template ng-footer-tmp>
+                                    <div class="create-new" (click)="createSystemDevice(deviceModel,deviceBrand)">Create New </div>
+                                 </ng-template>
+                            </ng-select>
+                       </div>
+                    </div>
+                </div>
+                <div class="row mb15">
+                    <!-- <div class="col-lg-6">
+                        <label [ngClass]="{ 'is-invalid': deviceSubmitted && fDeviceForm.deviceBrand.errors}"
+                          for="deviceBrand" class="color000 mb0 fontPoppin font12 fontSemiBold">Device brand and model</label>
+                        <input  autocomplete="off" [ngModelOptions]="{standalone: true}"  [(ngModel)]="devicesBrandSearch"  type="text" name="deviceBrand" id="deviceBrand" 
+                        (ngModelChange)='getAllCompatibleDevices($event)' (ngModelChange)='showSearchInputFun()' [ngModelOptions]="{standalone: true}"
+                        class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Example: Apple iPhone 6S">
+                        <div class="ulWrapper addbrandModel" *ngIf="deviceBrandList">
+                            <ul>
+                                <li>
+                                    <a (click)='AddCustomItem()' >Add a custom item</a>
+                                </li>
+                                <li *ngFor="let brand of deviceBrandAndModel"  >
+                                    <a (click)='selectBrand(brand)' >{{brand.name | titlecase }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div> -->
+                    <div class="col-lg-12">
+                      <label [ngClass]="{ 'is-invalid': deviceSubmitted && fDeviceForm.device_color.errors}" for="device_color"
+                         class="color000 mb0 fontPoppin font12 fontSemiBold">Device color</label>
+                        <input  [ngClass]="{ 'bounce': deviceSubmitted && fDeviceForm.device_color.errors}" autocomplete="off"   formControlName="device_color" type="text" name="device_color" id="device_color"
+                         class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Example: Black">
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-lg-6">
+                        <label [ngClass]="{ 'is-invalid': deviceSubmitted && fDeviceForm.imei_ssn.errors}" for="imei_ssn"
+                         class="color000 mb0 fontPoppin font12 fontSemiBold">IMEI/ESN</label>
+                        <input (click)="hideErrorFun('ImeiError')" maxlength="30" [ngClass]="{ 'bounce': deviceSubmitted && fDeviceForm.imei_ssn.errors}"  type="text" formControlName="imei_ssn" ame="imei_ssn" id="imei_ssn" 
+                        placeholder="Type IMEI/SN"  autocomplete="off" class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                        <span *ngIf="ImeiError" class="field-error-msg">
+                            Device imei ssn number already exist.
+                        </span>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="device_pictures" class="color000 mb0 fontPoppin font12 fontSemiBold">Device Picture</label>
+                        <div class="input-group input-file addDeviceimages" name="device_pictures">
+                            <label *ngIf="deviceFileName!=''"for="device_pictures"><span>{{deviceFileName}} image uploaded</span></label>
+                            <label *ngIf="deviceFileName==''"for="device_pictures"><span>Upload image</span></label>
+                                <input [ngClass]="{ 'bounce': deviceSubmitted && isObjectEmpty(img)}" class="form-control cust-field" type="file" #imageInput name="device_pictures" id="device_pictures" accept="image/png, image/jpeg"
+                                (change)="onFileChanged($event)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default btn-choose" type="button">Browse</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button (click)="addDevice()" type="button" class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">{{deviceUpdateOrAdd}} Device</button>
+        <button (click)="closeDeviceModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>

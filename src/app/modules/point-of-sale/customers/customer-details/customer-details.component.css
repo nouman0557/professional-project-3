@@ -1,0 +1,33 @@
+.suggGivenButton{
+    background-color: #000;
+    color: aliceblue;
+    box-shadow: none;
+  }
+  #discount-cat-btn a {
+    font-size: 12px;
+    padding: 8px;
+    cursor: pointer;
+    line-height: 14px;
+    cursor: pointer;
+  }
+  #discount-cat-btn .active {
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  #discount-cat-btn .notActive {
+    color: #000;
+    background-color: #fff;
+    border-color: #000;
+  }
+  #discount-cat-btn {
+    padding: 0px;
+    border: none;
+    width: 100%;
+    height: 32px;
+    background-color: #fff;
+    border-radius: 5px;
+  }
+  .ml10 {
+      margin-left: 10px;
+  }

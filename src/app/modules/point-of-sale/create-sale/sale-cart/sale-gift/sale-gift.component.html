@@ -1,0 +1,104 @@
+<accordion-group (isOpenChange)="gift.isOpen =$event" [isOpen]="gift.isOpen">
+    <ul accordion-heading (click)="noOpenAccordian($event)">
+        <li>
+            <div class="outer">
+                <div class="inner wd70percent" >
+                    <a href="JavaScript:void(0);">
+                        <span class="left">
+                            <span class="gift-icon">
+                                <i class="icon-giftcard_tickets"></i>
+                            </span>
+                        </span>
+                        <span class="right font12 fontPoppin notextTransform ">Gift Card</span>
+                    </a>
+                </div>
+                <div class="inner wd11Percent">
+                    <input placeholder="$25.00" type="text" numeric decimals="2" negative="0" click
+                        class="form-control height25px cust-field font12 borderColorcbcbcb borderRadius5"
+                        [ngClass]="{'is-invalid bounce inputError':submitGiftCard && giftCardFromControl.amount.errors }"
+                        (focusout)="giftAmountOnFocusOut()" (click)="gift.isOpen = true"
+                        [(ngModel)]="gift.total_amount" type="text">
+                </div>
+                <div class="inner wd11Percent" >
+                    <span class="fontPoppin fontSemiBold">{{gift.total_amount | currency }}</span>
+                </div>
+                <div class="inner wd4percent" >
+                    <a (click)="onRemoveFromCart()" class="close-icon" href="JavaScript:void(0);">
+                        <i class="icon-close"></i>
+                    </a>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <p class="font11 color808080 mb5 pl10 pr10 mtMin3">The gift card will not be activated untill payment comes
+        through</p>
+    <ul id="sub" class="giftListInner">
+        <li class="inner">
+            <form autocomplete="off" [formGroup]="giftCardForm">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label class="color000 mb0 fontPoppin font12 fontSemiBold"
+                            [ngClass]="{'is-invalid bounce':submitGiftCard  && giftCardFromControl.from.errors}"
+                            for="phone-number">From</label>
+                        <input type="text"
+                            value="{{customer ? customer?.first_name + ' ' + customer?.last_name : 'Please select customer' }}"
+                            readonly type="text" placeholder="Please select customer" name="phone-number"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="color000 mb0 fontPoppin font12 fontSemiBold"
+                            [ngClass]="{'is-invalid bounce':submitGiftCard  && giftCardFromControl.send_gift_card.errors}"
+                            for="email">Send
+                            on</label>
+                        <input type="text" name="send-date" placeholder="Select To Date"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                            formControlName="send_gift_card" bsDatepicker [bsConfig]="{showWeekNumbers: false,isAnimated: true, 
+                                 dateInputFormat: 'MMM/D/YYYY'}">
+                                 <!-- [maxDate]="toDayDate" [minDate]="toDayDate"-->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label class="color000 mb0 fontPoppin font12 fontSemiBold"
+                            [ngClass]="{'is-invalid bounce':submitGiftCard  && giftCardFromControl.to.errors}"
+                            for="phone-number">To</label>
+                        <input formControlName="to" placeholder="Type the recipient's name"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="color000 mb0 fontPoppin font12 fontSemiBold"
+                            [ngClass]="{'is-invalid bounce':submitGiftCard  && giftCardFromControl.email.errors}"
+                            for="email">Recipient email</label>
+                        <input type="email" name="email" formControlName="email"
+                            placeholder="Type the recipient's email"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label class="color000 mb0 fontPoppin font12 fontSemiBold"
+                            [ngClass]="{'is-invalid bounce':submitGiftCard  && giftCardFromControl.subject.errors}"
+                            for="phone-number">Subject:</label>
+                        <input type="text" name="phone-number" placeholder="Type the subject of the message"
+                            formControlName="subject"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="color000 mb0 fontPoppin font12 fontSemiBold" for="message">Message:</label>
+                        <input formControlName="message" type="text" name="phone-number" placeholder="Type your message"
+                            formControlName="subject"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="fr mb5 mt5">
+                            <button type="button" (click)="onClearAll()" class="btn giftcardBtn">Clear all</button>
+                            <button type="button" (click)="onSubmit()" class="btn giftcardBtn ml5">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </li>
+    </ul>
+</accordion-group>

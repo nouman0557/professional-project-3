@@ -1,0 +1,348 @@
+<div class="tab-pane fade active show" id="tab-st-three" id="restock">
+    <div  *ngIf="!deviceSelected" class="deviceSelected" [ngClass]="{ 'empty': !deviceSelected}" >
+        <div class="empty-text dBlock">
+            <h2 class="font16 fontSemiBold500"><i class="icon-name font64"></i> 
+                Select a customer's device<br>to see all the replacement parts<br>assign to it</h2>
+        </div>
+    </div>
+    <div *ngIf="deviceSelected" class="deviceSelected">
+        <div class="cut-search-area posRelative zIndex100 dtable wd100Percent">
+            <div class="dtableCell wd40percent text-left">
+                <h2 class="color000 mb0 font14 pt7 pb7 fontBold fontPoppin dInlinetable">
+                 {{deviceModelName}}
+                </h2>
+            </div>
+            <div class="dtableCell wd60percent text-right">
+                <div class="dInlinetable wd80percent">
+                    <div class="search-field input-group">
+                        <input type="text"  [(ngModel)]="searchProduct" class="form-control"
+                            placeholder="Search by product name...">
+                        <a href="JavaScript:void(0)" class="input-group-addon">
+                            <i *ngIf="searchProduct.value" (click)="searchProduct.reset()" class="fas fa-times-circle"></i>
+                            <i class="icon-search"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="wd12Percent dInlinetable ml10 valignMiddle posRelative">
+                    <a tooltip="Scanner" placement="bottom" class="receivingIcon dInlineBlock pl10" href="JavaScript:void(0)">
+                        <i class="icon-scan1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="po-wrapper" [ngClass]="{'empty':isObjectEmpty(allProducts)}">
+            <div class="empty-text">
+                <h2 *ngIf="deviceSelectedForProduct"><i class="fa fa-product-hunt" aria-hidden="true"></i>No Service Available</h2>
+                <h2 *ngIf="!deviceSelectedForProduct"><i class="fa fa-product-hunt" aria-hidden="true"></i>No Product Available</h2>
+            </div>
+            <!-- <div class="po-top-info">
+                <div class="inner wd30percent">
+                    <span>Product Name</span>
+                </div>
+                <div class="inner wd12percent text-center">
+                    <span class="text-center"> SKU</span>
+                </div>
+                <div class="inner wd20percent text-center">
+                    <span>Reason</span>
+                </div>
+                <div class="inner wd15percent text-center">
+                    <span>Serial No.</span>
+                </div>
+                <div class="inner wd10percentFull text-center">
+                    <span>Qty.</span>
+                </div>
+                <div class="inner wd12percent text-center">
+                    <span>Action</span>
+                </div>
+            </div> -->
+            <div class="po-top-info">
+                <div class="inner wd11percent text-center"><span>On Shelf</span></div>
+                <div class="inner wd11percent text-center"><span class="text-center">In Order</span></div>
+                <div class="inner wd11percent text-center"><span>Incoming</span></div>
+                <div class="inner wd50percent text-left"><span class="text-left">Product Name</span></div>
+                <div class="inner wd11percent text-center"><span>Price</span></div>
+            </div>
+
+            <div class="po-inner-list" (click)="hidePopups()" >
+                <div *ngIf="extraItemLoader" class="luna-loading"></div>
+                <div *ngIf="loadProducts" class="luna-loading"></div>
+                <ul>
+                    <!-- <form autocomplete="off" [formGroup]="extraItemsForm"> 
+                        <li class="noHovereffect">
+                            <div class="inner wd30percent posRelative">
+                                <input
+                                [ngClass]="{'bounce inputError':addExtraSubmitted && faddExtraItem.productID.errors}"
+                                type="text"
+                                [(ngModel)]="searchExtraProduct"
+                                (ngModelChange)="getAllProducts()"
+                                [ngModelOptions]="{standalone: true}"
+                                class="form-control additionalItemsinput text-left"
+                                placeholder="Product Name" />
+                                <div class="ulWrapper inventoryAccDrop extraItemsDrop" *ngIf="extraItemList">
+                                    <ul class="compaign_list padding5px">
+                                        <li class="pr-suggestion-list" (click)="addExistingExtraItems(product)"
+                                        *ngFor="let product of existingProducts; let i= index;">
+                                            <a><span class="wd70percent">{{product?.product_name}}</span><span><b>{{product?.supplier?.supplier_company==null?"":product?.supplier?.supplier_company}}</b>{{product?.supplier_sku}}</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="inner wd12percent text-center">
+                                <input
+                                    [ngClass]="{'bounce inputError':addExtraSubmitted && faddExtraItem.supplier_sku.errors}"
+                                    type="text" formControlName="supplier_sku"
+                                    (click)="showExtraItemList(false)"
+                                    class="form-control additionalItemsinput mx-auto disableDiv"
+                                    placeholder="AAA001" />
+                            </div>
+                     
+                            <div class="inner wd20percent text-left">
+                                <div class="custSelect dark ngDropSelect">
+                                    <ng-select [(ngModel)]="selectedReason" [ngModelOptions]="{standalone: true}" placeholder="Select Reason"
+                                    (change)="setResaon(selectedReason)">
+                                       <ng-option  *ngFor="let reason of allReasons;" 
+                                       [value]="reason.reason_name">{{reason?.reason_name |titlecase}}</ng-option>
+                                    </ng-select>
+                               </div>
+                            </div>
+                            <div class="inner wd15percent text-center">
+                                <input  (keypress)="omitSpeChar($event)"
+                                    [ngClass]="{'bounce inputError':addExtraSubmitted && faddExtraItem.serial_no.errors}"
+                                    type="text" formControlName="serial_no" 
+                                    (click)="showExtraItemList(false)"
+                                    class="form-control additionalItemsinput mx-auto"
+                                    placeholder="Serial number" />
+                            </div>
+                            <div class="inner text-center recevingInput wd10percentFull">
+                                <input  (keypress)="numberOnly($event)"
+                                    [ngClass]="{'bounce inputError':addExtraSubmitted && faddExtraItem.quantity.errors}"
+                                    type="text" formControlName="quantity"
+                                    (click)="showExtraItemList(false)"
+                                    class="form-control additionalItemsinput mx-auto" placeholder="0" />
+                            </div>
+                            <div class="inner wd12percent text-center">
+                                <a (click)="addExtraItem()" href="JavaScript:void(0)"
+                                    class="addAdditionalItemsBtn">Add</a>
+                            </div>
+                        </li>
+                    </form>
+                    <li class="height34px noHovereffect" *ngFor="let extra of extraItems; let in = index;">
+                        <div class="inner wd30percent">
+                            <span tooltip="{{extra?.productName}}" placement="bottom" class="textOverflow maxWidth160 color000 dBlock text-left">{{extra?.productName}}</span>
+                        </div>
+                        <div class="inner wd12percent text-center">
+                            <span 
+                                class="dBlock text-center color000 dBlock">{{extra?.supplier_sku ||'N/A'}}</span>
+                        </div>
+                        <div class="inner wd20percent text-center labelFilter invNumStoreName reasonDrop">
+                            <span *ngIf="!extra?.editExtra"
+                                class="dBlock text-center color000 dBlock">{{extra?.reason}}</span>
+                    <div  *ngIf="extra?.editExtra" [ngClass]="{'bounce inputError':addExtraSubmitted && faddExtraItem.reason.errors}" class="btn-group" dropdown>
+                                    <button id="button-animated" dropdownToggle type="button"
+                                        class="btn dropdown-toggle statusFilter mainPOStatusFilter"
+                                        aria-controls="dropdown-animated">{{extra?.reason |titlecase}}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <div class="filterDrop">
+                                        <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu supplierFilterUl">
+                                            <li *ngFor="let reason of allReasons;" (click)="setResaonforAdd(reason.reason_name,in)">
+                                                <a class="dropdown-item">{{reason?.reason_name |titlecase}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="inner wd15percent text-center">
+                            <span *ngIf="!extra?.editExtra"
+                                class="color000  dBlock">{{extra?.serial_no}}</span>
+                            <input *ngIf="extra?.editExtra"  (keypress)="omitSpeChar($event)"
+                                [ngClass]="{'bounce inputError':extraItems[in].serial_no==''}"
+                                type="text" [(ngModel)]="extraItems[in].serial_no"
+                                class="form-control additionalItemsinput mx-auto" placeholder="serial number" />
+                        </div>
+                        <div class="inner text-center recevingInput wd10percentFull">
+                            <span *ngIf="!extra?.editExtra"
+                                class="color000 dBlock">{{extra?.quantity}}</span>
+                            <input *ngIf="extra?.editExtra" (keypress)="numberOnly($event)"
+                                [ngClass]="{'bounce inputError':extraItems[in].quantity==0}"
+                                type="text" [(ngModel)]="extraItems[in].quantity"
+                                class="form-control additionalItemsinput mx-auto" placeholder="0" />
+                        </div>
+                        <div class="inner wd12percent text-center extraAction">
+                            <a *ngIf="!extra?.editExtra" href="JavaScript:void(0)"
+                                (click)="editExtraItems(in)"
+                                class="color808080 font12 m0 dInlineBlock">
+                                <i class="far fa-edit"></i>
+                            </a>
+                            <a *ngIf="extra?.editExtra" (click)="updateExtraItems(in)"
+                                href="JavaScript:void(0)"
+                                class="color808080 font12 m0 dInlineBlock">
+                                <i class="far fa-save"></i>
+                            </a>
+                            <a (click)="openRemoveProductModel(open_removeproduct,'custModal wd250',in,false);"
+                                href="JavaScript:void(0)"
+                                class="color808080 font12 m0 dInlineBlock pl10">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                            
+                        </div>
+                    </li> -->
+                    <li  (dblclick)="addExtraItem(product)" *ngFor="let product of allProducts  | listFilterByFieldName: searchProduct : productSearchString; let i = index" class="" > 
+                        <div class="inner wd11percent">
+                        	<!-- Simple service -->
+                            <span *ngIf="!product.is_product && !product.is_bundle_product" class="countBox text-center bgBlack">
+                                <i class="icon-service"></i>
+                            </span>
+                            <!-- Bundle Service -->
+                            <span *ngIf="!product.is_product && product.is_bundle_product" class="countBox text-center bgBlack">
+                                <i class="icon-bundle_service"></i>
+                            </span>
+                            <!-- Product -->
+                            <span [ngClass]="{'bgcolorRed': product.ProductStockPrice[0]?.qty_available <= 0 ,
+                            'bgcolorOrange': product.ProductStockPrice[0]?.qty_available <= product.ProductStockPrice[0]?.alert_quantity && product.ProductStockPrice[0]?.qty_available > 0 , 
+                            'bgcolorGreen': product.ProductStockPrice[0]?.qty_available >= product.ProductStockPrice[0]?.alert_quantity } "
+                             *ngIf="product.is_product && !product.is_bundle_product" class="countBox text-center">
+                                {{product?.ProductStockPrice[0]?.qty_available}}
+                            </span>
+                             <!-- Bundle product -->
+                             <span *ngIf="product.is_product && product.is_bundle_product && !product.bundle_products?.is_manufactured_qty" class="countBox text-center bgBlack">
+                                <i class="icon-bundle_product"></i>
+                            </span>
+                            <!--Manfacture Bundle product -->
+                            <span *ngIf="product.is_product && product.is_bundle_product && product.bundle_products?.is_manufactured_qty" class="countBox text-center bgBlack">
+                                <i class="icon-manufacture_bundle_product"></i>
+                            </span>
+                        </div>
+                        <div class="inner wd11percent">
+                            <!-- Simple service -->
+                            <span *ngIf="!product.is_product && !product.is_bundle_product" class="countBox text-center bgBlack">
+                                <i class="icon-service"></i>
+                            </span>
+                            <!-- Bundle Service -->
+                            <span *ngIf="!product.is_product && product.is_bundle_product" class="countBox text-center bgBlack">
+                                <i class="icon-bundle_service"></i>
+                            </span>
+                            <!-- Product -->
+                            <span *ngIf="product.is_product && !product.is_bundle_product" class="countBox text-center bgBlack">
+                                {{product?.ProductStockPrice[0]?.order_qty}}
+                            </span>
+                             <!-- Bundle product -->
+                             <span *ngIf="product.is_product && product.is_bundle_product && !product.bundle_products?.is_manufactured_qty" class="countBox text-center bgBlack">
+                                <i class="icon-bundle_product"></i>
+                            </span>
+                            <!--Manfacture Bundle product -->
+                            <span *ngIf="product.is_product && product.is_bundle_product && product.bundle_products?.is_manufactured_qty" class="countBox text-center bgBlack">
+                                <i class="icon-manufacture_bundle_product"></i>
+                            </span>
+                        </div>
+                        <div class="inner wd11percent">
+                            <!-- Simple service -->
+                            <span *ngIf="!product.is_product && !product.is_bundle_product" class="countBox text-center bgBlack">
+                                <i class="icon-service"></i>
+                            </span>
+                            <!-- Bundle Service -->
+                            <span *ngIf="!product.is_product && product.is_bundle_product" class="countBox text-center bgBlack">
+                                <i class="icon-bundle_service"></i>
+                            </span>
+                            <!-- Product -->
+                            <span *ngIf="product.is_product && !product.is_bundle_product" class="countBox text-center bgcolorcolorPurple">
+                                {{product?.incoming_item}}
+                            </span>
+                            <!-- Bundle product -->
+                            <span *ngIf="product.is_product && product.is_bundle_product && !product.bundle_products?.is_manufactured_qty" class="countBox text-center bgBlack">
+                                <i class="icon-bundle_product"></i>
+                            </span>
+                            <!--Manfacture Bundle product -->
+                            <span *ngIf="product.is_product && product.is_bundle_product && product.bundle_products?.is_manufactured_qty" class="countBox text-center bgBlack">
+                                <i class="icon-manufacture_bundle_product"></i>
+                            </span>
+                        </div>
+                        <div class="inner wd50percent">
+                            <span class="text-left textOverflow maxWidth290" tooltip="{{product?.product_name}}" placement="bottom">{{product?.product_name}}</span>
+                        </div>
+                        <div class="inner wd11percent posRelative">
+                            <span class="text-center priceBox">{{product?.ProductStockPrice[0]?.sell_price_inc_tax}}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="listCount">
+            <span>Total: <b>{{extraItems.length}}</b></span>
+        </div>
+        <div class="bottomActionBar wd100percent">
+            <div class="dtableCell wd90Percent valignMiddle">
+                <div class="setTimerBottom dInlinetable valignMiddle wd20percent pr5">
+                    <label class="color000 fontPoppin fontSemiBold pr5 dInlineBlock font12 m0">Timer:</label>
+                    <input type="text" [(ngModel)]="alertTime" (keypress)="customTimeOnly($event)" class="form-control cust-field font12 dInlineBlock borderColorcbcbcb borderRadius5" placeholder="00:00" />
+                </div>
+                <div class="setActionBottom dInlinetable valignMiddle wd45percent pr5">
+                    <label class="color000 fontPoppin fontSemiBold pr5 dInlineBlock font12 m0">Action:</label>
+                    <input type="text" [(ngModel)]="alertAction"  class="form-control cust-field font12 dInlineBlock borderColorcbcbcb borderRadius5" placeholder="Write the alert action..." />
+                </div>
+                <div class="setBtnBottom dInlinetable valignMiddle wd20percent" [ngClass]="{'disableDiv': alertTime.length<5 || alertAction=='' }">
+                    <a (click)="openModal(open_Alert, 'custModal wd500')" href="JavaScript:void(0)" class="setAlertbtn"><i class="fas fa-bell pr5"></i>Set alert</a>
+                </div>
+            </div>
+            <div class="dtableCell wd10percent valignMiddle text-right">
+                <div class="btn-group settingBtn">
+                    <a class="innerStatusBtns dInlineBlock minWd30px p0 font16 height25px lineHeight25px" href="JavaScript:void(0)"
+                        (click) = "goToComponent('device-checkin')">
+                        <i class="fas fa-tasks"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #open_removeExtraProduct>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30">
+            <i class="icon-archive font42 color000"></i>
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000">Do you want to <br> remove this product?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Yes, remove it</button>
+        <button (click)="closeModel()" type="button" class="btn modalSaveBtnReceive fontPoppin borderRadius20">No, go back</button>
+    </div>
+</ng-template>
+<ng-template #open_Alert>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <i class="fas fa-bell font64 color000 mb20"></i>
+            <h2 class="fontPoppin font20 fontSemiBold color000">You have set an alert</h2>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt10 pb10 pr40">
+        <div class="alertBox text-center">
+            <h2 class="fontPoppin font20 fontRegular color000 mb10">Your alert will ring at <span class="fontBold">{{alertTime}}</span></h2>
+            <h2 class="fontPoppin font20 fontRegular color000 mb10">Order -<span class="fontBold">{{'#'+transactionKeepingUnit}}</span></h2>
+            <h2 class="fontPoppin font20 fontRegular color000 mb10">Action: <span class="fontBold">{{alertAction}}</span></h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="closeModel()" (click)="createTransactionCustomerAlertFun()" type="button" class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Save</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_removeproduct>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center pt15">
+            <i class="icon-archive font42 color000"></i>
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000">Do you want to <br> remove this
+                product?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button (click)="removeProduct()" type="button"
+            class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite wd140px">Yes,
+            remove it</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font10 fontLato fontSemiBold mx-auto p0">Cancel</button>
+    </div>
+</ng-template>

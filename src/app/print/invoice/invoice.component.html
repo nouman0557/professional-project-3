@@ -1,0 +1,133 @@
+<div class="invoice" *ngFor="let invoice of invoiceIds; let i = index">
+    <h1>Invoice Num. {{ invoice }}</h1>
+    Amount: {{ (invoiceDetails[i] | async)?.amount }}
+    <div class="print_box">
+        <div class="top">
+            <div class="left">
+                <div class="title">
+                    <h2>Invoice</h2>
+                    <p>1acf-Inovice</p>
+                    <p>06/07/2020</p>
+                </div>
+            </div>
+            <div class="right">
+                <div class="logo">
+                    <h2><span>Mr</span>Repair IT</h2>
+                </div>
+            </div>
+        </div>
+        <div class="mid">
+            <div class="left">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Store</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Rafay'S Store</td>
+                        </tr>
+                        <tr>
+                            <td>House 1</td>
+                        </tr>
+                        <tr>
+                            <td>0345-5551890</td>
+                        </tr>
+                        <tr>
+                            <td>rafay@gamail.com</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="right">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Abdul rafay</td>
+                        </tr>
+                        <tr>
+                            <td>House 1</td>
+                        </tr>
+                        <tr>
+                            <td>03455555555</td>
+                        </tr>
+                        <tr>
+                            <td>rafay@gmail.com</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="cart-list">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Item Tax</th>
+                        <th>Item Discount</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="inner">Product Name
+                                <span>Description</span>
+                                <span></span>
+                            </div>
+                        </td>
+                        <td>Quantity</td>
+                        
+                        <td><i class="fa fa-times"></i></td>
+                        <td>0</td>
+                        <td>1000.00</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Gift Card</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>1000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="bottom">
+            <div class="left">
+                <label>Notes</label>
+                <div class="notes-box">Notes</div>
+            </div>
+            <div class="right">
+                <table class="table">
+                    <tbody>
+                        <tr colspan="2">
+                            <td>Order Disscount:</td>
+                            <td>100</td>
+                        </tr>
+                        <tr colspan="2">
+                            <td>Subtotal:</td>
+                            <td>10000</td>
+                        </tr>
+                        <tr  colspan="2">
+                            <td>Charge Taxes:</td>
+                            <td>$0.00</td>
+                        </tr>
+                        
+                        <tr colspan="2">
+                            <td>Total</td>
+                            <td>{{totalBill | currency}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

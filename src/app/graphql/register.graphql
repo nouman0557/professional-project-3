@@ -1,0 +1,89 @@
+# import './author.fragment.graphql'
+
+query AllCureencies {
+  currency {
+    _id
+    code
+    country
+    currency
+  }
+}
+
+query checkUserEmail($email: String!) {
+  checkUserEmail(email: $email)
+}
+
+mutation createBusiness($business: businesInput) {
+  createBusiness(input: $business) {
+    _id
+  }
+}
+
+query checkBusinessSystemName($name: String!) {
+  checkBusinessSystemName(business_system_name: $name) {
+    business_system_name
+  }
+}
+
+query checkBusinessUniqueCode($code: String!) {
+  checkBusinessUniqueCode(unique_code: $code) {
+    unique_code
+  }
+}
+
+mutation uploadFile($file: Upload!, $business_id: String!) {
+  uploadFile(file: $file, business_id: $business_id)
+}
+
+mutation createEmailOTP($input: emailOtpInput) {
+  createEmailOTP(input: $input) {
+    _id
+    otp_code
+  }
+}
+
+mutation verifyEmailOTP($input: emailVerifyOtpInput) {
+  verifyEmailOTP(input: $input) {
+    verified
+  }
+}
+
+mutation createOTP($input: phoneOtpInput) {
+  createOTP(input: $input) 
+}
+
+mutation verifyOTP($input: phoneVerifyOtpInput) {
+  verifyOTP(input: $input) 
+}
+
+query getCityStateTax($input: ZipCodeTaxInput) {
+  getCityStateTax(input:$input) {
+    _id
+    zipCode
+    Country {
+      _id
+      name
+      short_name
+      identification_types
+    }
+    State {
+      state_name
+    }
+    City {
+      city_name
+    }
+    tax {
+      total
+    }
+  }
+}
+
+query checkStoreNickName($store_nick_name: String!) {
+  checkStoreNickName(store_nick_name: $store_nick_name )
+}
+
+query getTaxByLocationId($businessLocationId: ID!){
+  BusinessLocationById(businessLocationId: $businessLocationId){
+    sales_tax
+  }
+}

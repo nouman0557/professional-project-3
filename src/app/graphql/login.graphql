@@ -1,0 +1,144 @@
+query checkBusiness($business: String!) {
+  checkBusiness(business_system_name: $business) {
+    business_system_name
+    _id
+    date_format
+  }
+}
+
+query userBusinessLocations {
+  userBusinessLocations {
+    address_1
+    _id
+    state
+    phone
+    city
+    email
+    store_name
+    store_legal_name
+    logo
+    location_keeping_unit
+  }
+}
+
+query usersWithRespectToBusinesses($ID: ID!) {
+  usersWithRespectToBusinesses(businessId: $ID) {
+    first_name
+    last_name
+    email
+    id
+    avatar_location
+    status
+    user_keeping_unit
+  }
+}
+
+mutation login($Id: ID!, $pass: String!) {
+  login(id: $Id, password: $pass) {
+    token
+    user {
+      email
+      first_name
+      last_name
+      id
+      avatar_location
+    }
+  }
+}
+
+query cashRegistersOfLocation($ID: ID!) {
+  cashRegistersOfLocation(locationId: $ID) {
+    name
+    _id
+    cash_register_keeping_unit
+    opening_amount
+    closing_amount
+    closed_at
+    status
+    location_id
+  }
+}
+
+mutation userClockOutBeforeLogOut($is_check_clockIn: Boolean!) {
+  userClockOutBeforeLogOut(is_check_clockIn: $is_check_clockIn)
+}
+
+query forgetBusinessUrl($input: forgetBusinessInput) {
+  forgetBusinessUrl(input: $input)
+}
+
+mutation verifyforgetBusinessUrl($input: verifyforgetBusinessUrlInput) {
+  verifyforgetBusinessUrl(input: $input) {
+    _id
+    business_system_name
+    logo
+    date_format
+  }
+}
+
+mutation userForgetPassword($email: String!, $method: AllowMethodPhoneVerify) {
+  userForgetPassword(email: $email, method: $method)
+}
+
+mutation userPasswordReset($input: PasswordResetInput) {
+  userPasswordReset(input: $input)
+}
+
+query getUserByEmail($email: String! , $businessId: ID!) {
+  getUserByEmail(email: $email,businessId : $businessId) {
+    id
+    email
+    first_name
+    last_name
+    phone
+    avatar_location
+    status
+  }
+}
+
+mutation loginWithEmail($email: String! , $password: String!, $businessId: ID!) {
+  loginWithEmail(email: $email , password: $password,businessId:$businessId) {
+    token
+    user {
+      email
+      first_name
+      last_name
+      avatar_location
+    }
+  }
+}
+
+query forgetEmailWithPhone($businessName: String! , $phoneNumber: String!) {
+  forgetEmailWithPhone(businessName: $businessName , phoneNumber: $phoneNumber) 
+}
+
+mutation VerifyforgetEmailWithPhone($businessName: String! , $phoneNumber: String! , $code: String!) {
+  VerifyforgetEmailWithPhone(businessName: $businessName , phoneNumber: $phoneNumber , code: $code) {
+    email
+    first_name
+    last_name
+    phone
+    avatar_location
+    status
+  }
+}
+
+mutation VerifyuserForgetPassword($code: String! , $email: String! , $method: AllowMethodPhoneVerify) {
+  VerifyuserForgetPassword(code: $code , email: $email , method: $method)
+}
+
+ mutation userLoginByVerification($email:String!,$code:String!,$method:AllowMethodPhoneVerify,$businessId:ID!){
+ userLoginByVerification(
+ email: $email
+ code: $code
+   method:$method
+ businessId:$businessId
+ ) {
+ token
+ user{
+ email
+ first_name
+ last_name
+ }
+ }
+ }

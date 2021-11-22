@@ -1,0 +1,473 @@
+<footer class="footer-outer text-center">
+    <div class="footer-wrapper">
+        <div class="footer-overlay"></div>
+        <!-- <div *ngIf="permissionBox" class="permissionOverlay"></div> -->
+        <div *ngIf="pinBox || clockedIn || clockedOut" class="bgDarkOverlay"></div>
+        <div class="footer-inner">
+            <div class="left">
+                <a (click)="openChatBox()" href="javascript:void(0);"><img src="../../../assets/images/footer-help.png" width="110" alt=""></a>
+            </div>
+            <div class="mid">
+                <div class="right">
+                    <div class="login-buttons">
+                        <div class="click-wrap inline-btn dropdown posRel">
+                            <a (click)="openpinBox()" href="javascript:void(0);" class="parallelogram click-btn dropbtn"
+                                [ngClass]="{'bgDarkOnbtn':pinBox || clockedIn || clockedOut}">
+                                <span class="skew-fix">Clock In/ Out</span>
+                            </a>
+                            <!-- <div class="permissionCheck" *ngIf="permissionBox">
+                                <input id="p1" class="checkbox-custom" name="p1" type="checkbox">
+                                <label for="p1" class="checkbox-custom-label"></label>
+                            </div> -->
+                            <div class="dropdown-content pinuser current bgDarkOnbtnBox" *ngIf="pinBox"
+                                style="display: block;">
+                                <div class="closeIcon"><a href="javascript:void(0);" (click)="openpinBox()"><img
+                                            src="../../../assets/images/close-icon.png"></a></div>
+                                <div class="top">
+                                    <h2>Clock in/out</h2>
+                                    <p>Enter your user PIN Code.</p>
+                                </div>
+                                <div class='mid'>
+                                    <div class="inputFieldBox">
+                                        <input #userPinfield type="password" (keyup.enter)="verifyPinCode()" name="Pin"
+                                            [(ngModel)]="Pin" class="input-pin" id="input" value="input" autofocus />
+                                        <span class="fa fa-fw fa-eye field-icon"
+                                            (click)="togglePassword(userPinfield,$event)"></span>
+                                    </div>
+                                    <!-- <a href="javascript:void(0);" class="forgetLink">Forgot your PIN User?</a> -->
+                                </div>
+                                <div class='bottom'>
+                                    <div class="calculator">
+                                        <div class="buttons">
+                                            <div class="leftPanel">
+                                                <div class="numbers">
+                                                    <div (click)="handleInput('1')">1</div>
+                                                    <div (click)="handleInput('2')">2</div>
+                                                    <div (click)="handleInput('3')">3</div>
+                                                </div>
+                                                <div class="numbers">
+                                                    <div (click)="handleInput('4')">4</div>
+                                                    <div (click)="handleInput('5')">5</div>
+                                                    <div (click)="handleInput('6')">6</div>
+                                                </div>
+                                                <div class="numbers">
+                                                    <div (click)="handleInput('7')">7</div>
+                                                    <div (click)="handleInput('8')">8</div>
+                                                    <div (click)="handleInput('9')">9</div>
+                                                </div>
+                                                <div class="numbers">
+                                                    <div (click)="deleteOndeDigit()" class="action"><img
+                                                            src="../../../assets/images/calc-left.png" alt=""></div>
+                                                    <div (click)="handleInput('0')">0</div>
+                                                    <div class="action" (click)="verifyPinCode()"><img
+                                                            src="../../../assets/images/calc-right.png" alt=""></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf='riseAndShine' class="riseAndShine">
+                                    <div class="box-clockInPin p15 borderRadius10 padding15px bgWhite">
+                                        <img src="../../../../assets/images/teaCup.png" alt="" width="32">
+                                        <h2 class="color000 font16 fontPoppin fontSemiBold mb5 mt5 notextTransform">Rise
+                                            and shine!</h2>
+                                        <p class="color808080 lineHeight1point2 font10">clock in to start your day.
+                                            Don't waste any minute.
+                                        </p>
+                                        <button (click)="closeClockInModel()" type="button"
+                                            class="btn bgDarkOnbtnBox skipBtn" data-dismiss="modal">Skip</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="clockedIn" class="dropdown-content clockin bgDarkOnbtnBox"
+                                style="display: block;">
+                                <div class="closeIcon"><a href="javascript:void(0);" (click)="openpinBox()"><img
+                                            src="../../../assets/images/close-icon.png"></a></div>
+                                <div class="top">
+                                    <h2>Clock in/out</h2>
+                                </div>
+                                <div class='mid'>
+                                    <p>Welcome</p>
+                                    <h3>{{userName | titlecase}}</h3>
+                                </div>
+                                <div class='bottom'>
+                                    <a (click)="userClockIn()" id="clock-in-btn"><span>Clock in Now</span></a>
+                                </div>
+                            </div>
+                            <div *ngIf="clockedOut" class="dropdown-content clockout bgDarkOnbtnBox"
+                                style="display: block;">
+                                <div class="closeIcon"><a href="javascript:void(0);" (click)="openpinBox()"><img
+                                            src="../../../assets/images/close-icon.png"></a></div>
+                                <div class="top">
+                                    <h2>Clock in/out</h2>
+                                </div>
+                                <div class='mid'>
+                                    <p>You are already clocked in</p>
+                                    <h3>{{userName | titlecase}}</h3>
+                                </div>
+                                <div class="mid-down">
+                                    <h4>{{ time }}</h4>
+                                    <p>Hours you’ve been clocked in.</p>
+                                </div>
+                                <div class='bottom'>
+                                    <a href="javascript:void(0);" (click)="userClockOutNow()"
+                                        id="clock-out-btn"><span>Clock Out Now</span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="click-wrap inline-btn posRel">
+                            <a class="parallelogram click-btn" href="javascript:void(0);"
+                                (click)="openModal(open_integration, 'box-integrations')">
+                                <span class="skew-fix">Integrations</span>
+                            </a>
+                            <!-- <div class="permissionCheck" *ngIf="permissionBox">
+                                <input id="p2" class="checkbox-custom" name="p2" type="checkbox">
+                                <label for="p2" class="checkbox-custom-label"></label>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <p>Copyright © {{year}} by <a>Tech Bar.</a> All rights reserved.</p>
+            </div>
+            <div class="right">
+                <div class="login-buttons">
+                    <div class="click-wrap inline-btn posRel">
+                        <a class="parallelogram bg click-btn" href="javascript:void(0);">
+                            <span class="skew-fix">Screenshot</span>
+                        </a>
+                        <!-- <div class="permissionCheck" *ngIf="permissionBox">
+                            <input id="p3" class="checkbox-custom" name="p3" type="checkbox">
+                            <label for="p3" class="checkbox-custom-label"></label>
+                        </div> -->
+                    </div>
+                    <div class="click-wrap inline-btn posRel">
+                        <a class="parallelogram bg click-btn">
+                            <span class="skew-fix">Record Screen</span>
+                        </a>
+                        <!-- <div class="permissionCheck" *ngIf="permissionBox">
+                            <input id="p4" class="checkbox-custom" name="p4" type="checkbox">
+                            <label for="p4" class="checkbox-custom-label"></label>
+                        </div> -->
+                    </div>
+                    <!-- <div class="click-wrap inline-btn" [ngClass]="{'zIndex9999 posRel' : permissionBox}">
+                        <a *ngIf="!permissionBox" (click)="openModal(permissionSet, 'custModal wd400')" href="javascript:void(0);" class="parallelogram bg click-btn">
+                            <span class="skew-fix">Set Permissions</span>
+                        </a>
+                        <a *ngIf="permissionBox" (click)="savePermissionBox()" href="javascript:void(0);" class="parallelogram bg click-btn">
+                            <span class="skew-fix">Save Permissions</span>
+                        </a>
+                    </div> -->
+                </div>
+            </div>
+            <div class="inner-calc posRel">
+                <!-- <a href="javascript:void(0);" (click)="openCalculator(open_calculator, 'box-calculator')"> -->
+                <a href="javascript:void(0);" (click)="openCalculatorBox()">
+                    <img src="../../../assets/images/calculator-icon.png" width="35" alt="">
+                </a>
+                <!-- <div class="permissionCheck" *ngIf="permissionBox">
+                    <input id="p5" class="checkbox-custom" name="p5" type="checkbox">
+                    <label for="p5" class="checkbox-custom-label"></label>
+                </div> -->
+            </div>
+            <div ngDraggable [inBounds]="true" *ngIf="boxCalculator" class="box-calculator">
+                <div class="dragableArea">
+                    <button type="button" class="close" (click)="closeCalculatorBox()">
+                        <i class="icon-close"></i>
+                    </button>
+                </div>
+                <div id='calc-contain'>
+                    <form autocomplete="off" name="calculator">
+                        <input type="text" autoFocus appTwoDigitDecimaNumber name="answer" />
+                        <input class="bgGreen" type="button" value=" / " onclick="calculator.answer.value += '/'" />
+                        <input class="bgGreen" type="button" value=" x " onclick="calculator.answer.value += '*'" />
+                        <input class="bgGreen" type="button" value=" - " onclick="calculator.answer.value += '-'" />
+                        <input class="bgGreen" type="button" value=" + " onclick="calculator.answer.value += '+'" />
+                        <br>
+                        <input type="button" value=" 7 " onclick="calculator.answer.value += '7'" />
+                        <input type="button" value=" 8 " onclick="calculator.answer.value += '8'" />
+                        <input type="button" value=" 9 " onclick="calculator.answer.value += '9'" />
+                        <input type="button" value=" Del " onclick="calculator.answer.value += ''" />
+                        <br>
+                        <input type="button" value=" 4 " onclick="calculator.answer.value += '4'" />
+                        <input type="button" value=" 5 " onclick="calculator.answer.value += '5'" />
+                        <input type="button" value=" 6 " onclick="calculator.answer.value += '6'" />
+                        <input type="button" value=" AC " onclick="calculator.answer.value = ''" />
+                        <br>
+                        <input class="custPos" type="button" value=" 1 " onclick="calculator.answer.value += '1'" />
+                        <input class="custPos" type="button" value=" 2 " onclick="calculator.answer.value += '2'" />
+                        <input class="custPos" type="button" value=" 3 " onclick="calculator.answer.value += '3'" />
+                        <br>
+                        <input class="custPos" type="button" value=" . " onclick="calculator.answer.value += '.'" />
+                        <input class="wd122 custPos" type="button" value=" 0 "
+                            onclick="calculator.answer.value += '0'" />
+                        <input class="bgGreen custPosLast" type="button" value=" = "
+                            onclick="calculator.answer.value = eval(calculator.answer.value)" />
+                    </form>
+                </div>
+            </div>
+            <div class="chatBox" *ngIf="boxChat" [ngClass]="{'is-visible':boxChat}">
+                <div class="chat_header">
+                    <div class="chat_option" [ngClass]="{'isFaq':boxFaqDetail}">
+                        <a href="javascript:void(0);" class="backBtn" *ngIf="boxFaqDetail" (click)="backtoFaqMain()"><i class="fas fa-chevron-left"></i></a>
+                        <div class="header_img">
+                            <img src="../../../assets/images/tb-icon.png" alt="">
+                        </div>
+                        <span class="chat_headText">Techbar<i>Support Team</i></span>
+                        <div class="callActions" *ngIf="boxConvoIcon">
+                            <a href="javascript:void(0);" class="videoCall"><i class="fas fa-video"></i></a>
+                            <a href="javascript:void(0);" class="audioCall"><i class="icon-telephone"></i></a>
+                        </div>
+                        <!-- <span (click)="closechatBox()" class="close"><i class="icon-close"></i></span> -->
+                    </div>
+                </div>
+                <tabset #staticTabs>
+                    <tab heading="FAQs" tabOrder="1">
+                        <div class="chat_body">
+                            <div class="chat_category" *ngIf="boxFaqMain" >
+                                <p>What would you like to talk about?</p>
+                                <ul>
+                                    <li (click)="openFaqDetail()">Tech</li>
+                                    <li (click)="openFaqDetail()">Sales</li>
+                                    <li (click)="openFaqDetail()">Stock</li>
+                                    <li (click)="openConvo()">other</li>
+                                </ul>
+                            </div>
+                            <div class="chat_category" *ngIf="boxFaqDetail">
+                                <p>What type of issue you faced in sales?</p>
+                                <ul>
+                                    <li>Create a sale</li>
+                                    <li>Add customer</li>
+                                    <li>Add device</li>
+                                    <li (click)="openConvo()">other</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </tab>
+                    <tab heading="Conversations" (click)="openConvo()" id="boxConvoid" tabOrder="2">
+                        <div class="chat_conversion chat_converse">
+                           <ul>
+                                <li class="supportMsg">
+                                    <span>Hey there! Any question?</span>
+                                    <span class="chatTime">12:05 UTC</span>
+                                </li>
+                                <li class="userMsg">
+                                    <span>Hello!</span>
+                                    <span class="chatTime">12:10 UTC</span>
+                                </li>
+                                <li class="supportMsg">
+                                    <span>Hey! Would you like to talk sales, support, or anyone?</span>
+                                    <span class="chatTime">12:11 UTC</span>
+                                </li>
+                                <li class="userMsg">
+                                    <span>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                    <span class="chatTime">12:12 UTC</span>
+                                </li>
+                           </ul>
+                        </div>
+                        <div class="fab_field">
+                            <a id="fab_camera" class="fab"><i class="icon-more"></i></a>
+                            <a id="fab_send" class="fab"><i class="fa fa-paper-plane"></i></a>
+                            <textarea id="chatSend" name="chat_message" placeholder="Send a message"
+                                class="chat_field chat_message"></textarea>
+                        </div>
+                    </tab>
+                </tabset>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+<ng-template #open_integration>
+    <div class="modal-header">
+        <h2>Integrations</h2>
+    </div>
+    <div class="modal-body">
+        <div class="wrapper">
+            <div class="int">
+                <div class="inner">
+                    <div class="top">
+                        <img src="../../../../assets/images/int-facebook.png" alt="">
+                    </div>
+                    <div class="bottom">
+                        <a href="javascript:void(0);">Send message</a>
+                        <a href="javascript:void(0);">Connect</a>
+                    </div>
+                </div>
+            </div>
+            <div class="int">
+                <div class="inner">
+                    <div class="top">
+                        <img src="../../../../assets/images/int-whatsapp.png" alt="">
+                    </div>
+                    <div class="bottom">
+                        <a href="javascript:void(0);">Send message</a>
+                        <a href="javascript:void(0);" class="active">Connected</a>
+                    </div>
+                </div>
+            </div>
+            <div class="int">
+                <div class="inner">
+                    <div class="top">
+                        <img src="../../../../assets/images/int-gmail.png" alt="">
+                    </div>
+                    <div class="bottom">
+                        <a href="javascript:void(0);">Send message</a>
+                        <a href="javascript:void(0);">Connect</a>
+                    </div>
+                </div>
+            </div>
+            <div class="int">
+                <div class="inner">
+                    <div class="top">
+                        <img src="../../../../assets/images/int-ringcentral.png" alt="">
+                    </div>
+                    <div class="bottom">
+                        <a href="javascript:void(0);">Call customer</a>
+                        <a href="javascript:void(0);">Connect</a>
+                    </div>
+                </div>
+            </div>
+            <div class="int">
+                <div class="inner">
+                    <div class="top">
+                        <img src="../../../../assets/images/int-jive.png" alt="">
+                    </div>
+                    <div class="bottom">
+                        <a href="javascript:void(0);">Call customer</a>
+                        <a href="javascript:void(0);">Connect</a>
+                    </div>
+                </div>
+            </div>
+            <div class="int">
+                <div class="inner">
+                    <div class="top">
+                        <img src="../../../../assets/images/int-yelp.png" alt="">
+                    </div>
+                    <div class="bottom">
+                        <a href="javascript:void(0);">Send message</a>
+                        <a href="javascript:void(0);">Connect</a>
+                    </div>
+                </div>
+            </div>
+            <div class="int">
+                <div class="inner">
+                    <div class="top">
+                        <img src="../../../../assets/images/int-mailchimp.png" alt="">
+                    </div>
+                    <div class="bottom">
+                        <a href="javascript:void(0);">Send email</a>
+                        <a href="javascript:void(0);">Connect</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_calculator>
+    <div class="modal-header dragableArea">
+        <button type="button" class="close" (click)="closeModel()">
+            <img src="../../../../assets/images/box-close-icon.png" alt="" width="10">
+            <img src="../../../../assets/images/box-close-icon-hover.png" class="hoverimg" alt="" width="10">
+        </button>
+    </div>
+    <div class="modal-body">
+        <div id='calc-contain'>
+            <form autocomplete="off" name="calculator">
+                <input type="text" name="answer" />
+                <input class="bgGreen" type="button" value=" / " onclick="calculator.answer.value += '/'" />
+                <input class="bgGreen" type="button" value=" x " onclick="calculator.answer.value += '*'" />
+                <input class="bgGreen" type="button" value=" - " onclick="calculator.answer.value += '-'" />
+                <input class="bgGreen" type="button" value=" + " onclick="calculator.answer.value += '+'" />
+                <br>
+                <input type="button" value=" 7 " onclick="calculator.answer.value += '7'" />
+                <input type="button" value=" 8 " onclick="calculator.answer.value += '8'" />
+                <input type="button" value=" 9 " onclick="calculator.answer.value += '9'" />
+                <input type="button" value=" Del " onclick="calculator.answer.value += ''" />
+                <br>
+                <input type="button" value=" 4 " onclick="calculator.answer.value += '4'" />
+                <input type="button" value=" 5 " onclick="calculator.answer.value += '5'" />
+                <input type="button" value=" 6 " onclick="calculator.answer.value += '6'" />
+                <input type="button" value=" AC " onclick="calculator.answer.value = ''" />
+                <br>
+                <input class="custPos" type="button" value=" 1 " onclick="calculator.answer.value += '1'" />
+                <input class="custPos" type="button" value=" 2 " onclick="calculator.answer.value += '2'" />
+                <input class="custPos" type="button" value=" 3 " onclick="calculator.answer.value += '3'" />
+                <br>
+                <input class="custPos" type="button" value=" . " onclick="calculator.answer.value += '.'" />
+                <input class="wd122 custPos" type="button" value=" 0 " onclick="calculator.answer.value += '0'" />
+                <input class="bgGreen custPosLast" type="button" value=" = "
+                    onclick="calculator.answer.value = eval(calculator.answer.value)" />
+
+            </form>
+        </div>
+    </div>
+</ng-template>
+<ng-template #open_signIn>
+    <div class="modal-header"></div>
+    <div class="modal-body" style="padding:15px !important;">
+        <img src="../../../../assets/images/teaCup.png" alt="" width="32">
+        <h2 class="color000 font16 fontPoppin fontSemiBold mb5 mt5 notextTransform">Rise and shine!</h2>
+        <p class="color808080 lineHeight1point2">clock in to start your day. Don't waste any minute.
+        </p>
+        <button (click)="closeClockInModel()" type="button" class="btn bgDarkOnbtnBox skipBtn"
+            data-dismiss="modal">Skip</button>
+    </div>
+    <!-- <div class="modal-footer">
+        <button (click)="closeClockInModel()"  type="button" class="bgDarkOnbtnBox" data-dismiss="modal">Skip</button>
+    </div> -->
+</ng-template>
+<ng-template #permissionSet>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <i class="fas fa-user-lock color000 font42"></i>
+            <h2 *ngIf="!selectRolesList" class="fontPoppin font20 fontSemiBold mt15 color000">Set Roles and Permissions</h2>
+            <h2 *ngIf="selectRolesList" class="fontPoppin font20 fontSemiBold mt15 color000">Select Roles</h2>
+        </div>
+    </div>
+    <div class="modal-body pl30 pr30">
+       <div class="rolesPermissionsWrapper">
+            <div *ngIf="selectRoleUser">
+                <div id="discount-cat-btn" class="btn-group dInlineBlock height30px wd100Percent">
+                    <a class="btn wd50percent font11 lineHeight28 active">Role Based</a>
+                    <a class="btn wd50percent font11 lineHeight28 notActive">User Based</a>
+                </div>
+            </div>
+            <div  *ngIf="selectRolesList" class="selectCust">
+                <div class="row">
+                    <div class="col-lg-12 centerList">
+                        <input type="radio" id="role1" name="radio-group-role">
+                        <label for="role1">Accountant</label>
+                    </div>
+                    <div class="col-lg-12 centerList">
+                        <input type="radio" id="role2" name="radio-group-role">
+                        <label for="role2">Technician</label>
+                    </div>
+                    <div class="col-lg-12 centerList">
+                        <input type="radio" id="role3" name="radio-group-role">
+                        <label for="role3">Stock Manager</label>
+                    </div>
+                    <div class="col-lg-12 centerList">
+                        <input type="radio" id="role4" name="radio-group-role">
+                        <label for="role4">Sales Manager</label>
+                    </div>
+                    <div class="col-lg-12 centerList">
+                        <input type="radio" id="role5" name="radio-group-role">
+                        <label for="role5">HR Manager</label>
+                    </div>
+                </div>
+            </div>
+       </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb30">
+        <button type="button" *ngIf="selectRoleUser" (click)="selectRolesListBtn()"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Next</button>
+        <button type="button" *ngIf="!selectRoleUser" (click)="enablePermissionBox()"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Set Permission</button>
+        <button type="button" *ngIf="selectRolesList" (click)="backtoselectRoleUser()"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Back</button>
+        <button (click)="closeModel()" type="button" class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>

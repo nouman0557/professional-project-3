@@ -1,0 +1,382 @@
+<section *ngIf="reportsMain" id="order-invoice">
+    <div class="row">
+        <div class="col-lg-12 p0">
+            <div class="existing-order-wrapper reportsWrapper text-center table-responsive">
+                <div class="top-info">
+                    <div class="left">
+                        <h2>Reports</h2>
+                    </div>
+                    <div class="right">
+                        <div class="iconActions">
+                            <a (click)="minOrder()" class="colorWhite"><i class="icon-minimized font16"></i></a>
+                            <a class="colorWhite"><i class="icon-close font16"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div id="existing-order-table_wrapper">
+                    <div class="orders-inner-list">
+                        <ul class="reportsCards">
+                            <li>
+                                <a href="JavaScript:void(0)">
+                                    <span class="topLeft"><i class="far fa-money-bill-alt font24 dBlock"></i></span>
+                                    <span class="topRight"><b>$450.00</b>Total Sales</span>
+                                    <span class="bottomCenter">
+                                        <div id="salesChart"></div>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)">
+                                    <span class="topLeft"><i class="far fas fa-chart-line font24 dBlock"></i></span>
+                                    <span class="topRight"><b>$100.00</b>Total Purchase</span>
+                                    <span class="bottomCenter">
+                                        <div id="purchaseChart"></div>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)">
+                                    <span class="topLeft"><i class="fas fa-dolly-flatbed font24 dBlock"></i></span>
+                                    <span class="topRight"><b>$200.00</b>Total Inventory</span>
+                                    <span class="bottomCenter">
+                                        <div id="inventoryChart"></div>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)">
+                                    <span class="topLeft"><i class="fas fa-receipt font24 dBlock"></i></span>
+                                    <span class="topRight"><b>$100.00</b>Total Income</span>
+                                    <span class="bottomCenter">
+                                        <div id="incomeChart"></div>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)">
+                                    <span class="topLeft"><i class="fas fa-chart-bar font24 dBlock"></i></span>
+                                    <span class="topRight"><b>$80.00</b>Total Balance</span>
+                                    <span class="bottomCenter">
+                                        <div id="balanceChart"></div>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="reportsList">
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Purchase Report</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Sales Report</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Inventory Report</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Ledger Balance</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Trail Balance Report</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Income Statement</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Bills Receivable</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Bills Payable</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Cash Book</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Bank Book</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Ledger Balance</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Income Statement</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Purchase Report</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Sales Report</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0)" (click)="gotoReportDetails()">
+                                    <span class="middleCenter">Bills Receivable</span>
+                                    <span class="bottomLeft">Total: <b>20</b></span>
+                                    <span class="bottomRight">Bottom Right</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section *ngIf="reportsDetail" id="order-invoice">
+    <div class="row">
+        <div class="col-lg-12 p0">
+            <div class="existing-order-wrapper text-center table-responsive">
+                <div class="top-info">
+                    <div class="left">
+                        <h2>Sales Report</h2>
+                    </div>
+                    <div class="right">
+                        <div class="iconActions">
+                            <a (click)="minOrder()" class="colorWhite"><i class="icon-minimized font16"></i></a>
+                            <a class="colorWhite"><i class="icon-close font16"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="cut-search-area posRelative zIndex100 dtable wd100Percent">
+                    <div class="dtableCell wd65percent text-left">
+                        <div class="dInlinetable wd50percent">
+                            <a href="JavaScript:void(0)" (click)="gotoReportMain()" class="back-cust-list">Back</a>
+                            <div class="filterLinks pOfilter newfilters ml15">
+                                <label>Filter by time:</label>
+                                <a tooltip="This Month" placement="bottom" href="JavaScript:void(0)" class="color000">
+                                    <i class="icon-today"></i>
+                                </a>
+                                <a tooltip="Set date range" placement="bottom" href="JavaScript:void(0)"  class="color000"
+                                    (click)="openModal(open_DateRange, 'custModal wd400')" >
+                                    <i class="icon-calendar_tickets"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dtableCell wd35percent text-right">
+                        <div class="dInlinetable wd80percent">
+                            <div class="search-field input-group">
+                                <input type="text" class="form-control"
+                                    placeholder="Search by name, date...">
+                                <a href="JavaScript:void(0)" class="input-group-addon">
+                                    <!-- <i *ngIf="searchOrder.value" (click)="searchOrder.reset()"
+                                        class="fas fa-times-circle"></i> -->
+                                    <i class="icon-search"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="wd5percent dInlinetable ml5 valignMiddle">
+                            <a (click)="clearAllFilters()" class="receivingIcon dInlineBlock ml5" href="JavaScript:void(0)">
+                                <i class="icon-clear_all"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div id="existing-order-table_wrapper">
+                    <!-- <div *ngIf="loadTickets" class="luna-loading"></div>
+                    <div class="empty-text">
+                        <h2><i class="fa fa-cogs" aria-hidden="true"></i>No reports available</h2>
+                    </div> -->
+                    <div class="orders-top-info">
+                        <div class="inner wd3percent allCheckbox">
+                            <span class="ml0">
+                                <input class="checkbox-custom"  id="cust-checkMain1"
+                                    name="cust-checkMain1" type="checkbox">
+                                <label class="checkbox-custom-label" for="cust-checkMain1"></label>
+                            </span>
+                        </div>
+                        <div class="inner wd10percent"><span>ID</span></div>
+                        <div class="inner wd10percent"><span>Date and time</span></div>
+                        <div class="inner wd15percent"><span>Sold By</span></div>
+                        <div class="inner wd15percent"><span>Sold To</span></div>
+                        <div class="inner wd8percent"><span>Sub Total</span></div>
+                        <div class="inner wd8percent"><span>Discount</span></div>
+                        <div class="inner wd8percent"><span>Tax</span></div>
+                        <div class="inner wd8percent"><span>Total Ammount</span></div>
+                        <div class="inner wd8percent"><span>Payment Method</span></div>
+                        <div class="inner wd7percent"><span>Actions</span></div>
+                    </div>
+                    <div class="orders-inner-list">
+                        <ul>
+                            <li class="">
+                                <div class="inner wd3percent allCheckbox">
+                                    <span class="text-left">
+                                        <input class="checkbox-custom" type="checkbox"  name="customer{{i}}"   id="customer{{i}}">
+                                        <label class="checkbox-custom-label" for="customer{{i}}"></label>
+                                    </span>
+                                </div>
+                                <div class="inner wd10percent"><span>ID-123</span></div>
+                                <div class="inner wd10percent"><span>12/Apr/2020</span></div>
+                                <div class="inner wd15percent"><span>David Jones</span></div>
+                                <div class="inner wd15percent"><span>Catherine Williams</span></div>
+                                <div class="inner wd8percent"><span>$90.00</span></div>
+                                <div class="inner wd8percent"><span>$5.00</span></div>
+                                <div class="inner wd8percent"><span>$3.50</span></div>
+                                <div class="inner wd8percent"><span>$300.50</span></div>
+                                <div class="inner wd8percent"><span>Cash</span></div>
+                                <div class="inner wd7percent">
+                                    <a href="JavaScript:void(0) " class="text-center launchbtn">
+                                        <i class="fas fa-info-circle color000 font14" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom bottomActionBar">
+                        <div class="caution-stock dtableCell wd40percent valignMiddle">
+                            <div class="listCount">
+                                <span>Total: <b>20 reports</b></span>
+                            </div>
+                            <div class="filterLinks newfilters bottomFilters rmaFilters ticketsFilters">
+                                <label>Filter by type:</label>
+                                <a href="JavaScript:void(0)" class="active color000 fontSemiBold fontPoppin">All</a>
+                                <a href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Customers</a>
+                                <a href="JavaScript:void(0)" class="color000 fontSemiBold fontPoppin">Products</a>
+                            </div>
+                        </div>
+                        <div class="caution-stock dtableCell text-right wd60percent">
+                            <div class="ifPOUnChecked">
+                                <a href="JavaScript:void(0)" (click)="openModal(downloadInvoice, 'custModal wd300')"  class="innerStatusBtns dInlineBlock">Download</a>
+                                <!-- (click)="openModal(printInvoice, 'custModal wd300')" -->
+                                <a href="JavaScript:void(0)"   class="innerStatusBtns dInlineBlock ml10">Print</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<ng-template #downloadInvoice>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt20 wd250">
+            <i class="fas fa-download font42 color000"></i>
+            <h2 class="fontPoppin font20 fontSemiBold mt15 color000">
+                How do you want to download your file?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb30">
+        <button type="button" (click)="downloadInvoices('pdf')" 
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">PDF</button>
+        <button type="button" (click)="downloadInvoices('csv')"
+            class="btn modalSaveBtnReceive mb5 fontPoppin borderRadius20">CSV</button>
+        <button (click)="closeModel()" type="button" class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #printInvoice>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt20 wd250">
+            <i class="icon-print font42 color000"></i>
+            <h2 class="fontPoppin font20 fontSemiBold mt15 color000">Print Invoice</h2>
+            <p class="fontPoppin font12 mb0 color808080">Select what kind of invoice would you like to print</p>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb30">
+        <button  type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Invoice with details</button>
+        <button type="button"
+            class="btn modalSaveBtnReceive mb5 fontPoppin borderRadius20">Invoice without details</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_DateRange>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold color000">
+                Date Range</h2>
+            <p class="fontPoppin font12 mb0 color808080">Set your date range.</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <div class="items-form-content popupList">
+            <form autocomplete="off" action="#">
+                <div class="row mb15">
+                    <div class="col-lg-12">
+                        <label class="fontPoppin mb0 font12 fontSemiBold color000" for="startDate">Start date</label>
+                        <!-- <datetime-popup [(value)]="myDate"></datetime-popup> -->
+                        <input [(ngModel)]="fromDate" type="text" name="startDate" id="startDate"
+                            placeholder="Select From Date" class="form-control font12 borderColorcbcbcb " bsDatepicker
+                            [bsConfig]="{showWeekNumbers:false, isAnimated: true  , dateInputFormat: 'MMM/DD/YYYY'}"
+                            placeholder="MM/DD/YY" [isOpen]="isOpenfromDate">
+                        <span (click)="isOpenfromDate = !isOpenfromDate" class="datePickerIcon"></span>
+                    </div>
+                </div>
+                <div class="row mb15">
+                    <div class="col-lg-12">
+                        <label class="fontPoppin mb0 font12 fontSemiBold color000" for="endDate">End Date</label>
+                        <input type="text" [(ngModel)]="toDate" name="endDate" id="endDate" placeholder="Select To Date"
+                            class="form-control font12 borderColorcbcbcb" bsDatepicker
+                            [bsConfig]="{showWeekNumbers:false, minDate: fromDate , isAnimated: true  , dateInputFormat: 'MMM/DD/YYYY'}"
+                            placeholder="MM/DD/YY" [isOpen]="isOpentoDate">
+                        <span (click)="isOpentoDate = !isOpentoDate" class="datePickerIcon"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button [ngClass]="{'disabled' : toDate == null || fromDate == null}" (click)="applyDateRange()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Filter</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<!--   
+    <div class="permissionCheck" *ngIf="setPermissionEnable">
+        <input id="per1" class="checkbox-custom" name="per1" type="checkbox">
+        <label for="per1" class="checkbox-custom-label"></label>
+    </div> 
+-->

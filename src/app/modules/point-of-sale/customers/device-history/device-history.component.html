@@ -1,0 +1,230 @@
+<div class="tab-pane fade active show" id="tab-s-two">
+    <div id="existing-customer" class="deviceListDetails" [ngClass]="{'empty':deviceHistoryData?.length==0}">
+        <div class="cut-search-area posRelative zIndex100">
+            <a href="JavaScript:void(0)" (click)="backToComponent()"
+                class="back-cust-list dInlineBlock">Back</a>
+            <h2 class="color000 mb0 font14 fontSemiBold fontPoppin dInlineBlock">{{device['brand_model_name']}} Activity History</h2>
+        </div>
+        <div id="order-invoices">
+            <div class="current-order-table-wrapper" id="existing-order-table_wrapper">
+                <div class="cart-list">
+                    <div *ngIf='deviceHistoryLoader' class="luna-loading"></div>
+                    <div class="empty-text">
+                        <h2 class="color808080 font16 fontSemiBold500">There are no devices history.</h2>
+                    </div>
+                    <div class="cart-top">
+                        <div class="inner wd15percent"><span class="text-center">Date</span></div>
+                        <div class="inner wd15percent"><span>Invoice No</span></div>
+                        <div class="inner wd15percent"><span>Store ID</span></div>
+                        <div class="inner wd40percent"><span class="text-left pl10">Store name</span></div>
+                        <div class="inner wd15percent"><span>Actions</span></div>
+                    </div>
+                    <div class="cart-bottom">
+                        <accordion [isAnimated]="true" [closeOthers]="true">
+                            <accordion-group  *ngFor="let device of deviceHistoryData; let i = index">
+                                <ul accordion-heading>
+                                    <li>
+                                        <div class="outer">
+                                            <div class="inner wd15percent" (click)="noOpenAccordianOnInput($event)">
+                                                <span>{{device?.date |customDateFormat}}</span>
+                                            </div>
+                                            <div class="inner wd15percent" (click)="noOpenAccordianOnInput($event)">
+                                                <!-- <span>{{device?.invoice_store_name||'N/A'}}</span> -->
+                                                <span>{{device?.inovice_no}}</span>
+                                            </div>
+                                            <div class="inner wd15percent" (click)="noOpenAccordianOnInput($event)">
+                                                <span>{{device?.store_id}}</span>
+                                            </div>
+                                            <div class="inner wd40percent text-left labelFilter invNumStoreName" (click)="noOpenAccordianOnInput($event)">
+                                                <span class="text-left">{{device?.invoice_store_name}}</span>
+                                                <!-- <span class="text-left">{{device?.invoice_store_name}}</span> -->
+                                            </div>
+                                            <div class="inner wd15percent">
+                                                <div class="title-info">
+                                                    <a (click)="openFetchDeviceImagesModal(fetchImg, 'box-fetchimg',device)" class="font13">
+                                                        <i class="fas fa-images"></i>
+                                                    </a>
+                                                    <a href="JavaScript:void(0)" class="font16 arrowIcon pl10"><i class="fas fa-caret-right"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <accordion [isAnimated]="true" [closeOthers]="true">
+                                    <div class="cart-top" (click)="noOpenAccordianOnInput($event)">
+                                        <div class="inner wd50percent"><span class="text-left">Service Name</span></div>
+                                        <div class="inner wd20percent"><span>Repaired by</span></div>
+                                        <div class="inner wd15percent"><span>Time spend</span></div>
+                                        <div class="inner wd15percent"><span>Actions</span></div>
+                                    </div>
+                                    <accordion-group *ngFor="let service of device?.services_detail; let j = index">
+                                        <ul accordion-heading>
+                                            <li>
+                                                <div class="outer">
+                                                    <div class="inner wd50percent text-left" (click)="noOpenAccordianOnInput($event)">
+                                                        <span class="pl10 dBlock textOverflow maxWidth160" tooltip="{{service?.TransactionService?.Product?.product_name}}"
+                                                         placement="bottom">{{service?.TransactionService?.Product?.product_name || 'N/A'}}</span>
+                                                    </div>
+                                                    <div class="inner wd20percent" (click)="noOpenAccordianOnInput($event)">
+                                                        <span *ngIf="service?.technicionRepair!=null">{{service?.technicionRepair?.Technicion?.first_name +' '+service?.technicionRepair?.Technicion?.last_name }}</span>
+                                                        <span *ngIf="service?.technicionRepair==null"> No Technicion Assign </span>
+                                                    </div>
+                                                    <div class="inner wd15percent" (click)="noOpenAccordianOnInput($event)">
+                                                        <span class="text-center">{{_repairRoom.time_convert(service?.technicionRepair?.log_time) || 'N/A'}}</span>
+                                                    </div>
+                                                    <div class="inner wd15percent">
+                                                        <a href="JavaScript:void(0)" class="font16 arrowIcon"><i class="fas fa-caret-right"></i></a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <div class="cart-top" (click)="noOpenAccordianOnInput($event)">
+                                                <div class="inner wd15percent"><span class="text-center">SKU</span></div>
+                                                <div class="inner wd40percent"><span  class="text-left">Item Name</span></div>
+                                                <div class="inner wd15percent"><span>Item Status</span></div>
+                                                <div class="inner wd30percent"><span>Reason/ Notes</span></div>
+                                            </div>
+                                            <li  *ngFor="let sProduct of service?.TransactionService?.serviceProduct; let p = index">
+                                                <div class="outer">
+                                                    <div class="inner wd15percent">
+                                                        <span>{{sProduct?.serviceProductSKU ||'N/A'}}</span>
+                                                    </div>
+                                                    <div *ngIf="sProduct?.serviceProductType=='product'" class="inner wd40percent text-left">
+                                                        <span class="pl10 dBlock textOverflow maxWidth160" tooltip="{{sProduct?.serviceProductId?.product_name ||'N/A'}}" 
+                                                    placement="bottom">{{sProduct?.serviceProductId?.product_name ||'N/A'}}</span>
+                                                    </div>
+                                                    <div *ngIf="sProduct?.serviceProductType =='custom'" class="inner wd40percent text-left">
+                                                        <span class="pl10 dBlock textOverflow maxWidth160" tooltip="{{sProduct?.serviceCustomProductId?.name ||'N/A'}}" 
+                                                    placement="bottom">{{sProduct?.serviceCustomProductId?.name ||'N/A'}}</span>
+                                                    </div>
+                                                    <div class="inner wd15percent">
+                                                        <span>{{sProduct?.service_repair_room_item_type || 'N/A'}}</span>
+                                                    </div>
+                                                    <div class="inner wd30percent">
+                                                        <span>{{sProduct?.serviceReason ||'N/A'}}</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <!-- <li>
+                                                <div class="outer">
+                                                    <div class="inner wd15percent">
+                                                        <span>SKU-001</span>
+                                                    </div>
+                                                    <div class="inner wd40percent text-left">
+                                                        <span class="pl10 dBlock textOverflow maxWidth160" tooltip="R 1.1 - Back Cover for Samsung Galaxy Note 8 Premium Quality (Black)" placement="bottom">R 1.1 - Back Cover for Samsung Galaxy Note 8 Premium Quality (Black)</span>
+                                                    </div>
+                                                    <div class="inner wd15percent">
+                                                        <span>Done</span>
+                                                    </div>
+                                                    <div class="inner wd30percent">
+                                                        <span>Checkeout</span>
+                                                    </div>
+                                                </div>
+                                            </li> -->
+                                        </ul>
+                                    </accordion-group>
+                                </accordion>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="navigationSource == 'createSale'" class="bottomActionBar">
+        <div class="dtableCell wd60percent"></div>
+        <div class="dtableCell wd40percent text-right">
+            <!-- <a href="JavaScript:void(0)" class="innerStatusBtns noFloat dInlineBlock add-btn-item"
+            (click)="openModal(adddevice,'custModal wd600')">Add Device</a> -->
+            <div class="btn-group settingBtn">
+                <a  class="innerStatusBtns dInlineBlock minWd30px" href="JavaScript:void(0)" (click)="openDevicesSettings(true);$event.stopPropagation()">
+                    <i class="icon-settings"></i>
+                </a>
+                <div class="dropdown-content settingOptions listItemsOne"
+                    *ngIf="devicesSettingsOpen" style="display: block;">
+                    <ul>
+                        <li><a (click)="openDeviceModal(open_CustomerModal,'custModal wd210','print')" class="dropdown-item">Print History</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #fetchImg>
+    <div *ngIf='devicefolderLoader' class="luna-loading"></div>
+    <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+    [hideToster]="showToaster"></app-toaster>
+    <div class="modal-header">
+        <div class="left">
+            <h2>Check in album</h2>
+        </div>
+        <button type="button" class="close"  (click)="modalRef.hide()" >&times;</button>
+    </div>
+    <!-- [ngClass]="{'empty': if no folder selected}" -->
+    <div class="modal-body" [ngClass]="{'empty': isObjectEmpty(selectedFolder)}">
+        <div class="row">
+            <div class="col-md-3 minHeight390">
+                <h5> Device registered albums</h5>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li *ngFor="let folder of deviceFoldersWithFiles; let i = index;"  (click)="showImagesOfDirectory(folder,i)" >
+                        <a data-toggle="tab" class="" [ngClass]="{'active':folder._id==selectedFolder._id}"><i class="fa fa-folder" aria-hidden="true"></i>{{folder.name | titlecase}}
+                        <!-- <div class="deleteIcon"><i class="icon-close"></i></div> -->
+                        </a>
+                    </li>
+                </ul>
+                <a href="JavaScript:void(0)" (click)='createFolderFun()' class="innerStatusBtns dInlineBlock add-btn-item btnBottom">Add Folder</a>
+            </div>
+            <div class="col-md-9">
+                <div class="empty-text">
+                    <h2 class="color808080 font16 fontSemiBold500">Select a folder to show images</h2>
+                </div>
+                <div class="tab-content">
+                    <div  class="tab-pane" [ngClass]="{'active':folder.isVisible}"
+                    *ngFor="let folder of deviceFoldersWithFiles; let i = index;">
+                        <div class="col-md-4 minHeight390">
+                            <h5>{{folder.name | titlecase}} images</h5>
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li *ngFor="let file of folder?.SourceFile; let j = index;" (click)="selectDeviceImage(file,i,j)" >
+                                    <a data-toggle="tab" class="" [ngClass]="{'active':file._id==deviceImageSelect._id}">
+                                        <div class="gal-list-img" [ngStyle]="{'background-image':'url('+ [baseUrl+file.path] +')'}"></div>
+                                        <span>{{file.name}}</span>
+                                        <div class="deleteIcon" (click)="deleteImage(file)" ><i class="icon-close"></i></div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <h2 *ngIf="isObjectEmpty(folder?.SourceFile)" class="color808080 fontSemiBold500">No image avialable in this folder</h2>
+                            <a href="JavaScript:void(0)" for="uploadAlbumImages" class="innerStatusBtns dInlineBlock add-btn-item btnBottom">
+                                Add Photos
+                                <input #imageInput type="file" name="uploadAlbumImages" id="uploadAlbumImages" accept="image/png, image/jpeg"
+                                (change)="uploadImages($event)" class="form-control cust-field" placeholder=""
+                                multiple>
+                            </a>
+                        </div>
+                        <div class="col-md-8" *ngIf="showImageDetail">
+                            <div class="tab-content">
+                                <!-- <div class="empty-text">
+                                    <h2 class="color808080 font14 fontSemiBold500">No Preview avialable, please select the image</h2>
+                                </div> -->
+                                <div id="album1-1" class="tab-pane fade in active show">
+                                    <div class='top'>
+                                        <div class="current-img" [ngStyle]="{'background-image':'url('+ [baseUrl+deviceImageSelect.path] +')'}"></div>
+                                        <!-- <img src="{{baseUrl + deviceImageSelect.path }}" class="class2" /> -->
+                                    </div>
+                                    <div *ngIf="!isObjectEmpty(deviceImageSelect)" class='bottom'>
+                                        <p>Image Name:<span>{{deviceImageSelect?.name}}</span></p>
+                                        <p>Date Created:<span>{{deviceImageSelect?.created_at |customDateFormat}}</span></p>
+                                    </div>
+                                    <div *ngIf="isObjectEmpty(deviceImageSelect)" class='bottom'>
+                                        <span>Please select image to show.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer"></div>
+</ng-template>

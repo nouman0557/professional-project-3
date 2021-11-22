@@ -1,0 +1,787 @@
+<section class="home-dashboard">
+    <div class="row">
+        <div class="col-lg-2" style="padding: 0px 0px 0px 25px">
+            <div class="left wrapper">
+                <div class="title">
+                    <h2>Daily goals</h2>
+                </div>
+                <div class="inner">
+                    <div class="today-sales ">
+                        <div class="today-sales-chart pt30">
+                            <circle-progress [percent]="70" [outerStrokeWidth]="10" [innerStrokeWidth]="5"
+                                [outerStrokeColor]="'#5bdbbf'" [innerStrokeColor]="'#606060'" [animation]="true">
+                            </circle-progress>
+
+                        </div>
+                        <div class="today-sales-desc pt30">
+                            <div class="current-sales">
+                                <p>Current Sales</p>
+                                <h2>$750.00</h2>
+                            </div>
+                            <div class="current-sales">
+                                <p>Daily Goal</p>
+                                <h2>$1,000.00</h2>
+                            </div>
+                            <div class="current-sales">
+                                <p>Amount to reach goal</p>
+                                <h2>$270.00</h2>
+                            </div>
+                            <div class="current-sales">
+                                <p>Average ticket</p>
+                                <h2>$250.00</h2>
+                            </div>
+                        </div>
+                        <div class="today-sales-actions pt30">
+                            <a href="javascript:void(0);"
+                                (click)="model_cashDrawer(open_cashDrawer,'custModal wd300')">Open Cash Drawer</a>
+                            <a href="javascript:void(0);"
+                                (click)="model_tillCount(open_tillCount,'custModal wd400')">Till Count</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="mid">
+                <div class="row">
+                    <div class="col-lg-3 pr0">
+                        <div class="mid-top wrapper">
+                            <div class="title">
+                                <h2>Discount of the day</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 pl0">
+                        <div class="mid-top wrapper">
+                            <div class="offer">
+                                <h2>Casper Clear Glass for iPhone Models - 10% OFF</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 pr0">
+                        <div class="mid-mid wrapper">
+                            <div class="title">
+                                <h2>Repair sale</h2>
+                            </div>
+                            <div class="inner-mid-top">
+                                <div class="wrap">
+                                    <div class="left">
+                                        <h2>$ 650.00</h2>
+                                    </div>
+                                    <div class="right">
+                                        <i class="fa fa-line-chart" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                <p>$2132.99 as of this month</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 pr0">
+                        <div class="mid-mid wrapper">
+                            <div class="title">
+                                <h2>Money in drawer</h2>
+                            </div>
+                            <div class="inner-mid-top">
+                                <div class="wrap">
+                                    <div class="left">
+                                        <h2>$ 650.00</h2>
+                                    </div>
+                                    <div class="right">
+                                        <i class="fa fa-money" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                <p>$100.00 in debit/credit card</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 pr0">
+                        <div class="mid-mid wrapper">
+                            <div class="title">
+                                <h2>Today's repair</h2>
+                            </div>
+                            <div class="inner-mid-top">
+                                <div class="wrap">
+                                    <div class="left">
+                                        <h2>3 Devices</h2>
+                                    </div>
+                                    <div class="right">
+                                        <i class="fa fa-laptop" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                <p>1 new customer</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="mid-mid wrapper">
+                            <div class="title">
+                                <h2>Pending repairs</h2>
+                            </div>
+                            <div class="inner-mid-top">
+                                <div class="wrap">
+                                    <div class="left">
+                                        <h2>2 Repairs</h2>
+                                    </div>
+                                    <div class="right">
+                                        <i class="fa fa-mobile" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                <p>3 Repairs completed today</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 pr0">
+                        <div class="mid-bottom wrapper">
+                            <div class="title">
+                                <h2>Repair Alerts </h2>
+                            </div>
+                            <div class="inner-mid-bottom posRelative" [ngClass]="{'empty':customerAlerts?.length==0}">
+                                <div class="empty-text">
+                                    <h2 class="font14">No repair alert(s) available</h2>
+                                </div>
+                                <ul>
+                                    <!-- <li  *ngFor="let alert of customerAlerts" >
+                                        <div class="left">
+                                            <p><span>Tech Bar POS Update 2.2.1 is now available!</span></p><a
+                                                href="#">Download here!</a>
+                                        </div>
+                                        <div class="right"><span>01/07/2019</span></div>
+                                    </li> -->
+                                    <li *ngFor="let alert of customerAlerts">
+                                        <div class="left">
+                                            <p><span>{{alert?.alert_title}}</span></p>
+                                            <a href="JavaScript:void(0)">{{alert?.alert_message}} at
+                                                {{alert?.alert_timer}}</a>
+                                        </div>
+                                        <div class="right"><span>{{alert?.created_at | customDateFormat}}</span></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mid-bottom wrapper">
+                            <div class="title">
+                                <h2>Purchase Alerts</h2>
+                            </div>
+                            <div class="inner-mid-bottom posRelative"  [ngClass]="{'empty':purchaseAlerts?.length==0}">
+                                <div class="empty-text">
+                                    <h2 class="font14">No purchase alert(s) available</h2>
+                                </div>
+                                <ul>
+                                    <li *ngFor="let alert of purchaseAlerts">
+                                        <div class="left">
+                                            <p><span>{{alert?.alert_title}}</span></p>
+                                            <a href="JavaScript:void(0)">{{alert?.alert_message}}</a>
+                                        </div>
+                                        <div class="right"><span>{{alert?.created_at | customDateFormat}}</span></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 pr0">
+                        <div class="mid-bottom wrapper userList">
+                            <div class="title">
+                                <h2>Tech Bar POS News</h2>
+                            </div>
+                            <div class="inner-mid-bottom">
+                                <ul>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>Tech Bar POS Update 2.2.1 is now available!</span></p><a
+                                                href="#">Download here!</a>
+                                        </div>
+                                        <div class="right"><span>01/07/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>New "Money Function" available.</span></p><a href="#">More
+                                                information</a>
+                                        </div>
+                                        <div class="right"><span>15/06/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>New "Dashboard" look. Coming Soon!</span></p><a href="#">See
+                                                video</a>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>Tech Bar POS Update 2.2.1 is now available!</span></p><a
+                                                href="#">Download here!</a>
+                                        </div>
+                                        <div class="right"><span>01/07/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>New "Money Function" available.</span></p><a href="#">More
+                                                information</a>
+                                        </div>
+                                        <div class="right"><span>15/06/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>New "Dashboard" look. Coming Soon!</span></p><a href="#">See
+                                                video</a>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>Tech Bar POS Update 2.2.1 is now available!</span></p><a
+                                                href="#">Download here!</a>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>Tech Bar POS Update 2.2.1 is now available!</span></p><a
+                                                href="#">Download here!</a>
+                                        </div>
+                                        <div class="right"><span>01/07/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>New "Money Function" available.</span></p><a href="#">More
+                                                information</a>
+                                        </div>
+                                        <div class="right"><span>15/06/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>New "Dashboard" look. Coming Soon!</span></p><a href="#">See
+                                                video</a>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>Tech Bar POS Update 2.2.1 is now available!</span></p><a
+                                                href="#">Download here!</a>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>Tech Bar POS Update 2.2.1 is now available!</span></p><a
+                                                href="#">Download here!</a>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mid-bottom wrapper userList">
+                            <div class="title">
+                                <h2>Store / Franchise News</h2>
+                            </div>
+                            <div class="inner-mid-bottom">
+                                <ul>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iphone 6S HQ White Screen Replacement's</span> price has changed
+                                                form <span>$89.99</span> to <span>$79.99</span></p>
+                                        </div>
+                                        <div class="right"><span>01/07/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iPhone 4 Premium Black Screen Replacement</span> has been removed
+                                                form inventory.</p>
+                                        </div>
+                                        <div class="right"><span>15/06/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iPhone 4 Premium White Screen Replacement</span> has been removed
+                                                form inventory.</p>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iphone 6S HQ White Screen Replacement's</span> price has changed
+                                                form <span>$89.99</span> to <span>$79.99</span></p>
+                                        </div>
+                                        <div class="right"><span>01/07/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iPhone 4 Premium Black Screen Replacement</span> has been removed
+                                                form inventory.</p>
+                                        </div>
+                                        <div class="right"><span>15/06/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iPhone 6S Black Screen Replacement</span> has been added to
+                                                inventory.</p>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iPhone 4 Premium Black Screen Replacement</span> has been removed
+                                                form inventory.</p>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iPhone 6S Black Screen Replacement</span> has been added to
+                                                inventory.</p>
+                                        </div>
+                                        <div class="right"><span>01/07/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iphone 6S HQ White Screen Replacement's</span> price has changed
+                                                form <span>$89.99</span> to <span>$79.99</span></p>
+                                        </div>
+                                        <div class="right"><span>15/06/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iPhone 4 Premium Black Screen Replacement</span> has been removed
+                                                form inventory.</p>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iphone 6S HQ White Screen Replacement's</span> price has changed
+                                                form <span>$89.99</span> to <span>$79.99</span></p>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="left">
+                                            <p><span>iPhone 4 Premium Black Screen Replacement</span> has been removed
+                                                form inventory.</p>
+                                        </div>
+                                        <div class="right"><span>10/12/2019</span></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4" style="padding: 0px 15px 0px 0px">
+            <div class="right wrapper repairList">
+                <div class="title">
+                    <h2>Repair Room</h2>
+                </div>
+                <div class="inner repairRoom" [ngClass]="{'empty':repairTaskList.length==0}">
+                    <div *ngIf="isLoading" class="luna-loading zIndex100"></div>
+                    <div class="empty-text">
+                            <h2 class="font14">No task(s) available</h2>
+                        </div>
+                    <ul>
+                        <li class="dtable wd100Percent" *ngFor="let task of repairTaskList">
+                            <div class="dtableCell wd40percent valignMiddle">
+                                <span
+                                    class="text-left font11 fontSemiBold fontPoppin color000">{{task.Customer.first_name + " " + task.Customer.last_name}}
+                                    <i *ngIf="task.is_repair_room_customer_alert" class="fas fa-bell pl5"></i>
+                                </span>
+                            </div>
+                            <div class="dtableCell wd20percent text-center valignMiddle">
+                                <ul class="status-info">
+                                    <li *ngFor="let taskColor of task.repair_room_color_pallet"
+                                        [ngStyle]="{'background-color': taskColor}">S</li>
+                                </ul>
+                            </div>
+                            <div class="dtableCell wd20percent borderLeftRight text-center valignMiddle">
+                                <span class="font10 fontPoppin color808080">{{task.device_count}} device(s)</span>
+                            </div>
+                            <div class="dtableCell wd20percent text-center valignMiddle">
+                                <span
+                                    class="font10 fontPoppin color808080">{{time_convert(task.total_repair_time)}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="right wrapper userList">
+                <div class="title">
+                    <h2>User Logs</h2>
+                </div>
+                <div class="inner" [ngClass]="{'empty': isObjectEmpty(allUsers)}" >
+                    <div *ngIf='getUserLoader' class="luna-loading"></div>
+                    <div class="empty-text">
+                        <h2 class="font14">No user(s) available</h2>
+                    </div>
+                    <ul>
+                        <li class="dtable wd100Percent" *ngFor="let user of allUsers; let i = index;" >
+                            <div class="dtableCell wd10percentFull">
+                                <span *ngIf="user == null" class="userBgImage" style="background-image: url(../../../../assets/images/tb-icon.png);" ></span>
+                                <span *ngIf="user != null" class="userBgImage" [ngStyle]="{'background-image':'url('+ [baseUrl+user?.avatar_location] +')'}" ></span>
+                            </div>
+                            <div class="dtableCell wd40percent">
+                                <span class="fontSemiBold fontPoppin color000 font11">{{user?.first_name + ' ' + user?.last_name | titlecase}}</span>
+                            </div>
+                            <div class="dtableCell wd30percent text-center">
+                                <span class="fontPoppin color808080 font11">{{user?.roles[0] ||'N/A'}}</span>
+                            </div>
+                            <div class="dtableCell wd20percent text-center">
+                                <span *ngIf="user?.is_clocked_in" class="userStatusBox userClockedIn">Clocked in</span>
+                                <span *ngIf="!user?.is_clocked_in" class="userStatusBox userClockedOut">Clocked out</span>
+                            </div>
+                        </li>
+                        <!-- <li class="dtable wd100Percent">
+                            <div class="dtableCell wd10percentFull">
+                                <span class="userBgImage"></span>
+                            </div>
+                            <div class="dtableCell wd40percent">
+                                <span class="fontSemiBold fontPoppin color000 font11">James Williams</span>
+                            </div>
+                            <div class="dtableCell wd30percent wd30percent">
+                                <span class="fontPoppin color808080 font11">Technician</span>
+                            </div>
+                            <div class="dtableCell wd20percent text-center">
+                                <span class="userStatusBox userClockedOut">Clocked out</span>
+                            </div>
+                        </li>
+                        <li class="dtable wd100Percent">
+                            <div class="dtableCell wd10percentFull">
+                                <span class="userBgImage"></span>
+                            </div>
+                            <div class="dtableCell wd40percent">
+                                <span class="fontSemiBold fontPoppin color000 font11">Sara Jones</span>
+                            </div>
+                            <div class="dtableCell wd30percent wd30percent">
+                                <span class="fontPoppin color808080 font11">Receptionist</span>
+                            </div>
+                            <div class="dtableCell wd20percent text-center">
+                                <span class="userStatusBox userClockedIn">Clocked in</span>
+                            </div>
+                        </li>
+                        <li class="dtable wd100Percent">
+                            <div class="dtableCell wd10percentFull">
+                                <span class="userBgImage"></span>
+                            </div>
+                            <div class="dtableCell wd40percent">
+                                <span class="fontSemiBold fontPoppin color000 font11">Julian T</span>
+                            </div>
+                            <div class="dtableCell wd30percent">
+                                <span class="fontPoppin color808080 font11">HR Manager</span>
+                            </div>
+                            <div class="dtableCell wd20percent text-center">
+                                <span class="userStatusBox userClockedOut">Clocked out</span>
+                            </div>
+                        </li>
+                        <li class="dtable wd100Percent">
+                            <div class="dtableCell wd10percentFull">
+                                <span class="userBgImage"></span>
+                            </div>
+                            <div class="dtableCell wd40percent">
+                                <span class="fontSemiBold fontPoppin color000 font11">David Jones</span>
+                            </div>
+                            <div class="dtableCell wd30percent">
+                                <span class="fontPoppin color808080 font11">Sales Manager</span>
+                            </div>
+                            <div class="dtableCell wd20percent text-center">
+                                <span class="userStatusBox userClockedOut">Clocked out</span>
+                            </div>
+                        </li>
+                        <li class="dtable wd100Percent">
+                            <div class="dtableCell wd10percentFull">
+                                <span class="userBgImage"></span>
+                            </div>
+                            <div class="dtableCell wd40percent">
+                                <span class="fontSemiBold fontPoppin color000 font11">James Williams</span>
+                            </div>
+                            <div class="dtableCell wd30percent">
+                                <span class="fontPoppin color808080 font11">Technician</span>
+                            </div>
+                            <div class="dtableCell wd20percent text-center">
+                                <span class="userStatusBox userClockedIn">Clocked in</span>
+                            </div>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<ng-template #open_tillCount>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold mb10 color000">Till Count</h2>
+            <div *ngIf="cashReegisterData.length > 1" class="btn-group" dropdown>
+                <button id="button-animated" dropdownToggle type="button"
+                    class="btn dropdown-toggle form-control cust-field font11 borderColorcbcbcb borderRadius5"
+                    aria-controls="dropdown-animated">
+                    <span class="btnText dBlock">{{changeCashregister}}</span>
+                    <span class="caret"></span>
+                </button>
+                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                    aria-labelledby="button-animated">
+                    <li *ngFor="let reg of cashReegisterData; let i = index;"
+                        (click)="changeValue('changeCashregister',reg)" role="menuitem"><a
+                            class="dropdown-item">{{reg.name}}</a>
+                    </li>
+                </ul>
+            </div>
+            <span *ngIf="cashReegisterData.length == 1"
+                class="fontPoppin font14 fontSemiBold mb10 color000">{{cashReegisterData[0].name || 'Cash register 1'}}</span>
+        </div>
+        <div class="topRight">
+            <a href="javascript:void(0);" *ngIf="tillHelpBtn" (click)="opentillHelp();$event.stopPropagation()">
+                <div class="icon">
+                    <i class="fas fa-receipt"></i>
+                    <div class="text"><span>Help me count</span></div>
+                </div>
+            </a>
+        </div>
+        <div class="dropdown-content" *ngIf="tillHelpBox" style="display: block;">
+            <div class="tillHelpBox" [ngClass]="{'Show':tillHelpBoxOPEN}">
+                <div class="top">
+                    <div class="inner">
+                        <a href="javascript:void(0);" (click)="closetillHelp();$event.stopPropagation()">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </a>
+                        <span>Help me count</span>
+                    </div>
+                </div>
+                <div class='bottom'>
+                    <span class="color000 mb10">Type the number of bills and coins you have of each denomination</span>
+                    <table class="table text-center">
+                        <thead>
+                            <th></th>
+                            <th></th>
+                            <th>Qty.</th>
+                            <th>Total</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let curr of totalCurrencies; let i = index;">
+                                <td><i class="fa fa-money color000 font16" aria-hidden="true"></i></td>
+                                <td><span class="color808080">{{curr?.unit}}</span></td>
+                                <td>
+                                    <input (ngModelChange)='calculateTotaltillCount(i,curr.unit,$event)'
+                                        [(ngModel)]="tillCountArray[i].qty" (keypress)="numberOnly($event)" type="text"
+                                        class="form-control cust-field borderColorcbcbcb borderRadius5" placeholder="0" [ngModelOptions]="{standalone: true}">
+                                </td>
+                                <td>
+                                    <span
+                                        class="color808080 fontSemiBold">${{tillCountArray[i].total | number : '1.2-2' || '0'}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body pl40">
+        <div class="items-form-content pr30 contentHeight350 contentScroll">
+            <form autocomplete="off" action="#">
+                <div class="row mb10">
+                    <div class="col-lg-12 dtable">
+                        <label class="dtableCell text-left fontLato fontBold color000 mb0">Expected in till</label>
+                        <span
+                            class="dtableCell text-right fontLato fontBold color808080 font14 pr15">${{expectedTotal}}</span>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <label class="fontLato fontBold color000 mb0">Counted in till</label>
+                        <input readonly type="text" (click)="opentillHelp()" [(ngModel)]="tillCounttotal"
+                            name="tillCounttotal"
+                            class="form-control fontLato fontBold text-right cust-field borderColorcbcbcb borderRadius5"
+                            placeholder="$0.00">
+                    </div>
+                </div>
+                <hr>
+                <div class="row mb10">
+                    <div class="col-lg-12 dtable">
+                        <label class="dtableCell text-left fontLato fontBold color000 mb0">Discrepancy</label>
+                        <span *ngIf="tillCounttotal != 0"
+                            class="dtableCell text-right fontLato fontBold color808080 font14 pr15">${{(expectedTotal - tillCounttotal).toFixed(2)}}</span>
+                        <span *ngIf="tillCounttotal == 0"
+                            class="dtableCell text-right fontLato fontBold color808080 font14 pr15">$0.00</span>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="col-lg-12 dtable">
+                        <label class="fontLato fontBold color000 mb0">Deposited</label>
+                        <input type="text" appTwoDigitDecimaNumber [(ngModel)]="amountToDeposit" name="Deposited"
+                            class="form-control fontLato fontBold text-right cust-field borderColorcbcbcb borderRadius5"
+                            placeholder="$0.00">
+                        <span *ngIf="amountToDeposit > tillCounttotal" class="field-error-msg text-center"> Deposit
+                            amount must be less or equal to Counted</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row mb10">
+                    <div class="col-lg-12 dtable">
+                        <label class="fontLato fontBold color000 mb0">Remaining in till</label>
+                        <span
+                            class="dtableCell text-right fontLato fontBold color808080 font14 pr15">${{(tillCounttotal - amountToDeposit).toFixed(2)}}</span>
+                        <!-- <input readonly type="text" value="{{tillCounttotal - amountToDeposit}}"
+                            class="form-control fontLato fontBold text-right cust-field borderColorcbcbcb borderRadius5"
+                            placeholder="$0.00"> -->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button (click)="submitTillCount()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Submit</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_cashDrawer>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <div class="color000 font64"><i class="fas fa-cash-register"></i></div>
+            <h2 *ngIf="!WithDrawMoney && !addMoney && !otherMoney && !clockINCode"
+                class="fontPoppin font24 fontSemiBold mb10 color000">
+                Cash Drawer</h2>
+            <h2 *ngIf="WithDrawMoney" class="fontPoppin font24 fontSemiBold mb10 color000">Withdrawing money</h2>
+            <h2 *ngIf="addMoney" class="fontPoppin font24 fontSemiBold mb10 color000">Adding Money</h2>
+            <h2 *ngIf="otherMoney" class="fontPoppin font24 fontSemiBold mb10 color000">Other</h2>
+            <h2 *ngIf="clockINCode" class="fontPoppin font24 fontSemiBold mb10 color000">Enter your clock in code</h2>
+        </div>
+    </div>
+    <div class="modal-body pl40 pr40">
+        <form autocomplete="off" [formGroup]="openCashDrawer">
+            <div *ngIf="drawerMain">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <button (click)="openDrawer('WithDrawMoney','Withdraw')" type="button"
+                            class="btn bgWhite fontPoppin borderRadius20">Withdrawing money</button>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <button (click)="openDrawer('addMoney','Deposit')" type="button"
+                            class="btn bgWhite fontPoppin borderRadius20">Adding
+                            money</button>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <button (click)="openDrawer('otherMoney','Others')" type="button"
+                            class="btn bgWhite fontPoppin borderRadius20">Other</button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="WithDrawMoney">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <label [ngClass]="{'is-invalid bounce':submitCash && fopenCashDrawerFormIni.amount.errors}"
+                            class="fontLato fontBold color000 mb0">Withdrawing money</label>
+                        <input [ngClass]="{'bounce':submitCash && fopenCashDrawerFormIni.amount.errors}"
+                            appTwoDigitDecimaNumber formControlName="amount" type="text"
+                            class="form-control font12 cust-field borderColorcbcbcb borderRadius5"
+                            placeholder="total amount">
+                        <span *ngIf="submitCash && fopenCashDrawerFormIni.amount.errors "
+                            class="field-error-msg text-center"> Amount is required</span>
+                        <span *ngIf="withDrawAmountError" class="field-error-msg text-center">withdrawal amount exceeded
+                            then available</span>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <label [ngClass]="{'is-invalid bounce':submitCash && fopenCashDrawerFormIni.remarks.errors}"
+                            class="fontLato fontBold color000 mb0">Notes</label>
+                        <input [ngClass]="{'bounce':submitCash && fopenCashDrawerFormIni.remarks.errors}"
+                            formControlName="remarks" type="text"
+                            class="form-control font12 cust-field borderColorcbcbcb borderRadius5"
+                            placeholder="Add your notes here...">
+                        <span *ngIf="submitCash && fopenCashDrawerFormIni.remarks.errors"
+                            class="field-error-msg text-center"> Note is required</span>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="addMoney">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <label [ngClass]="{'is-invalid bounce':submitCash && fopenCashDrawerFormIni.amount.errors}"
+                            class="fontLato fontBold color000 mb0">Adding money</label>
+                        <input [ngClass]="{'bounce':submitCash && fopenCashDrawerFormIni.amount.errors}"
+                            appTwoDigitDecimaNumber formControlName="amount" type="text"
+                            class="form-control font12 cust-field borderColorcbcbcb borderRadius5"
+                            placeholder="total amount">
+                        <span *ngIf="submitCash && fopenCashDrawerFormIni.amount.errors "
+                            class="field-error-msg text-center"> Amount is required</span>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <label [ngClass]="{'is-invalid bounce':submitCash && fopenCashDrawerFormIni.remarks.errors}"
+                            class="fontLato fontBold color000 mb0">Notes</label>
+                        <input [ngClass]="{'bounce':submitCash && fopenCashDrawerFormIni.remarks.errors}"
+                            formControlName="remarks" type="text"
+                            class="form-control font12 cust-field borderColorcbcbcb borderRadius5"
+                            placeholder="Add your notes here...">
+                        <span *ngIf="submitCash && fopenCashDrawerFormIni.remarks.errors"
+                            class="field-error-msg text-center"> Note is required</span>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="otherMoney">
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <label [ngClass]="{'is-invalid bounce':submitCash && fopenCashDrawerFormIni.amount.errors}"
+                            class="fontLato fontBold color000 mb0">Other</label>
+                        <input [ngClass]="{'bounce':submitCash && fopenCashDrawerFormIni.amount.errors}"
+                            appTwoDigitDecimaNumber formControlName="amount" type="text"
+                            class="form-control font12 cust-field borderColorcbcbcb borderRadius5"
+                            placeholder="total amount">
+                        <span *ngIf="submitCash && fopenCashDrawerFormIni.amount.errors "
+                            class="field-error-msg text-center"> Amount is required</span>
+                    </div>
+                </div>
+                <div class="row mb10">
+                    <div class="col-lg-12">
+                        <label [ngClass]="{'is-invalid bounce':submitCash && fopenCashDrawerFormIni.remarks.errors}"
+                            class="fontLato fontBold color000 mb0">Notes</label>
+                        <input [ngClass]="{'bounce':submitCash && fopenCashDrawerFormIni.remarks.errors}"
+                            formControlName="remarks" type="text"
+                            class="form-control font12 cust-field borderColorcbcbcb borderRadius5"
+                            placeholder="Add your notes here...">
+                        <span *ngIf="submitCash && fopenCashDrawerFormIni.remarks.errors"
+                            class="field-error-msg text-center"> Note is required</span>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="clockINCode">
+                <div class="row mb10">
+                    <div class="col-lg-12 p0">
+                        <input [ngClass]="{'bounce':updateSubmitted}" (keyup.enter)="updateCashDrawer()" #userPinfield
+                            type="password" name="pin" [(ngModel)]="userPin"
+                            class="form-control font12 text-center cust-field borderColorcbcbcb borderRadius5"
+                            placeholder="type your code here" [ngModelOptions]="{standalone: true}">
+                        <span *ngIf="updateSubmitted" class="field-error-msg text-center bounce">
+                            {{errorMessage}}</span>
+                        <span class="fa fa-fw fa-eye field-icon" (click)="togglePassword(userPinfield,$event)"></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button *ngIf="!drawerMain && !clockINCode" (click)="submitCashDrawer()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Save</button>
+        <button *ngIf="!drawerMain && !WithDrawMoney && !addMoney && !otherMoney" (click)="updateCashDrawer()"
+            type="button" class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Save</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>

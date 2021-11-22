@@ -1,0 +1,77 @@
+<div
+  class="tab-pane fade active show"
+  id="tab-s-one"
+  role="tabpanel"
+  aria-labelledby="pills-tab-s-two"
+>
+
+  <div class="header-content">
+    <h2 class="title-view">{{dataReview.userName}}</h2>
+  </div>
+  <div class="container-fluid container-view-review">
+    <div class="row">
+      <div *ngFor="let item of dataReview.reviews" class="col-xl-3 col-lg-4 col-md-6 col-xs-4 col-sm-12 custom-content">
+          <div class="card-body custom-body-reviews">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 custom-content-raiting">
+                <div class="custom-rate">
+                  <label class="custom-date-rate">{{item.date}}</label>
+                  <label class="custom-title-rate">{{item.author}}</label>
+                </div>
+                <div class="custom-date">
+                  <h3 class="card-text"><b>{{item.rate}} / 5</b></h3>
+                <app-star-raiting radius="7" [stars-selected]="item.rate"></app-star-raiting>
+                </div>
+              </div>
+              <div class="col-md-12 col-sm-12">
+                <h5 class="card-title title-view custom-title custom-title-content">{{item.title}}</h5>
+                <label class="card-title title-view custom-title">{{item.comment}}</label>
+              </div>
+            </div>
+
+            <div class="options-button custom-content-btn-reply" >
+              <button type="button" class="btn btn-primary custom-btn-reply" (click)="isCollapsed == '' || isCollapsed != item.id ? isCollapsed = item.id : isCollapsed = ''"
+        [attr.aria-expanded]="isCollapsed == item.id ? true : false" aria-controls="collapseBasic">Reply
+      </button>
+              <!--<button type="button" class="btn custom-reply-btn" (click)="openModal(reply_review)">Reply</button>-->
+            </div>
+            <div id="collapseBasic" [collapse]="isCollapsed == item.id ? false : true" [isAnimated]="true">
+              <div class="well well-lg card card-block card-header"><h6 style="text-align: left;">Type your answer</h6>
+                <textarea class="form-control custom-textarea" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <div class="options-button custom-content-btn-save">
+                  <button type="button" class="btn btn-primary custom-btn-reply">Save</button>
+                  <!--<button type="button" class="btn btn-primary custom-btn-reply">Cancel</button>-->
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<ng-template #reply_review>
+  <div class="modal-body custom-body-modal">
+      <h2>Type your answer</h2>
+      <textarea class="form-control custom-textarea" id="exampleFormControlTextarea1" rows="3"></textarea>
+  </div>
+  <div class="modal-footer">
+      <div class="invoice_checks">
+          <div class="inner">
+
+              <label for="checking" class="checkbox-custom-label">Print</label>
+          </div>
+          <div class="inner">
+
+              <label for="invoiceCheck2" class="checkbox-custom-label">Email</label>
+          </div>
+          <div class="inner">
+
+              <label for="invoiceCheck3" class="checkbox-custom-label">SMS</label>
+          </div>
+      </div>
+      <div class="invoice_btns">
+          <button (click)="closeModal()" type="button" class="btn btn-default"
+              data-dismiss="modal">Close</button>
+      </div>
+  </div>
+</ng-template>-->

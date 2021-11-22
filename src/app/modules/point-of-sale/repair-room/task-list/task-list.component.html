@@ -1,0 +1,283 @@
+<div *ngIf="_repairRoom.isListing" id="existing-customer" [ngClass]="{'empty':taskList.length==0}">
+    <div class="cut-search-area posRelative zIndex100 dtable wd100Percent">
+        <div class="dtableCell wd55percent text-left">
+            <div class="dInlinetable valignMiddle wd45percent posRelative">
+                <div class="selectOrders dInlineBlock valignMiddle">
+                    <a class="color000 font16" href="JavaScript:void(0)"
+                        (click)=" SelectAllDropOrders = !SelectAllDropOrders;">
+                        <i class="fas fa-tasks"></i>
+                    </a>
+                    <div class="dropdown-content importBox selectAllitemsBox" *ngIf="SelectAllDropOrders"
+                        style="display: block;">
+                        <div class='dotBoxitems'>
+                            <ul>
+                                <li><a [ngClass] = "{'active': isSelectAll}" (click)="onSelectAll(true);  this.SelectAllDropOrders = false"
+                                        href="javascript:void(0);">Select all</a></li>
+                                <li><a (click)="onSelectAll(false); this.SelectAllDropOrders = false"
+                                        href="javascript:void(0);">Unselect all</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="selectTasks dInlineBlock ml10 valignMiddle">
+                    <a class="font14 fontPoppin color000 fontSemiBold" href="JavaScript:void(0)"
+                        (click)="SelectAllDropTasks = !SelectAllDropTasks;">
+                       <span class="textTransformCapitalize"> {{this.repairRoomFilters.task}}</span> task(s)<i class="pl5 font9 icon-dropdown_stock"></i>
+                    </a>
+                    <div class="dropdown-content importBox selectAllitemsBox" *ngIf="SelectAllDropTasks"
+                        style="display: block;">
+                        <div class='dotBoxitems'>
+                            <ul>
+                                <li><a [ngClass]="{'active': this.repairRoomFilters.task == 'all'}" (click)="setRepairRoomTaskFilter(TaskEnum.All); this.SelectAllDropTasks = false"
+                                        href="javascript:void(0);">All
+                                        Tasks</a></li>
+                                <li><a [ngClass]="{'active': this.repairRoomFilters.task == 'my'}" (click)="setRepairRoomTaskFilter(TaskEnum.My); this.SelectAllDropTasks = false"
+                                        href="javascript:void(0);">My
+                                        Tasks</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="refreshOrders dInlineBlock ml10 valignMiddle posRelative">
+                    <a tooltip="Refresh" placement="bottom" (click)="getRepairRoomTaskList()" class="font16"
+                        [ngClass]="{'active': isLoading}" href="JavaScript:void(0)">
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="dInlinetable wd50percent valignMiddle text-right">
+                <div class="filterLinks pOfilter newfilters">
+                    <label>Filter by:</label>
+                    <a [ngClass]="{'active':this.repairRoomFilters.dateFilter == 'today'}" (click)="setRepairRoomDateFilter(DateFilterEnum.Today);" tooltip="Today" placement="bottom"
+                        href="JavaScript:void(0)" class="color000">
+                        <i class="icon-today"></i>
+                    </a>
+                    <a [ngClass]="{'active':this.repairRoomFilters.dateFilter == 'yesterday'}" (click)="setRepairRoomDateFilter(DateFilterEnum.Yesterday);" tooltip="Yesterday"
+                        placement="bottom" href="JavaScript:void(0)" class="color000">
+                        <i class="icon-tomorrow"></i>
+                    </a>
+                    <a tooltip="Set date range" placement="bottom"
+                        (click)="_repairRoom.openModal(open_DateRange, 'custModal wd400')" href="JavaScript:void(0)"
+                        class="color000">
+                        <i class="icon-calendar_tickets"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="dtableCell wd45percent text-right">
+            <div class="dInlinetable wd80percent">
+                <div class="search-field input-group">
+                    <input type="text" [formControl]="searchText" class="form-control"
+                        placeholder="Search by customer, technician...">
+                    <a href="JavaScript:void(0)" class="input-group-addon">
+                        <i *ngIf="searchText.value" (click)="searchText.reset()" class="fas fa-times-circle"></i>
+                        <i class="icon-search"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="wd12Percent dInlinetable ml10 valignMiddle posRelative">
+                <a tooltip="Clear filters" placement="bottom" href="JavaScript:void(0)" (click)="setRepairRoomDefaultFilters()" class="clearAllfilter">
+                    <i class="icon-clear_all"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="po-wrapper">
+        <div *ngIf="isLoading" class="luna-loading zIndex100"></div>
+
+        <div class="empty-text">
+            <h2><i class="fas fa-exclamation-triangle"></i>No Task(s) Available</h2>
+        </div>
+        <div class="po-inner-list">
+            <ul>
+                <li [ngClass]="{'active':task.checked}" *ngFor="let task of taskList" (dblclick)="onSelectTaskDetail(task._id)">
+                    <div class="inner wd3percent allCheckbox">
+                        <span class="text-left ml0">
+                            <input [(ngModel)]="task.checked"
+                                id="task{{task.transaction_keeping_unit}}" class="checkbox-custom"
+                                name="task{{task.transaction_keeping_unit}}" type="checkbox">
+                            <label class="checkbox-custom-label" for="task{{task.transaction_keeping_unit}}"></label>
+                        </span>
+                    </div>
+                    <div class="inner wd35percent">
+                        <span
+                            class="text-left font13 fontSemiBold">{{task.Customer.first_name + " " + task.Customer.last_name}}
+                            <i *ngIf="task.is_repair_room_customer_alert" (click)="openModal(open_RepairAlerts, 'custModal wd500')" class="repairAlertIcon fas fa-bell pl5"><p class="tool">2</p></i>
+                        </span>
+                    </div>
+                    <div class="inner wd20percent">
+                        <ul class="status-info">
+                            <li *ngFor="let taskColor of task.repair_room_color_pallet"
+                                [ngStyle]="{'background-color': taskColor}">S</li>
+                            <!-- <li class="workingOnit">S</li>
+                            <li class="stuck">S</li>
+                            <li class="done">S</li> -->
+                        </ul>
+                    </div>
+                    <div class="inner wd15percent">
+                        <span>#{{task.transaction_keeping_unit}}</span>
+                    </div>
+                    <div class="inner wd15percent borderLeftRight">
+                        <span>{{task.device_count}} device(s)</span>
+                    </div>
+                    <div class="inner wd12percent">
+                        <span class="m0">{{_repairRoom.time_convert(task.total_repair_time)}}</span>
+                    </div>
+                    <div class="inner wd3percent">
+                        <div class="title-info">
+                            <a (click)="onSelectTaskDetail(task._id);" class="font12"><i
+                                    class="fas fa-info-circle"></i></a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="listCount">
+        <span>Total: <b>{{total}}</b></span>
+    </div>
+    <div class="bottomActionBar">
+        <div class="dtableCell wd60percent valignMiddle">
+            <div class="orderBottomFilters noposRelative">
+                <label class="color808080 fontPoppin fontSemiBold500 pr10 dInlineBlock m0">Quick filter:</label>
+                <div class="labelFilter dInlineBlock">
+                    <div class="btn-group" dropdown>
+                        <button id="button-animated" dropdownToggle type="button"
+                            class="btn dropdown-toggle statusFilter mainPOStatusFilter"
+                            aria-controls="dropdown-animated">All status(s)
+                            <span class="caret"></span>
+                        </button>
+                        <div class="filterDrop">
+                            <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu supplierFilterUl" role="menu"
+                                aria-labelledby="button-animated">
+                                <li *ngFor="let status of taskStatus" (click)="$event.stopPropagation()"
+                                    [ngClass]="status.class_name">
+                                    <input id="status{{status.status_name}}" 
+                                        value="{{status.status_name}}" [(ngModel)]="status.checked"
+                                        class="checkbox-custom" name="{{status.status_name}}" type="checkbox">
+                                    <label for="status{{status.status_name}}" class="checkbox-custom-label"
+                                        [ngClass]="{'active':status.checked}">{{status.status_name}}</label>
+                                </li>
+
+                            </ul>
+                            <a href="JavaScript:void(0)" (click)="setRepairRoomStatusFilter();"
+                                class="dBlock fontPoppin fontBold font11 padding5 borderRadius5 doneFilter text-center">Done</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dtableCell wd40percent text-right">
+            <div class="btn-group settingBtn">
+                <a class="innerStatusBtns dInlineBlock minWd30px" href="JavaScript:void(0)"
+                    (click)="ordersSettingsOpen = !ordersSettingsOpen">
+                    <i class="icon-settings"></i>
+                </a>
+                <div class="dropdown-content settingOptions listItemsTwo" *ngIf="ordersSettingsOpen"
+                    style="display: block;">
+                    <ul>
+                        <li class=""><a [ngClass] = "{'disableDiv': isTaskSelect()}"
+                                (click)="ordersSettingsOpen = false;isMarkAll = false; _repairRoom.openModal(open_FinishTasks, 'custModal wd300')"
+                                class="dropdown-item">Mark as done</a></li>
+                        <li><a (click)="ordersSettingsOpen = false;isMarkAll = true; _repairRoom.openModal(open_FinishTasks, 'custModal wd300')"
+                                class="dropdown-item">Mark all as done</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="!_repairRoom.isListing" id="existing-customer">
+    <task-detail (getRepairRoomTaskList) = "getRepairRoomTaskList()"></task-detail>
+</div>
+<ng-template #open_DateRange>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold color000">
+                Date Range</h2>
+            <p class="fontPoppin font12 mb0 color808080">Set your date range.</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <div class="items-form-content popupList">
+            <form autocomplete="off" action="#">
+                <div class="row mb15">
+                    <div class="col-lg-12">
+                        <label class="fontPoppin mb0 font12 fontSemiBold color000" for="startDate">Start date</label>
+                        <!-- <datetime-popup [(value)]="myDate"></datetime-popup> -->
+                        <input [(ngModel)]="repairRoomFilters.startDate" type="text" name="startDate" id="startDate"
+                            placeholder="Select From Date" class="form-control font12 borderColorcbcbcb " bsDatepicker
+                            [bsConfig]="{showWeekNumbers:false, isAnimated: true  , dateInputFormat: 'MMM/DD/YYYY'}"
+                            placeholder="MM/DD/YY" [isOpen]="isOpenfromDate">
+                        <span (click)="isOpenfromDate = !isOpenfromDate" class="datePickerIcon"></span>
+                    </div>
+                </div>
+                <div class="row mb15">
+                    <div class="col-lg-12">
+                        <label class="fontPoppin mb0 font12 fontSemiBold color000" for="endDate">End Date</label>
+                        <input type="text" [(ngModel)]="repairRoomFilters.endDate" name="endDate" id="endDate"
+                            placeholder="Select To Date" class="form-control font12 borderColorcbcbcb" bsDatepicker
+                            [bsConfig]="{showWeekNumbers:false, minDate: fromDate , isAnimated: true  , dateInputFormat: 'MMM/DD/YYYY'}"
+                            placeholder="MM/DD/YY" [isOpen]="isOpentoDate">
+                        <span (click)="isOpentoDate = !isOpentoDate" class="datePickerIcon"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button [ngClass]="{'disabled' : repairRoomFilters.startDate == null || repairRoomFilters.endDate == null}"
+            (click)="getRepairRoomTaskList(); _repairRoom.closeModel()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Filter</button>
+        <button (click)="_repairRoom.closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_FinishTasks>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font18 fontSemiBold color000">
+                Do you want to finish<br>the selected tasks?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="onMarkTaskAsDone(); _repairRoom.closeModel()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Yes</button>
+        <button (click)="_repairRoom.closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_RepairAlerts>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold color000">Repair alterts</h2>
+            <p class="fontPoppin font12 mb0 color808080">#INV-AAA0-Raja Muhammad Ashar Repair</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <div class="items-form-content popupList OrdrPartList">
+            <div id="po-wrapper">
+                <div class="po-top-info">
+                    <div class="inner wd40percent"><span class="text-center">Device Name</span></div>
+                    <div class="inner wd50percent text-center"><span class="text-center">Alert Message</span></div>
+                    <div class="inner wd10Percent text-center"><span class="text-center">Timer</span></div>
+                </div>
+                <div class="po-inner-list">
+                    <div class="ifBundleProduct">
+                        <ul>
+                            <li class="">
+                                <div class="inner wd40percent text-center"><span>Samsung Glaxay S20</span></div>
+                                <div class="inner wd50percent text-center"><span>Call the customer</span></div>
+                                <div class="inner wd11percent"><span class="text-center">01:56</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>

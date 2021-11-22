@@ -1,0 +1,157 @@
+<app-toaster (click)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg" [hideToster]="hideToster">
+</app-toaster>
+<div class="outer-wrapper">
+    <div class="inner-wrapper po-details po-info receiveType" [ngClass]="{'down-list':isScrollable}">
+        <div *ngIf="showLoader" class="luna-loading"></div>
+        <div class="cut-search-area">
+            <div class="top-info">
+                <h2
+                    class="color000 mb0 font14 pt7 pb7 fontSemiBold fontPoppin dInlinetable text-left wd30percent textUpperCase">
+                    <span>Buyback Details</span>
+                </h2>
+                <div class="wd70percent dInlinetable text-right">
+                    <div class="dInlinetable wd80percent">
+                        <div class="search-field input-group wd100Percent poDetailSearch">
+                            <input [(ngModel)]="searchBuyback" type="text" class="form-control"
+                                placeholder="Search by product name">
+                            <a href="JavaScript:void(0)" class="input-group-addon">
+                                <i *ngIf="searchBuyback.value" (click)="searchBuyback.reset()"
+                                    class="fas fa-times-circle"></i>
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="dInlinetable ml10 valignMiddle"  *ngIf="showOrderReviceTextField">
+                        <a (click)="reciveAllItems()" [ngClass]="{'active':isReciveAllItem}" class="receivingIcon dInlineBlock" href="JavaScript:void(0)">
+                            <i class="icon-complete2"></i>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="po-wrapper">
+            <div class="po-top-info">
+                <div class="inner wd30percent"><span>Product Name</span></div>
+                <div class="inner wd12percent text-center"><span class="text-center">Items sent</span></div>
+                <div class="inner wd12percent text-center"><span class="text-center">Price</span></div>
+                <div class="inner wd15percent text-center"><span class="text-center">Items received</span></div>
+                <div class="inner wd15percent text-center"><span class="text-center">Items approved</span></div>
+                <div class="inner wd15percent text-center"><span class="text-center">Total</span></div>
+            </div>
+            <div class="po-inner-list">
+                <ul>
+
+                    <li *ngFor="let product of orderDetail?.TransactionBuyBackLine | listFilter:searchBuyback let i = index; "
+                        class="padding8px">
+                        <div class="inner wd30percent">
+
+                            <span class="dBlock">{{product['System_Device']['product_name']}}</span>
+                            <!-- <span class="dBlock color808080">SKU: {{product?.Product?.sku}}</span> -->
+                        </div>
+                        <div class="inner wd12percent text-center"><span class="text-center">{{product.quantity}}</span>
+                        </div>
+                        <div class="inner wd12percent text-center recevingInput">
+                            <span *ngIf="!showOrderReviceTextField"
+                                class="text-center">{{product.device_price | currency}}</span>
+                            <span *ngIf="showOrderReviceTextField">
+                                <input numeric name="pr{{i + 1}}" [(ngModel)]="product.device_price"
+                                    (blur)="manageOrderProcessing(product)">
+                            </span>
+                        </div>
+                        <div class="inner wd15percent text-center recevingInput">
+                            <span *ngIf="!showOrderReviceTextField">
+                                {{orderStatus == 'Completed' ? product.received_qty : '--' }}
+                            </span>
+                            <span *ngIf="showOrderReviceTextField">
+                                <input ngInit='oldValue = product.received_qty' numeric
+                                    [ngClass]="{'bounce':product.received_qty > product.quantity}" name="pr{{i + 1}}"
+                                    [(ngModel)]="product.received_qty" type="text"
+                                    (blur)="manageOrderProcessing(product)">
+                            </span>
+                        </div>
+                        <div class="inner wd15percent text-center recevingInput">
+                            <span *ngIf="!showOrderReviceTextField">
+                                {{orderStatus == 'Completed' ? product.approve_qty : '--' }}
+                            </span>
+                            <span *ngIf="showOrderReviceTextField">
+                                <input numeric
+                                    [ngClass]="{'bounce':product.approve_qty > product.quantity || product.approve_qty > product.received_qty}"
+                                    class="" name="product{{i + 1}}" [(ngModel)]="product.approve_qty" type="text"
+                                    (blur)="manageOrderProcessing(product)">
+                            </span>
+                        </div>
+                        <div class="inner wd15percent text-center">
+                            <span
+                                *ngIf="!showOrderReviceTextField  && orderStatus != 'Completed'">{{product.device_price * product.quantity | currency}}</span>
+                            <span
+                                *ngIf="showOrderReviceTextField || orderStatus == 'Completed'">{{product.device_price * product.approve_qty | currency}}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="order-cash-details po-info box-shadow">
+            <div class="down">
+                <div class="center">
+                    <a (click)="downcart()"><i class="fas fa-caret-up"></i></a>
+                </div>
+            </div>
+            <div class="up">
+                <div class="center">
+                    <a (click)="downcart()"><i class="fas fa-caret-down"></i></a>
+                </div>
+            </div>
+            <div class="rightText"><span>Buyback Details</span></div>
+            <div class="inner-top">
+                <div class="cash-field">
+                    <div class="top-sub">
+                        <div class="scroll-content">
+                            <table class="table" style="width:100%">
+                                <tbody>
+                                    <tr colspan="4">
+                                        <td>Supplier:</td>
+                                        <td>{{supplierCompanyNameText}}</td>
+                                        <td>Supplier's buyback no.:</td>
+                                        <td>{{supplierOrderNumber || 'N/A'}}</td>
+                                    </tr>
+                                    <tr colspan="4">
+                                        <td>Date:</td>
+                                        <td>
+                                            {{orderDetail?.transaction_date | customDateFormat}}
+                                        </td>
+                                        <td>Tracking number:</td>
+                                        <td>{{trackingNumberText || 'N/A'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="cash-field">
+                    <div class="top-sub noborder p0">
+                        <table class="table notes-table" style="width:100%">
+                            <tbody>
+                                <tr colspan="2">
+                                    <td>Estimated Payout:</td>
+                                    <td>{{orderDetail?.order_estimate_amount | currency}}</td>
+                                </tr>
+                                <tr colspan="2">
+                                    <td>Actual Payout:</td>
+                                    <td>{{actualPayout | currency}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="caution-stock dtableCell wd90percent text-right valignMiddle">
+                <a *ngIf="showCompleteButton" (click)="onOrderComplete()" href="JavaScript:void(0)"
+                    class="back-cust-list wd100px">Complete</a>
+            </div>
+        </div>
+    </div>
+</div>

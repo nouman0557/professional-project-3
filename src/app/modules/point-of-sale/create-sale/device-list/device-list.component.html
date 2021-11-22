@@ -1,0 +1,501 @@
+<div class="tab-pane fade active show" id="tab-s-two">
+    <div id="existing-customer" [ngClass]="{'empty':customerDevices.length==0}">
+        <div class="cut-search-area posRelative zIndex100">
+            <div class="dInlinetable wd10percent valignMiddle">
+                <a href="JavaScript:void(0)" (click)="onBackButtonCLick()"
+                    class="back-cust-list dInlineBlock">Back</a>
+            </div>
+            <div class="dInlinetable wd25percent">
+                <div id="discount-cat-btn" class="btn-group height30px wd100Percent">
+                    <!-- <a [ngClass]="{'active': !archiveProducts , 'notActive' : archiveProducts}"
+                        (click)='applyActiveArchivedDevicesFilter(true)'
+                        class="btn wd50percent lineHeight22px font12 padding3px">Active</a>
+                    <a [ngClass]="{'active': archiveProducts , 'notActive' : !archiveProducts}"
+                        (click)='applyActiveArchivedDevicesFilter(false)' 
+                        class="btn wd50percent lineHeight22px font12 padding3px">Archive</a> -->
+                        <a  [ngClass]="{'active':searchDeviceInput.is_active , 'notActive' : !searchDeviceInput.is_active }"
+                         (click)='applyActiveArchivedDevicesFilter(true)' class="btn wd50percent lineHeight22px font12 padding3px">Active</a>
+                        <a  [ngClass]="{'active':!searchDeviceInput.is_active , 'notActive' : searchDeviceInput.is_active }"
+                         (click)='applyActiveArchivedDevicesFilter(false)' class="btn wd50percent lineHeight22px font12 padding3px">Archived</a>
+                </div>
+            </div>
+            <div class="dInlinetable valignMiddle wd3percent ml10 pt5 posRelative">
+                <a class="clearAllfilter dotMainbox" href="JavaScript:void(0)"
+                    (click)="openSelectAllDevices();$event.stopPropagation()">
+                    <span class="dotMenu"></span>
+                    <span class="dotMenu"></span>
+                    <span class="dotMenu"></span>
+                </a>
+                <div class="dropdown-content importBox selectAllitemsBox"
+                    *ngIf="SelectAllDropDevices" style="display: block;">
+                    <div class='dotBoxitems'>
+                        <ul>
+                                    <li><a  (click)="checkedAllField(customerDevices,true)" 
+                                        href="javascript:void(0);">Select all</a></li>
+                                    <li><a (click)="checkedAllField(customerDevices,false)"
+                                        href="javascript:void(0);">Unselect all</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="dInlinetable wd55percent">
+                <div class="dInlinetable">
+                    <div class="search-field input-group">
+                        <input type="text" [(ngModel)]="searchDevice" class="form-control"
+                    placeholder="Search by ID, Brand and Model, Color, IMEI/SNN...">
+                    <a href="JavaScript:void(0)" class="input-group-addon">
+                        <i *ngIf="searchDevice" (click)="searchDevice=''"
+                            class="fas fa-times-circle"></i>
+                        <i class="icon-search"></i>
+                    </a>
+                    </div>
+                </div>
+                <div class="wd12Percent dInlinetable ml10 valignMiddle">
+                    <a href="JavaScript:void(0)" (click)="resetDeviceFilter()"
+                        class="clearAllfilter"><i class="icon-clear_all"></i></a>
+                </div>
+            </div>
+        </div>
+        <div id="po-wrapper">
+            <div *ngIf='deviceLoader==true' class="luna-loading"></div>
+            <div class="empty-text">
+                <h2 *ngIf="searchDeviceInput.is_active" class="color808080 font16 fontSemiBold500">There are no devices created to <br> this customers yet. Let's create one!</h2>
+                <h2 *ngIf="!searchDeviceInput.is_active" class="color808080 font16 fontSemiBold500" >There are no archived devices.</h2>
+            </div>
+            <div class="po-top-info">
+                <div class="inner wd5percent allCheckbox">
+                    <span class="ml0">
+                        <input [(ngModel)]="theCheckbox"  (change)="checkedAllField(customerDevices,$event.target.checked)" 
+                        class="checkbox-custom"  id="cust-checkMain1"
+                            name="cust-checkMain1" type="checkbox">
+                        <label class="checkbox-custom-label" for="cust-checkMain1"></label>
+                    </span>
+                </div>
+                <div class="inner wd15percent"><span>Device ID</span></div>
+                <div class="inner wd15percent"><span>Brand</span></div>
+                <div class="inner wd15percent"><span>Model</span></div>
+                <div class="inner wd15percent"><span>Color</span></div>
+                <div class="inner wd20percent"><span>IMEI/ESN</span></div>
+                <div class="inner wd15percent"><span>Actions</span></div>
+            </div>
+            <div class="po-inner-list" (click)="hideSettingList()">
+                <div *ngIf='deviceLoader' class="luna-loading"></div>
+                <ul> 
+                    <li (dblclick)='onDeviceSelect(device)'
+                        *ngFor="let device of customerDevices | listFilterByFieldName: searchDevice : deviceSearchString;let i = index;"
+                        [ngClass]="{'active':''}">
+                        <div class="inner wd5percent allCheckbox">
+                            <span class="text-left">
+                                <input [checked]="device?.checked" (change)="singleItemChecked(customerDevices,i,$event)"
+                                 class="checkbox-custom" type="checkbox"  name="deviceCheck{{i}}"   id="deviceCheck{{i}}">
+                                <label class="checkbox-custom-label" for="deviceCheck{{i}}"></label>
+                            </span>
+                        </div>
+                        <div class="inner wd15percent">
+                            <span>{{device?.device_keeping_unit}}</span>
+                        </div>
+                        <div class="inner wd15percent">
+                            <span>{{device?.deviceBrand?.brand_name ||'N/A'}}</span>
+                        </div>
+                        <div class="inner wd15percent">
+                            <span>{{device?.deviceModel?.name ||'N/A'}}</span>
+                        </div>
+                        <div class="inner wd15percent">
+                            <span>{{device?.device_color}}</span>
+                        </div>
+                        <div class="inner wd20percent">
+                            <span>{{device?.imei_ssn}}</span>
+                        </div>
+                        <div class="inner wd15percent">
+                            <div class="title-info">
+                                <a (click)="onDeviceHistoryIconClick(device._id)" class="font12">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                <a *ngIf='searchDeviceInput.is_active' (click)="onUpdateCustomerDevice(device._id)" class="font12 pl8 pr8">
+                                    <i class="icon-edit"></i>
+                                </a>
+                                <a *ngIf='searchDeviceInput.is_active' (click)="openPrintLabelFun(openPrintLabel, 'custModal wd700',device)"   class="font12">
+                                    <i class="icon-print"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="bottomActionBar">
+            <div class="dtableCell wd60percent"></div>
+            <div class="dtableCell wd40percent text-right">
+                <a href="JavaScript:void(0)" class="innerStatusBtns noFloat dInlineBlock add-btn-item"
+                (click)="onAddCustomerDevice(customerId)" > Add Device</a>
+                <div class="btn-group settingBtn">
+                    <!-- <a  class="innerStatusBtns dInlineBlock minWd30px" href="JavaScript:void(0)"
+                     (click)="openDevicesSettings(true);$event.stopPropagation()">
+                        <i class="icon-settings"></i>
+                    </a> -->
+                    <!-- <div class="dropdown-content importBox productsSettingOptions deviceList settingOptions"
+                        *ngIf="devicesSettingsOpen" style="display: block;">
+                        <ul>
+                            <li><a class="dropdown-item">Merge Device(s)</a></li>
+                            <li><a class="dropdown-item">Export Device(s)</a></li>
+                            <li><a class="dropdown-item">Print Device Labels(s)</a></li>
+                            <li><a (click)="openModal(removeDevice,'custModal wd210')" class="dropdown-item">Archive Device(s)</a></li>
+                        </ul>
+                    </div> -->
+                    <a class="innerStatusBtns dInlineBlock minWd30px" href="JavaScript:void(0)"
+                    (click)="openDeviceSettings(customerDevices);$event.stopPropagation()">
+                    <i class="icon-settings"></i>
+                </a>
+                    <div class="dropdown-content settingOptions" [ngClass]="{'listItemsSix': searchDeviceInput.is_active, 'listItemsTwo': !searchDeviceInput.is_active}"
+                    *ngIf="deviceSettingsOpen" style="display: block;">
+                    <ul *ngIf='searchDeviceInput.is_active'>
+                        <li><a [ngClass]="{'disableDiv': !showMergeOption}"   (click)="openCompareItemModal(open_CompareTwoItems,'custModal wd600')"  class="dropdown-item noFloat">Merge Device(s)</a></li>
+                        <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','export')" class="dropdown-item noFloat">Export Device(s)</a></li>
+                        <li><a (click)="importModal.openModal()" (click)='deviceSettingsOpen=false' class="dropdown-item noFloat">Import Device(s)</a></li>
+                        <li><a (click)="openDeviceModal(openPrintLabel, 'custModal wd700','print')" class="dropdown-item noFloat">Print Device Label(s)</a></li>
+                        <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','archive')" class="dropdown-item noFloat">Archive Device(s)</a></li>
+                        <li><a [ngClass]="{'disableDiv': !showTransferOption}"  (click)="openDeviceModal(openDeviceTransfer, 'custModal wd700', transfer)" class="dropdown-item noFloat">Transfer Device(s)</a></li>
+                    </ul>
+                    <ul *ngIf='!searchDeviceInput.is_active'>
+                        <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','active')"
+                             class="dropdown-item noFloat">Active Device(s)</a></li>
+                        <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','delete')" 
+                            class="dropdown-item noFloat">Permanently Delete Device(s)</a></li>
+                    </ul>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="deviceDetails" id="existing-customer" [ngClass]="{'empty':customerDevices.length==0}">
+        <div class="cut-search-area posRelative zIndex100">
+            <a href="JavaScript:void(0)" (click)="cancel('deviceDetails','existingDevices')"
+            class="back-cust-list dInlineBlock">Back</a>
+            <h2 class="color000 mb0 font14 fontSemiBold fontPoppin dInlineBlock">iPhone 6s Plus Activity History</h2>
+        </div>
+        <div id="po-wrapper">
+            <div *ngIf='deviceLoader==true' class="luna-loading"></div>
+            <div class="empty-text">
+                <h2 class="color808080 font16 fontSemiBold500">There are no devices created to <br> this customers yet. Let's create one!</h2>
+            </div>
+            <div class="po-top-info">
+                <div class="inner wd5percent allCheckbox">
+                    <span class="ml0">
+                        <input class="checkbox-custom"  id="cust-checkMain"
+                            name="cust-checkMain" type="checkbox">
+                        <label class="checkbox-custom-label" for="cust-checkMain"></label>
+                    </span>
+                </div>
+                <div class="inner wd20percent"><span>Replacement Date</span></div>
+                <div class="inner wd60percent"><span class="text-left">Replacement(s)</span></div>
+                <div class="inner wd15percent"><span>Actions</span></div>
+            </div>
+            <div class="po-inner-list">
+                <ul>
+                    <li>
+                        <div class="inner wd5percent allCheckbox">
+                            <span class="text-left">
+                                <input class="checkbox-custom" type="checkbox" name="cust-POcheck{{i}}" id="cust-POcheck{{i}}">
+                                <label class="checkbox-custom-label" for="cust-POcheck{{i}}"></label>
+                            </span>
+                        </div>
+                        <div class="inner wd20percent">
+                            <span>Apr/02/2020</span>
+                        </div>
+                        <div class="inner wd60percent text-left">
+                            <span class="text-left">iPhone 6s plus Screen Replacement HQ Black</span>
+                        </div>
+                        <div class="inner wd15percent">
+                            <div class="title-info">
+                                <a (click)="openFetchDeviceImagesModal(fetchImg, 'box-fetchimg')" class="font12">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="bottomActionBar">
+            <div class="dtableCell wd60percent"></div>
+            <div class="dtableCell wd40percent text-right">
+                <a href="JavaScript:void(0)" class="innerStatusBtns noFloat dInlineBlock add-btn-item"
+                (click)="openModal(adddevice,'custModal wd600')">Add Device</a>
+                <div class="btn-group settingBtn">
+                    <!-- <a  class="innerStatusBtns dInlineBlock minWd30px" href="JavaScript:void(0)" (click)="openDevicesSettings(true);$event.stopPropagation()">
+                        <i class="icon-settings"></i>
+                    </a>
+                    <div class="dropdown-content importBox productsSettingOptions deviceList settingOptions"
+                        *ngIf="devicesSettingsOpen" style="display: block;">
+                        <ul>
+                            <li><a class="dropdown-item">Merge Device(s)</a></li>
+                            <li><a class="dropdown-item">Export Device(s)</a></li>
+                            <li><a class="dropdown-item">Print Device Labels(s)</a></li>
+                            <li><a (click)="openActiveDeviceModal(open_activeDevice,'custModal wd210')" class="dropdown-item">Active Device(s)</a></li>
+                        </ul> -->
+                        <a class="innerStatusBtns dInlineBlock minWd30px" href="JavaScript:void(0)"
+                    (click)="openDeviceSettings(customerDevices);$event.stopPropagation()">
+                    <i class="icon-settings"></i>
+                </a>
+                    <div class="dropdown-content settingOptions listItemsFour"
+                    *ngIf="deviceSettingsOpen" style="display: block;">
+                    <ul *ngIf='searchDeviceInput.is_active'>
+                        <li><a   [ngClass]="{'disableDiv': !showMergeOption}" (click)="openCompareItemModal(open_CompareTwoItems,'custModal wd600')"  class="dropdown-item noFloat">Merge Device(s)</a></li>
+                        <li><a class="dropdown-item noFloat">Export Device(s)</a></li>
+                        <li><a (click)="openDeviceModal(openPrintLabel, 'custModal wd600','print')" class="dropdown-item noFloat">Print Device Label(s)</a></li>
+                        <!-- <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','archive')" class="dropdown-item noFloat">Archive Device(s)</a></li> -->
+                        <li><a [ngClass]="{'disableDiv': !showTransferOption}" (click)="openDeviceModal(openDeviceTransfer, 'custModal wd600', transfer)" class="dropdown-item noFloat">Transfer Device(s)</a></li>
+                    </ul>
+                    <ul *ngIf='!searchDeviceInput.is_active'>
+                        <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','active')"
+                             class="dropdown-item noFloat">Active Device(s)</a></li>
+                        <li><a (click)="openDeviceModal(open_DevicesModal,'custModal wd210','delete')" 
+                            class="dropdown-item noFloat">Permanently Delete Device(s)</a></li>
+                    </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #open_DevicesModal>
+    <div class="modal-body">
+        <div *ngIf='deleteSuppLoader' class="luna-loading"></div>
+        <div class="modalTitle mx-auto text-center pt15">
+            <i class="icon-archive font42 color000"></i>
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000">Do you want to <br> {{deviceModalFor}} device(s)</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button  (click)="callFunction()" (click)="modalRef.hide()" type="button" class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite wd140px">
+            Yes, {{deviceModalFor}} it</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font10 fontLato fontSemiBold mx-auto p0">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #openPrintLabel>
+    <div *ngIf="ifPrintInput" class="ifPrintInput">
+        <div class="modal-header noborder pt30">
+            <div class="modalTitle mx-auto text-center">
+                <h2 class="fontPoppin font24 fontSemiBold color000">
+                    Print Label(s)</h2>
+                <p class="fontPoppin font12 mb10 color000">Select the number of lables that you want for each device
+                </p>
+            </div>
+        </div>
+        <div class="modal-body pl40 pt0 pr40">
+            <div class="items-form-content popupList">
+                <div id="po-wrapper">
+                    <div class="po-top-info">
+                        <div class="inner wd40percent"><span class="text-left bgBlack colorfff">Product name</span>
+                        </div>
+                        <div class="inner wd11percent text-center"><span
+                                class="text-center bgBlack colorfff">Quantity</span></div>
+                    </div>
+                    <div class="po-inner-list">
+                        <div class="ifBundleProduct">
+                            <ul>
+                                <li *ngFor="let print of printLabelProduct; let i = index" class="">
+                                    <div class="inner wd40percent text-left">
+                                        <span class="dBlock color000">{{print?.brand_model_name | titlecase}}</span>
+                                        <span class="dBlock color808080">{{print?.device_keeping_unit}}</span>
+                                    </div>
+                                    <div class="inner wd11percent">
+                                        <span class="text-center ml15 mr15">
+                                            <div
+                                                class="input-group borderWidth1pxSolid borderColorcbcbcb borderRadius5 bgWhite">
+                                                <span class="input-group-btn m0" (click)='printLabelMiuns(i)'>
+                                                    <button type="button"
+                                                        class="btn btn-default btn-number borderBRR0 borderTRR0"
+                                                        disabled="disabled" data-type="minus" data-field="quant[1]">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                </span>
+                                                <span
+                                                    (click)='printLabelQuantityInput(i)'
+                                                    class="form-control input-number"
+                                                    style="line-height:2.5">{{print?.quantity}}</span>
+                                                <!-- <input *ngIf='print.printLabelQuantityInput'
+                                                    (focusout)="donePrintLabelQuantity(i,$event.target.value)"
+                                                    type="text" name="quant{{i}}" class="form-control input-number"
+                                                    min="1" max="10"> -->
+                                                <span class="input-group-btn m0" (click)='printLabelPluse(i)'>
+                                                    <button type="button"
+                                                        class="btn btn-default btn-number borderBLR0 borderTLR0"
+                                                        data-type="plus" data-field="quant[1]">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer dBlock noborder text-center mx-auto">
+            <button (click)="openPrintPreview()" type="button"
+                class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20 mx-auto">Print Label</button>
+            <button (click)="closePrintLabelPopup()" type="button"
+                class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+        </div>
+    </div>
+    <div *ngIf="ifPrintPreview" class="ifPrintPreview">
+        <div class="modal-body">
+            <div id="print-section" class="labelPrintPreview">
+                <ul *ngFor="let plabel of printLabelProduct; let i = index" class="dtable wd100Percent text-left ">
+                    <li *ngFor="let in of counter(plabel?.quantity); let j = index"
+                        class="dInlinetable wd49percent border2px m1px borderRadius5">
+                        <div class="dtable wd100Percent padding5px">
+                            <div class="dtableCell wd30percent valignMiddle barCodeWrap">
+                                <ngx-barcode class="fontPoppin font10 m0 color000 dBlock text-center"
+                                    [bc-value]="printLabelProduct[i]?.imei_ssn" [bc-width]="3.5" [bc-height]="70"
+                                    [bc-display-value]="true" [bc-margin]="4" [bc-margin-top]="4" [bc-margin-bottom]="4"
+                                    [bc-margin-left]="4" [bc-margin-right]="4">
+                                </ngx-barcode>
+                            </div>
+                            <div class="dtableCell wd70percent">
+                                <div class="topLabelInfo mb10">
+                                    <h2 class="labelTitle devicelabelText fontPoppin font11 fontSemiBold color000 dBlock padding5px text-center">
+                                        {{printLabelProduct[i]?.brand_model_name  }}</h2>
+                                    <span
+                                        class="dBlock wd100Percent bgcolorGreenLabel colorWhite fontPoppin font10 fontSemiBold padding3px text-center">SKU:
+                                     ID: {{printLabelProduct[i]?.device_keeping_unit}}</span>
+                                </div>
+                                 <div class="dtable wd100Percent">
+                                    <div  class="dtableCell wd60percent">
+                                        <span class="dBlock font10 color808080 fontSemiBold">Client's Name</span>
+                                        <span class="dBlock font10 color808080 mb5">{{printLabelProduct[i]?.Customer?.first_name+' '+printLabelProduct[i]?.Customer?.last_name}}</span>
+                                        <span class="dBlock font10 color808080 fontSemiBold">Device IMEI/ESN</span>
+                                        <span class="dBlock font10 color808080 mb5">{{printLabelProduct[i]?.imei_ssn}}</span>
+                                    </div>
+                                    <div  class="dtableCell wd40percent">
+                                        <span class="dBlock font10 color808080 fontSemiBold">Client's Phone</span>
+                                        <span class="dBlock font10 color808080 mb5">{{printLabelProduct[i]?.Customer?.phone}}</span>
+                                        <span class="dBlock font10 color808080 fontSemiBold">Device Color</span>
+                                        <span class="dBlock font10 color808080 mb5">{{printLabelProduct[i]?.device_color}}</span>
+                                    </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer dBlock noborder text-center mx-auto">
+            <button (click)="closePrintLabelPopup()" (click)="doneprint()" printSectionId="print-section" ngxPrint  [useExistingCss]="true" type="button"
+                class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20 mx-auto">Print Labels</button>
+            <button (click)="backPrintPreview()" type="button"
+                class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Back</button>
+        </div>
+    </div>
+</ng-template>
+<ng-template #openDeviceTransfer>
+    <div  class="modal-header noborder pt30" (click)="showCustomerList=false">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin notextTransform fontBold font24 color000">Transfer Device</h2>
+            <p class="fontPoppin font12 mb10 color000">This device is going to be transfer to the customer you select on the search bar.</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40" (click)="showCustomerList=false">
+        <div class="items-form-content">
+            <label class="m0 color000 mb0 fontPoppin font12 fontSemiBold" for="selectCustomer">Select a Customer</label>
+            <div class="search-field input-group selectCustomer">
+                <input type="text" [(ngModel)]="searchCustomer" name="selectCustomer"
+                 id="selectCustomer" class="form-control cust-field font12 borderColorcbcbcb"
+                  placeholder="Search by name phone number or email..." (ngModelChange)='customerSearchForTransferDevice(inputSearchCustomer,$event)' >
+                <a href="JavaScript:void(0)" class="input-group-addon">Select</a>
+            </div>
+            <div class="ulWrapper selectCustomerDrop" *ngIf="showCustomerList">
+                <ul>
+                    <li *ngFor="let customer of customerList" (click)="showCustomerList=false"
+                    (click)="searchCustomer=customer?.first_name + ' ' + customer?.last_name"   (click)="transferCutomerId=customer._id">
+                        <a class="dtable wd100Percent">
+                            <span class="dtableCell wd35percent">{{customer?.first_name + ' ' + customer?.last_name || 'N/A'}}</span>
+                            <span class="dtableCell wd25percent">{{customer?.phone || 'N/A'}}</span>
+                            <span class="dtableCell wd40percent">{{customer?.email || 'N/A'}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button (click)="modalRef.hide()" (click)='transferDeviceFun()' [ngClass]="{'disableDiv': transferCutomerId==''}" type="button"
+         class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite wd140px">
+         Transfer</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font10 fontLato fontSemiBold mx-auto p0">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_CompareTwoItems>
+    <div  class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin notextTransform fontBold font24 color000">Merge Devices</h2>
+            <p style="color: black;">Select which device you want as principle.</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <div class="items-form-content">
+            <div class="row mb15">
+                <div class="col-lg-6">
+                    <!-- [ngClass]="{ 'boxSelected': sentSupplierForImport[count]?.selected=='given'}" -->
+                    <div class="compareBox posRelative nOcenter" [ngClass]="{ 'boxSelected': mergeDevicesDate[0]?._id==principalDevice[0]?._id}">
+                        <div class="innerCompare">
+                            <h2 class="fontPoppin font14 mb15 fontSemiBold color000 text-center">{{mergeDevicesDate[0]?.brand_model_name |titlecase }}
+                            </h2>
+                            <div class="addressInfo">
+                                <span class="dBlock color808080 fontSemiBold">Device ID</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[0]?.device_keeping_unit}}</span>
+                                <span class="dBlock color808080 fontSemiBold">Color</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[0]?.device_color |titlecase }}</span>
+                                <span class="dBlock color808080 fontSemiBold">IMEI/SSN</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[0]?.imei_ssn}}</span>
+                            </div>
+                            <!-- suggGivenButton -->
+                            <a href="JavaScript:void(0)" [ngClass]="{ 'suggGivenButton': mergeDevicesDate[0]?._id==principalDevice[0]?._id}"
+                            (click)="selectprincipalDevice(mergeDevicesDate[0],mergeDevicesDate[1])" class="mt20 font12 dBlock mx-auto text-center "> Use as principal </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="compareBox posRelative nOcenter" [ngClass]="{ 'boxSelected': mergeDevicesDate[1]?._id==principalDevice[0]?._id}" >
+                        <div class="innerCompare">
+                            <h2 class="fontPoppin font14 mb15 fontSemiBold color000 text-center">{{mergeDevicesDate[1]?.brand_model_name |titlecase }}
+                            </h2>
+                            <div class="addressInfo">
+                                <span class="dBlock color808080 fontSemiBold">Device ID</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[1]?.device_keeping_unit}}</span>
+                                <span class="dBlock color808080 fontSemiBold">Color</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[1]?.device_color |titlecase }}</span>
+                                <span class="dBlock color808080 fontSemiBold">IMEI/SSN</span>
+                                <span class="dBlock color808080 mb10">{{mergeDevicesDate[1]?.imei_ssn}}</span>
+                            </div>
+                            <a href="JavaScript:void(0)" [ngClass]="{ 'suggGivenButton': mergeDevicesDate[1]?._id==principalDevice[0]?._id}"
+                            (click)="selectprincipalDevice(mergeDevicesDate[1],mergeDevicesDate[0])" class="mt20 font12 dBlock mx-auto text-center">Use as principal</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span class="dBlock wd100Percent text-center confirmMergeBox">
+            <input [(ngModel)]='itemCompareYesCheck' class="checkbox-custom"  id="confirmMerge" name="confirmMerge" type="checkbox">
+            <label class="checkbox-custom-label font12 fontPoppin fontSemiBold500 color000" for="confirmMerge">I understand this change is irreversible</label>
+        </span>
+            <!-- <input [(ngModel)]='itemCompareYesCheck' type="checkbox"> I understand this change is irreversible -->
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button type="button" (click)='mergeDeviceFun()' (click)="modalRef.hide()"  [ngClass]="{'disableDiv': !itemCompareYesCheck || isObjectEmpty(principalDevice)}"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Save</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+
+<app-add-customer-device #adddevice  (addDeviceDone)="applyActiveArchivedDevicesFilter(true)"></app-add-customer-device> 
+
+<app-import-items #importModal [ItemToImport]="ItemToImport"  [mappedColumns]="deviceMappedColumns"
+   [sampleCsvPath]="sampleCsvPath"  [nonSkipAbleFieldsIndex]="nonSkipAbleFieldsIndex" (importCustomer)="importDevices($event)"></app-import-items>

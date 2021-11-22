@@ -1,0 +1,187 @@
+<div class="tab-content" id="pills-s-tabContent">
+    <div class="tab-pane fade active show" id="tab-s-two">
+        <div id="new-customer">
+            <div *ngIf="loading" class="luna-loading"></div>
+            <div id="stock-supplier">
+                <div class="cut-search-area posRelative zIndex3">
+                    <div class="top-info">
+                        <h2
+                            class="color000 mb0 font14 pt7 pb7 fontSemiBold fontPoppin dInlinetable text-left wd70percent">
+                            {{titleText}}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <form autocomplete="off" [formGroup]="customerForm" (ngSubmit)="saveCustomer()">
+                <div class="cust-inner bgWhite">
+                    <div class="customer-form-content pt15">
+                        <div class="col-lg-12 noborderBottom pl0 pr0 pb15">
+                            <span
+                                class="dBlock wd100Percent color000 font12 fontSemiBold fontPoppin mb0 bundleLine CustomerLine  posRelative">Personal
+                                Data</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label for="first-name"
+                                    [ngClass]="{ 'bounce is-invalid': isCustomerSubmitted && customerForm.controls.first_name.errors}">First
+                                    Name<sup>*</sup></label>
+                                <input type="text" formControlName="first_name" name="first-name"
+                                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                    placeholder="Type your customer first name" [ngClass]="{ 'bounce': isCustomerSubmitted && customerForm.controls.first_name.errors}">
+                                <span *ngIf="isCustomerSubmitted && customerForm.controls.first_name.errors"
+                                    class="field-error-msg bounce">
+                                    First Name required
+                                </span>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="last-name"
+                                    [ngClass]="{ 'bounce is-invalid':isCustomerSubmitted && customerForm.controls.last_name.errors}">Last
+                                    Name<sup>*</sup></label>
+                                <input type="text" formControlName="last_name" name="last-name"
+                                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                    placeholder="Type your customer last name" [ngClass]="{ 'bounce':isCustomerSubmitted && customerForm.controls.last_name.errors}">
+                                <span *ngIf="isCustomerSubmitted && customerForm.controls.last_name.errors"
+                                    class="field-error-msg bounce">
+                                    Last Name is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mb10">
+                            <div class="col-lg-6">
+                                <label for="phone-number"
+                                    [ngClass]="{ 'bounce is-invalid':isCustomerSubmitted && customerForm.controls.phone.errors}">Phone
+                                    Number<sup>*</sup></label>
+                                <input numeric negative="0" type="text" formControlName="phone" name="phone-number"
+                                    class="form-control mb5 cust-field font12 borderColorcbcbcb borderRadius5"
+                                    placeholder="Type your customer phone number" [ngClass]="{ 'bounce':isCustomerSubmitted && customerForm.controls.phone.errors}">
+                                <span *ngIf="isCustomerSubmitted && customerForm.controls.phone.errors"
+                                    class="field-error-msg bounce">
+                                    Phone Number is required
+                                </span>
+                                <div class="dInlineBlock pl10">
+                                    <input id="selectNotificationPhone" class="checkbox-custom"
+                                        name="selectNotificationPhone" type="checkbox" formControlName="can_sms">
+                                    <label for="selectNotificationPhone" class="checkbox-custom-label font10">Receive
+                                        SMS
+                                        Notification</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="email"
+                                    [ngClass]="{ 'bounce is-invalid':isCustomerSubmitted && customerForm.controls.email.errors}">Email<sup>*</sup></label>
+                                <input type="email" formControlName="email" name="email"
+                                    class="form-control cust-field font12 borderColorcbcbcb mb5 borderRadius5"
+                                    placeholder="Type your customer email"  [ngClass]="{ 'bounce':isCustomerSubmitted && customerForm.controls.email.errors}">
+                                <span *ngIf="isCustomerSubmitted && customerForm.controls.email.errors"
+                                    class="field-error-msg bounce">
+                                    Email is required
+                                </span>
+                                <span *ngIf="!customerService.validateEmail(customerForm.controls.email.value)
+                                && !customerForm.controls.email.errors" class="field-error-msg bounce">
+                                    Email format is invalid
+                                </span>
+                                <div class="dInlineBlock pl10">
+                                    <input id="selectNotificationEmail" class="checkbox-custom"
+                                        name="selectNotificationEmail" type="checkbox" formControlName="can_email">
+                                    <label for="selectNotificationEmail" class="checkbox-custom-label font10">Receive
+                                        Email
+                                        Notification</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label for="address1"
+                                    [ngClass]="{ 'bounce is-invalid':isCustomerSubmitted && customerForm.controls.address_1.errors}">Address
+                                    1<sup>*</sup></label>
+                                <input type="text" formControlName="address_1" name="address1"
+                                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                    placeholder="Address 1" [ngClass]="{ 'bounce':isCustomerSubmitted && customerForm.controls.address_1.errors}">
+                                <span *ngIf="isCustomerSubmitted && customerForm.controls.address_1.errors"
+                                    class="field-error-msg bounce">
+                                    Address 1 is required
+                                </span>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="address1">Address 2</label>
+                                <input type="text" formControlName="address_2" name="address2"
+                                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                    placeholder="Address 2">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="city"
+                                    [ngClass]="{ 'bounce is-invalid':isCustomerSubmitted && customerForm.controls.city.errors}">City<sup>*</sup></label>
+                                <input type="text" formControlName="city" name="city"
+                                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                    placeholder="Example: Satevilla" [ngClass]="{ 'bounce':isCustomerSubmitted && customerForm.controls.city.errors}">
+                                <span *ngIf="isCustomerSubmitted && customerForm.controls.city.errors"
+                                    class="field-error-msg bounce">
+                                    City is required
+                                </span>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="State"
+                                    [ngClass]="{ 'bounce is-invalid':isCustomerSubmitted && customerForm.controls.state.errors}">State<sup>*</sup></label>
+                                <input type="text" formControlName="state" name="State"
+                                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                    placeholder="Example: North Corolina" [ngClass]="{ 'bounce':isCustomerSubmitted && customerForm.controls.state.errors}">
+                                <span *ngIf="isCustomerSubmitted && customerForm.controls.state.errors"
+                                    class="field-error-msg bounce">
+                                    State is required
+                                </span>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="zipcode"
+                                    [ngClass]="{ 'bounce is-invalid':isCustomerSubmitted && customerForm.controls.zip_code.errors}">ZIP
+                                    Code<sup>*</sup></label>
+                                <input type="text" formControlName="zip_code" name="zipcode"
+                                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                    placeholder="Example: 28677" [ngClass]="{ 'bounce':isCustomerSubmitted && customerForm.controls.zip_code.errors}">
+                                <span *ngIf="isCustomerSubmitted && customerForm.controls.zip_code.errors"
+                                    class="field-error-msg bounce">
+                                    ZIP Code is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mb15">
+                            <div class="col-lg-12">
+                                <label for="device-add-note">Tags</label>
+                                <tag-input class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                    formControlName="Tags" [addOnBlur]="true" [maxItems]='6' [editable]="true"
+                                    [identifyBy]="'id'" [displayBy]="'name'" [separatorKeyCodes]="[13,9]"
+                                    [secondaryPlaceholder]="'Example: New'"
+                                    [placeholder]="'Enter a new tag'">
+                                </tag-input>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 noborderBottom pb15 pl0 pr0">
+                            <span
+                                class="dBlock wd100Percent color000 font12 fontSemiBold fontPoppin mb0 bundleLine CustomerLine generalInfo posRelative">Marketing
+                                Questions</span>
+                        </div>
+                        <div class="row mb15">
+                            <div class="col-lg-12">
+                                <label for="hearAboutUs">How did you hear about us?</label>
+                                <tag-input class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                                    formControlName="marketing_question" [addOnBlur]="true" [maxItems]='6'
+                                    [editable]="true" [identifyBy]="'id'" [displayBy]="'name'"
+                                    [separatorKeyCodes]="[13,9]"  [secondaryPlaceholder]="'Example: Twitter'"
+                                    [placeholder]="'Enter a new tag'">
+                                </tag-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-action-buttons">
+                    <div class="cust-btns text-right">
+                        <a (click)="onCancel(customerId)" class="cncl-btn-cust valignMiddle">Cancel</a>
+                        <button type="submit" class="btn btn-default noFloat ml10">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

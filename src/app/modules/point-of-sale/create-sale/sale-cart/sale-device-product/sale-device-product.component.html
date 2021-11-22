@@ -1,0 +1,281 @@
+<accordion-group (isOpenChange)="device.isOpen = $event; onDeviceSelect($event)" [isOpen]="device.isOpen" class="deviceList">
+    <div accordion-heading (click)="noOpenAccordian($event)">
+        <ul>
+            <li>
+                <div class="outer">
+                    <div class="inner wd70percent">
+                        <span class="right font12 fontPoppin notextTransform ">
+                            {{device?.device_keeping_unit }} - {{device.deviceModel?.name}} - Repair
+                        </span>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">{{device.total_amount | currency}}</span>
+                    </div>
+                    <div class="inner wd11Percent">
+                        <span class="fontPoppin fontSemiBold">{{device.total_amount | currency}}</span>
+                    </div>
+                    <div class="inner wd4percent">
+                        <a class="close-icon" (click)="createSaleService.openModal(open_removeDevice,'custModal wd300')"
+                            href="JavaScript:void(0);">
+                            <i class="icon-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul id="sub">
+            <li>
+                <div class="dtable wd100Percent">
+                    <div class="dtableCell wd40percent">
+                        <div [ngClass]="{'btn-disable':device['DeviceCheckIn'] != '' }" class="checkin-device">
+                            <a *ngIf="device['DeviceCheckIn'] == ''" href="JavaScript:void(0);"
+                                (click)="onCheckInDevice(device['_id'])">Check
+                                in Device</a>
+                            <a *ngIf="device['DeviceCheckIn'] != ''" (click)="onCheckInDevice(device['_id'])"
+                                href="JavaScript:void(0);">Checked in Device</a>
+                        </div>
+                    </div>
+                    <div class="dtableCell wd45percent">
+                        <div class="checkin-status">
+                            <p>Status:
+                                <span class="notStarted">Not started</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="dtableCell wd15percent">
+                        <div class="print-device">
+                            <a *ngIf="device['DeviceCheckIn'] != ''" href="JavaScript:void(0); "
+                                (click)="createSaleService.openModal(open_printLabel,'box-printLabel custModal wd700')">Print
+                                label</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="sub-content ">
+                    <div class="bottom">
+                        <div class="device-icons">
+                            <ul>
+                                <li class="dropdown imie-sn">
+                                    <a href="JavaScript:void(0);" class="added dropbtn">
+                                        <i class="icon-imei"></i>
+                                        IMEI/ ESN
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <p>IMEI/ ESN:</p>
+                                        <span>
+                                            {{device?.imei_ssn}}
+                                        </span>
+                                    </div>
+                                </li>
+                                <li class="dropdown fetch-image">
+                                    <a [ngClass]="{'added':device?.DeviceCheckIn != '' && device?.Checkin?.DeviceImages?.length > 0}" href="JavaScript:void(0);"
+                                        class="added dropbtn">
+                                        <i class="icon-fetch_image"></i>
+                                        Fetch Image
+                                    </a>
+                                    <div *ngIf="device['DeviceCheckIn'] != '' && device?.Checkin?.DeviceImages?.length > 0" class="dropdown-content">
+                                        <ul>
+                                            <li *ngFor="let img of device?.Checkin?.DeviceImages; let in = index;">
+                                                <span [ngStyle]="{'background-image':'url('+ baseUrl+device?.Checkin?.DeviceImages[in]?.path +')'}"></span>
+                                                <!-- <span style="background-image: url(../../../../assets/images/userplaceholder.png);"></span> -->
+                                            </li>
+                                        </ul>
+                                        <!-- <a *ngFor="let img of device?.Checkin?.DeviceImages; let in = index;" href="{{baseUrl+device?.Checkin?.DeviceImages[in].SourceFile[0]?.path}}" target="_blank"></a> -->
+                                    </div>
+                                </li>
+                                <li class="dropdown water-damage">
+                                    <a [ngClass]="{'added':device['DeviceCheckIn'] != ''}" href="JavaScript:void(0);"
+                                        class="dropbtn">
+                                        <i class="icon-water_damage"></i>
+                                        Water Damage
+                                    </a>
+                                    <div *ngIf="device['DeviceCheckIn'] != ''" class="dropdown-content">
+                                        <p *ngIf="device?.Checkin?.is_water_damage"> Device has water damage</p>
+                                        <p *ngIf="!device?.Checkin?.is_water_damage"> Device dose not have water damage
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="dropdown patterns">
+                                    <a *ngIf="device?.Checkin?.is_pattern" (click)="openPatternModel(addPattern,'custModal wd400')" [ngClass]="{'added':device['DeviceCheckIn'] != '' && (device?.Checkin?.password != '' || device?.Checkin?.pattern_code != '')}"
+                                        href="JavaScript:void(0);" class="dropbtn">
+                                        <i class="icon-pattern"></i>
+                                        Patterns
+                                    </a>
+                                    <a *ngIf="!device?.Checkin?.is_pattern" [ngClass]="{'added':device['DeviceCheckIn'] != '' && (device?.Checkin?.password != '' || device?.Checkin?.pattern_code != '')}"
+                                        href="JavaScript:void(0);" class="dropbtn">
+                                        <i class="icon-pattern"></i>
+                                        Password
+                                    </a>
+                                    <div *ngIf="device['DeviceCheckIn'] != '' && !device?.Checkin?.is_pattern" class="dropdown-content">
+                                        <p>{{device?.Checkin?.password}}</p>
+                                    </div>
+                                    <div *ngIf="device['DeviceCheckIn'] != '' && device?.Checkin?.is_pattern" class="dropdown-content">
+                                        <p>Click to view pattern</p>
+                                    </div>
+                                </li>
+                                <li class="dropdown accessories">
+                                    <a [ngClass]="{'added':device?.Checkin?.DeviceItems.length > 0}"
+                                        href="JavaScript:void(0);" class="dropbtn">
+                                        <i class="icon-accesories"></i>
+                                        Accessories
+                                    </a>
+                                    <div *ngIf="device['DeviceCheckIn'] != '' && device?.Checkin?.DeviceItems.length > 0" class="dropdown-content">
+                                        <p>Accessories left with device:
+                                        </p>
+                                        <ul>
+                                            <li *ngFor="let items of device?.Checkin?.DeviceItems">
+                                                <i class="fa fa-check-square"></i>{{items.name}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="dropdown issues">
+                                    <a [ngClass]="{'added':device?.Checkin?.DeviceIssues.length > 0}"
+                                        href="JavaScript:void(0);" class="dropbtn">
+                                        <i class="icon-issue"></i>
+                                        Issues
+                                    </a>
+                                    <div *ngIf="device['DeviceCheckIn'] != ''" class="dropdown-content">
+                                        <p>Present issues with the
+                                            device:
+                                        </p>
+                                        <ul>
+                                            <li *ngFor="let issue of device?.Checkin?.DeviceIssues">
+                                                <i class="fa fa-check-square"></i>{{issue.name}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="clear-device">
+                            <a (click)='clearDeviceCheckIn(device)'>Clear all</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <accordion id="accSub" class="addingItemstoDevice" [isAnimated]="true" [closeOthers]="true">
+        <div *ngFor="let product of device.deviceProducts">
+
+            <!-- When a Product is added to the device (it have one level) -->
+            <sale-product *ngIf="!product['Suppliers'] || product['Suppliers'].length <= 1 && (product.is_product || product.is_bundle_product)" class="giftList"
+                [product]="product" (onCalculateTotal)="onCalculateTotalAmount()" [isDeviceProduct]="true"
+                (removeFromCart)="onRemveProductFromDevice($event[0])">
+            </sale-product>
+
+            <sale-procduct-with-multiple-supplier class="giftList"
+                *ngIf="product['Suppliers'] && product['Suppliers'].length > 1" [product]="product"
+                [isDeviceProduct]="true" (onCalculateTotal)="onCalculateTotalAmount()"
+                (removeFromCart)="onRemveProductFromDevice($event[0])">
+            </sale-procduct-with-multiple-supplier>
+
+            <sale-service *ngIf="!product.is_product  && !product.is_bundle_product" [product]="product"
+            [isDeviceProduct]="true" (onCalculateTotal)="onCalculateTotalAmount()" (onServiceSelect)="onSelectSerivice($event)"
+            (removeFromCart)="onRemveProductFromDevice($event[0])"></sale-service>
+        </div>
+    </accordion>
+</accordion-group>
+
+<ng-template #open_removeDevice>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30">
+            <i class="icon-invoice font42 color000"></i>
+            <h2 class="fontPoppin font18 fontSemiBold mt15 color000">
+                Remove this item<br>form the cart?</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button (click)="onRemoveFromCart(device['_id']); createSaleService.closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Yes,
+            remove it</button>
+        <button (click)="createSaleService.closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20">No,
+            go back</button>
+    </div>
+</ng-template>
+<ng-template #open_printLabel>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30 mb20">
+            <h2 class="fontPoppin font24 fontSemiBold color000">Print Label</h2>
+        </div>
+        <div class="label-print">
+            <div class="top">
+                <div class="left">
+                    <h3>{{device.storeName}}</h3>
+                </div>
+                <div class='center'>
+                    <h3>
+                        {{device?.brand_model_name}}
+                    </h3>
+                </div>
+                <div class="right">
+                    <h3>
+                        {{device.Customer.first_name + ' ' + device.Customer.last_name | uppercase }}
+                    </h3>
+                </div>
+            </div>
+            <div class="top-mid">
+                <div class="left">
+                    <h3>Device ID:<span>{{device.device_keeping_unit}}</span></h3>
+                </div>
+                <div class="center">
+                    <h3>Serial Number:<span>{{device.serial_number ||'N/A'}}</span></h3>
+                </div>
+                <div class="right">
+                    <h3>IMEI:<span>{{device.imei_ssn}}</span></h3>
+                </div>
+            </div>
+            <div class="mid">
+                <div class="product-name">
+                    <ngx-barcode class="fontPoppin font10 mb5 mtMin5 color000 dBlock text-center"
+                    [bc-value]="device.imei_ssn" [bc-width]="3.5" [bc-height]="70"
+                    [bc-display-value]="true" [bc-margin]="4" [bc-margin-top]="4" [bc-margin-bottom]="4"
+                    [bc-margin-left]="4" [bc-margin-right]="4">
+                </ngx-barcode>
+                    <!-- <i class="icon-code_bar color000 font100 lineHeight08 dBlock"></i> -->
+                    <h3>{{device.brand_model_name}}<span>{{device.description}}</span>
+                    </h3>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="left">
+                    <h3><span>{{device?.Checkin.check_in_date | customDateFormat }}</span><span>{{device?.Checkin.check_in_date | date:'HH:mm:ss'}}</span></h3>
+                </div>
+                <div class="center">
+                    <h3><span>{{device.Customer.address_1}}</span></h3>
+                </div>
+                <div class="right">
+                    <h3><span>Device passcode:</span><span class="fontSemiBold">{{device?.Checkin.is_pattern ? device?.Checkin?.pattern_code || 'N/A' :  device?.Checkin?.password  || 'N/A'}}</span>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button type="button" (click)='print()'
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Print label</button>
+        <button (click)="createSaleService.closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #addPattern>
+    <div class="modal-header noborder pt40 pb0">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold color000">Pattern Lock</h2>
+            <p class="fontPoppin font12 mb10 color808080">Pattern lock to unlock device</p>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="items-form-content pl30 pr30 text-center">
+            <p class="fontPoppin fontSemiBold font11 mb10 color000">Pattern</p>
+            <div id="patternHolder"></div>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button (click)="createSaleService.closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>

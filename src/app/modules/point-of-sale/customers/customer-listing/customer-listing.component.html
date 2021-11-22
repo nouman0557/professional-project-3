@@ -1,0 +1,470 @@
+<div class="tab-pane fade active show" id="tab-s-two">
+    <div id="existing-customer">
+        <div *ngIf="customerloader" class="luna-loading"></div>
+        <div class="cut-search-area posRelative zIndex100 dtable wd100Percent">
+            <div class="dtableCell wd55percent text-left">
+                <div class="dInlinetable wd20percent">
+                    <div id="discount-cat-btn" class="btn-group height31px dInlineBlock wd100Percent">
+                        <a class="btn wd50percent padding5 font18" (click)="showCloudCustomer(true)"
+                            [ngClass]="{'active':isShowCloudCustomer,'notActive':!isShowCloudCustomer}"><i
+                                class="icon-saved"></i></a>
+                        <a class="btn wd50percent padding5 font18" (click)="showCloudCustomer(false)"
+                            [ngClass]="{'active':!isShowCloudCustomer,'notActive':isShowCloudCustomer}"><i
+                                class="icon-store_credit"></i></a>
+                    </div>
+                </div>
+                <div *ngIf="!isShowCloudCustomer" class="dInlinetable wd40percent valignMiddle ml10">
+                    <div id="discount-cat-btn" class="btn-group height31px dInlineBlock wd100Percent">
+                        <!-- <a class="btn wd50percent padding5 font12 lineHeight18px active">Active</a>
+                        <a class="btn wd50percent padding5 font12 lineHeight18px notActive">Archived</a> -->
+                        <a [ngClass]="{'active':!inputSearchCustomer.is_deleted , 'notActive' : inputSearchCustomer.is_deleted }"
+                            (click)='applyActiveArchivedCustomerFilter(false)'
+                            class="btn wd50percent padding5 font12 lineHeight18px">Active</a>
+                        <a [ngClass]="{'active':inputSearchCustomer.is_deleted , 'notActive' : !inputSearchCustomer.is_deleted }"
+                            (click)='applyActiveArchivedCustomerFilter(true)'
+                            class="btn wd50percent padding5 font12 lineHeight18px">Archived</a>
+                    </div>
+                </div>
+                <div class="dInlinetable wd33percent valignMiddle ml10">
+                    <div class="filterLinks pOfilter newfilters">
+                        <label>Filter by:</label>
+                        <a (click)="applyCustomerheaderFliter()" tooltip="Order this month" placement="bottom"
+                            href="JavaScript:void(0)" class="color000"
+                            [ngClass]="{'active': inputSearchCustomer.headerFliter == 'one_month'}">
+                            <i class="icon-today"></i>
+                        </a>
+                        <a tooltip="Set date range" placement="bottom"
+                            (click)="openModal(open_DateRange, 'custModal wd400')" href="JavaScript:void(0)"
+                            class="color000" [ngClass]="{'active': inputSearchCustomer.headerFliter == 'date_range' }">
+                            <i class="icon-calendar_tickets"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="dtableCell wd45percent text-right">
+                <div class="dInlinetable wd80percent">
+                    <div class="search-field input-group">
+                        <input type="text" [formControl]="searchCustomer" class="form-control"
+                            placeholder="Search by name, phone number, email, address...">
+                        <a href="JavaScript:void(0)" class="input-group-addon">
+                            <i *ngIf="searchCustomer.value" (click)="crossSearchIcon()" class="fas fa-times-circle"></i>
+                            <i class="icon-search"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="wd12Percent dInlinetable ml10 valignMiddle">
+                    <a tooltip="Clear filters" placement="bottom" href="JavaScript:void(0)"
+                        (click)="resetCustomerFilter()" class="clearAllfilter"><i class="icon-clear_all"></i></a>
+                </div>
+            </div>
+        </div>
+        <div id="po-wrapper" (click)="hideSettingList()" *ngIf="!isShowCloudCustomer"
+            [ngClass]="{'empty':isObjectEmpty(customerList?.customers)}">
+
+            <!-- Problem here -->
+            <div class="empty-text">
+                <h2><i class="fas fa-exclamation-triangle"></i>No Customers Available</h2>
+            </div>
+            <div class="po-top-info">
+                <div class="inner wd5percent allCheckbox">
+                    <span class="ml0">
+                        <input [(ngModel)]="theCheckbox" (change)="checkedAllField(customerList?.customers,$event)"
+                            class="checkbox-custom" id="cust-checkMain1" name="cust-checkMain1" type="checkbox">
+                        <label class="checkbox-custom-label" for="cust-checkMain1"></label>
+                    </span>
+                </div>
+                <div class="inner wd30percent"><span class="text-left">Name</span></div>
+                <div class="inner wd20percent"><span>Phone Number</span></div>
+                <div class="inner wd35percent"><span>Email</span></div>
+                <div class="inner wd10percent" *ngIf="!isCustomerLayout"><span>Actions</span></div>
+            </div>
+            <!-- infiniteScroll (scrolled)="onScroll()" [scrollWindow]="false" -->
+            <div class="po-inner-list">
+                <ul>
+                    <li [ngClass]="{'active':customer?.checked || (navigationSource == 'createSale' && customer._id==saleCartService.getSelectedCustomerId())||
+                    (navigationSource == 'customer' && customer._id==selectedCustomerID) }"
+                        *ngFor="let customer of customerList?.customers ;  let i = index;"
+                        (dblclick)="onCustomerListDoubleClick(customer['_id'])">
+                        <div class="inner wd5percent allCheckbox">
+                            <span class="text-left">
+                                <input [checked]="customer?.checked"
+                                    (change)="singleItemChecked(customerList?.customers,i,$event)"
+                                    class="checkbox-custom" type="checkbox" name="customer{{i}}" id="customer{{i}}">
+                                <label class="checkbox-custom-label" for="customer{{i}}"></label>
+                            </span>
+                        </div>
+                        <div (click)="onCustomerListClick(customer['_id'])" class="inner wd30percent">
+                            <span class="text-left">{{customer?.first_name + ' ' + customer?.last_name}}</span>
+                        </div>
+                        <div (click)="onCustomerListClick(customer['_id'])" class="inner wd20percent">
+                            <span>{{customer?.phone}}</span>
+                        </div>
+                        <div (click)="onCustomerListClick(customer['_id'])" class="inner wd35percent">
+                            <span>{{customer?.email}}</span>
+                        </div>
+                        <div (click)="onCustomerListClick(customer['_id'])" class="inner wd10percent"
+                            *ngIf="!isCustomerLayout">
+                            <div class="title-info">
+                                <a (click)="onCustomerInfoClick(customer._id)" class="font12">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                <a (click)="onEditCustomer(customer._id)" class="font12 pl8">
+                                    <i class="icon-edit"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Cloud list Under This list  -->
+        <div id="po-wrapper" *ngIf="isShowCloudCustomer" [ngClass]="{'empty':isObjectEmpty(customerList?.customers)}">
+            <div class="empty-text">
+                <h2><i class="fas fa-exclamation-triangle"></i>There is no customers available on cloud</h2>
+            </div>
+            <div class="po-top-info">
+                <div class="inner wd5percent allCheckbox">
+                    <span class="ml0">
+                        <input [(ngModel)]="theCheckbox" (change)="checkedAllField(customerList?.customers,$event)"
+                            class="checkbox-custom" id="cust-checkMain12" name="cust-checkMain12" type="checkbox">
+                        <label class="checkbox-custom-label" for="cust-checkMain12"></label>
+                    </span>
+                </div>
+                <div class="inner wd20percent"><span class="text-left">Name</span></div>
+                <div class="inner wd15percent"><span>Phone Number</span></div>
+                <div class="inner wd30percent"><span>Email</span></div>
+                <div class="inner wd20percent"><span>Stores</span></div>
+                <div class="inner wd10percent"><span>Actions</span></div>
+            </div>
+            <div class="po-inner-list" (click)="hideSettingList()">
+                <ul>
+                    <li [ngClass]="{'active': customer?.checked ||  (navigationSource == 'createSale' && customer._id==saleCartService.getSelectedCustomerId()) ||
+                    (navigationSource == 'customer' && customer._id==selectedCustomerID) }"
+                        *ngFor="let customer of customerList?.customers ;  let i = index;"
+                        (dblclick)="onCustomerListDoubleClick(customer['_id'])">
+                        <div class="inner wd5percent allCheckbox">
+                            <span class="text-left">
+                                <input [checked]="customer?.checked"
+                                    (change)="singleItemChecked(customerList?.customers,i,$event)"
+                                    class="checkbox-custom" type="checkbox" name="customer{{i}}" id="customer{{i}}">
+                                <label class="checkbox-custom-label" for="customer{{i}}"></label>
+                            </span>
+                        </div>
+                        <div (click)="onCustomerListClick(customer['_id'])" class="inner wd20percent">
+                            <span class="text-left">{{customer?.first_name + ' ' + customer?.last_name}}</span>
+                        </div>
+                        <div (click)="onCustomerListClick(customer['_id'])" class="inner wd15percent">
+                            <span>{{customer?.phone}}</span>
+                        </div>
+                        <div (click)="onCustomerListClick(customer['_id'])" class="inner wd30percent">
+                            <span>{{customer?.email}}</span>
+                        </div>
+                        <div (click)="onCustomerListClick(customer['_id'])" *ngIf="customer?.linkedStores?.length==1"
+                            class="inner wd20percent">
+                            <!-- When customer is on single store -->
+                            <span>{{customer?.linkedStores[0]['store_name']}}</span>
+                        </div>
+                        <div (click)="onCustomerListClick(customer['_id'])"
+                            *ngIf="isObjectEmpty(customer?.linkedStores)" class="inner wd20percent">
+                            <!-- When customer have no  store -->
+                            <span>N/A</span>
+                            <!-- <span *ngFor="let store of customer?.linkedStores; let i = index" >{{store.store_name |titlecase }}</span> -->
+                        </div>
+                        <div (click)="onCustomerListClick(customer['_id'])"
+                            *ngIf="customer?.linkedStores?.length!=1 &&customer?.linkedStores?.length!=0"
+                            class="inner wd20percent">
+                            <span class="dropdown multipleStore">
+                                <a href="JavaScript:void(0);" class="color000">({{customer.linkedStores?.length}})</a>
+                                <div class="dropdown-content">
+                                    <ul>
+                                        <li *ngFor="let store of customer?.linkedStores; let i = index">
+                                            {{store?.store_name}}</li>
+                                    </ul>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="inner wd10percent">
+                            <div class="title-info">
+                                <a *ngIf="!customer?.is_linked" (click)='downloadCustomerId=customer["_id"]'
+                                    (click)="openCustomerModal('download','download this customer to your store?','Yes, download it')"
+                                    class="font20">
+                                    <i class="icon-download"></i></a>
+                                <!-- The icon below will enable when cutomer is downloaded -->
+                                <span *ngIf="customer?.is_linked" class="font20"><i class="icon-saved"></i></span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="listCount">
+            <span>Total: <b>{{customerList?.total_customer}}</b></span>
+        </div>
+        <div class="bottomActionBar">
+            <div class="dtableCell wd60percent">
+                <div class="filterLinks pOfilter bottomBarFilter newfilters noposRelative">
+                    <label>Quick filter:</label>
+                    <div class="filterWhenActive dInlineBlock">
+                        <a tooltip="Customer Overdue" placement="top"
+                            [ngClass]="{'active': customerFooterFilter.OverDues != ''}"
+                            (click)="applyCustomerFotterFliter('overDues')" href="JavaScript:void(0)" class="color000">
+                            <i class="fas fa-bomb"></i>
+                        </a>
+                        <a tooltip="With device" [ngClass]="{'active': customerFooterFilter.WithDevice != ''}"
+                            (click)="applyCustomerFotterFliter('with_device')" placement="top" href="JavaScript:void(0)"
+                            class="color000">
+                            <i class="fas fa-laptop wdithDevice"></i>
+                        </a>
+                        <a tooltip="Without device" [ngClass]="{'active':  customerFooterFilter.WithoutDevice != ''}"
+                            (click)="applyCustomerFotterFliter('without_device')" placement="top"
+                            href="JavaScript:void(0)" class="color000">
+                            <i class="fas fa-laptop wdithOutDevice"></i>
+                        </a>
+                        <a tooltip="Have store credit"
+                            [ngClass]="{'active':  customerFooterFilter.HaveStoreCredit != ''}"
+                            (click)="applyCustomerFotterFliter('have_store_credit')" placement="top"
+                            href="JavaScript:void(0)" class="color000 font24">
+                            <i class="icon-store_credit"></i>
+                        </a>
+                        <a tooltip="Have net terms" [ngClass]="{'active':  customerFooterFilter.HaveNetTerm != ''}"
+                            (click)="applyCustomerFotterFliter('have_net_term')" placement="top"
+                            href="JavaScript:void(0)" class="color000">
+                            <i class="icon-net_terms"></i>
+                        </a>
+                        <a tooltip="Most recent customer" [ngClass]="{'active':  customerFooterFilter.MostRecent != ''}"
+                            (click)="applyCustomerFotterFliter('most_recent')" placement="top" href="JavaScript:void(0)"
+                            class="color000">
+                            <i class="far fa-clock"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="dtableCell wd40percent text-right">
+                <a href="JavaScript:void(0)" class="innerStatusBtns noFloat dInlineBlock add-btn-item"
+                    (click)="onAddCustomer()">Add Customer</a>
+                <!-- [ngClass]="{'disableDiv': isShowCloudCustomer}" -->
+                <div class="btn-group settingBtn" *ngIf="!isShowCloudCustomer">
+                    <a class="innerStatusBtns dInlineBlock minWd30px" href="JavaScript:void(0)"
+                        (click)="openCustomerSettings(customerList?.customers);$event.stopPropagation()">
+                        <i class="icon-settings"></i>
+                    </a>
+                    <div class="dropdown-content settingOptions"
+                        [ngClass]="{'listItemsFour': !inputSearchCustomer.is_deleted, 'listItemsThree': inputSearchCustomer.is_deleted}"
+                        *ngIf="customerSettingsOpen" style="display: block;">
+                        <ul>
+                            <li [ngClass]="{'disableDiv': !showMergeOption}" *ngIf='!inputSearchCustomer.is_deleted'
+                                (click)="openCompareItemModal(open_CompareTwoItems,'custModal wd600')"><a
+                                    class="dropdown-item">Merge Customer(s)</a></li>
+                            <!-- (click)="openCustomerModal(open_CustomerModal,'custModal wd210','archive')" -->
+                            <li><a (click)='exportCustomer()' class="dropdown-item">Export Customer(s)</a></li>
+                            <li *ngIf='!inputSearchCustomer.is_deleted'><a
+                                    (click)="openCustomerModal('archive','archive customer(s)','Yes, archive it')"
+                                    class="dropdown-item">Archive Customer(s)</a></li>
+                            <li *ngIf='inputSearchCustomer.is_deleted'><a
+                                    (click)="openCustomerModal('used','active customer(s)','Yes, active it')"
+                                    class="dropdown-item">Active Customer(s)</a></li>
+                            <li *ngIf='!inputSearchCustomer.is_deleted'><a (click)="importModal.openModal()"
+                                    (click)='customerSettingsOpen=false' class="dropdown-item">Import Customers</a></li>
+                            <li *ngIf='inputSearchCustomer.is_deleted'><a
+                                    (click)="openDeleteCustModal(open_DeleteItem,'custModal wd400','delete')"
+                                    class="dropdown-item">Permanent Delete Customer(s)</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #open_DateRange>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold color000">
+                Date Range</h2>
+            <p class="fontPoppin font12 mb0 color808080">Set your date range</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <div class="items-form-content popupList">
+            <form autocomplete="off" action="#">
+                <div class="row mb15">
+                    <div class="col-lg-12">
+                        <label class="fontPoppin mb0 font12 fontSemiBold color000" for="startDate">Start date</label>
+                        <input [(ngModel)]="fromDate" type="text" name="startDate" id="startDate"
+                            placeholder="Select From Date" class="form-control font12 borderColorcbcbcb " bsDatepicker
+                            [bsConfig]="{showWeekNumbers:false, isAnimated: true,maxDate: todayDate, dateInputFormat: 'MMM/D/YY'}"
+                            placeholder="MM/DD/YY" [isOpen]="isOpenfromDate">
+                        <span (click)="isOpenfromDate = !isOpenfromDate" class="datePickerIcon"></span>
+                    </div>
+                </div>
+                <div class="row mb15">
+                    <div class="col-lg-12">
+                        <label class="fontPoppin mb0 font12 fontSemiBold color000" for="endDate">End Date</label>
+                        <input type="text" [(ngModel)]="toDate" name="endDate" id="endDate" placeholder="Select To Date"
+                            class="form-control font12 borderColorcbcbcb" bsDatepicker
+                            [bsConfig]="{showWeekNumbers:false, isAnimated: true , maxDate: todayDate, dateInputFormat: 'MMM/D/YY'}"
+                            placeholder="MM/DD/YY" [isOpen]="isOpentoDate">
+                        <span (click)="isOpentoDate = !isOpentoDate" class="datePickerIcon"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="applyCustomerheaderDateRangeFliter()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Filter</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_CustomerModal>
+    <div class="modal-body">
+        <div *ngIf='deleteSuppLoader' class="luna-loading"></div>
+        <div class="modalTitle mx-auto text-center pt15">
+            <i *ngIf="customerModalFor=='archive'" class="icon-archive font42 color000"></i>
+            <i *ngIf="customerModalFor=='download'" class="icon-download font42 color000"></i>
+            <h2 class="fontPoppin font14 fontSemiBold mt10 color000">Do you want to <br> {{customerModalText}}</h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb20">
+        <button (click)="callFunction()" (click)="modalRef.hide()" type="button"
+            class="btn modalSaveBtnReceive font11 fontSemiBold borderRadius20 mb5 bgBlack colorWhite wd140px">
+            Yes, {{customerModalFor}} it</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font10 fontLato fontSemiBold mx-auto p0">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_CompareTwoItems>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin notextTransform fontBold font24 color000">Merge Customers</h2>
+            <p style="color: black;">Select what customer information you would like to keep.</p>
+            <p style="color: black;"> All the other information such as Net terms, Store Credit will be lost for old
+                customer.</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <div class="items-form-content">
+            <div class="row mb15">
+                <div class="col-lg-6">
+                    <!-- [ngClass]="{ 'boxSelected': sentSupplierForImport[count]?.selected=='given'}" -->
+                    <div class="compareBox posRelative nOcenter"
+                        [ngClass]="{ 'boxSelected': mergeCustomerDate[0]?._id==principalCustomer[0]?._id}">
+                        <div class="innerCompare">
+                            <h2 class="fontPoppin font14 mb15 fontSemiBold color000 text-center">
+                                {{mergeCustomerDate[0]?.first_name + ' ' + mergeCustomerDate[0]?.last_name}}
+                            </h2>
+                            <div class="addressInfo">
+                                <span class="dBlock color808080 fontSemiBold">Phone Number</span>
+                                <span class="dBlock color808080 mb10">{{mergeCustomerDate[0]?.phone}}</span>
+                                <span class="dBlock color808080 fontSemiBold">Email</span>
+                                <span class="dBlock color808080 mb10">{{mergeCustomerDate[0]?.email}}</span>
+                            </div>
+                            <!-- suggGivenButton -->
+                            <a href="JavaScript:void(0)"
+                                [ngClass]="{ 'suggGivenButton': mergeCustomerDate[0]?._id==principalCustomer[0]?._id}"
+                                (click)="selectPrincipalCustomer(mergeCustomerDate[0],mergeCustomerDate[1])"
+                                class="mt20 font12 dBlock mx-auto text-center "> Use as principal </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="compareBox posRelative nOcenter"
+                        [ngClass]="{ 'boxSelected': mergeCustomerDate[1]?._id==principalCustomer[0]?._id}">
+                        <div class="innerCompare">
+                            <h2 class="fontPoppin font14 mb15 fontSemiBold color000 text-center">
+                                {{mergeCustomerDate[1]?.first_name + ' ' + mergeCustomerDate[1]?.last_name}}
+                            </h2>
+                            <div class="addressInfo">
+                                <span class="dBlock color808080 fontSemiBold">Phone Number</span>
+                                <span class="dBlock color808080 mb10">{{mergeCustomerDate[1]?.phone}}</span>
+                                <span class="dBlock color808080 fontSemiBold">Email</span>
+                                <span class="dBlock color808080 mb10">{{mergeCustomerDate[1]?.email}}</span>
+                            </div>
+                            <a href="JavaScript:void(0)"
+                                [ngClass]="{ 'suggGivenButton': mergeCustomerDate[1]?._id==principalCustomer[0]?._id}"
+                                (click)="selectPrincipalCustomer(mergeCustomerDate[1],mergeCustomerDate[0])"
+                                class="mt20 font12 dBlock mx-auto text-center">Use as principal</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span class="dBlock wd100Percent text-center confirmMergeBox">
+            <input [(ngModel)]='itemCompareYesCheck' class="checkbox-custom" id="confirmMerge" name="confirmMerge"
+                type="checkbox">
+            <label class="checkbox-custom-label font12 fontPoppin fontSemiBold500 color000" for="confirmMerge">I
+                understand this change is irreversible</label>
+        </span>
+        <!-- <input [(ngModel)]='itemCompareYesCheck' type="checkbox"> I understand this change is irreversible -->
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button type="button" (click)='mergeCustomerFun()' (click)="modalRef.hide()"
+            [ngClass]="{'disableDiv': !itemCompareYesCheck || isObjectEmpty(principalCustomer)}"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Save</button>
+        <button (click)="modalRef.hide()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<ng-template #open_DeleteItem>
+    <div class="modal-body" [ngClass]="{'bounce':inValidPass}">
+        <app-toaster (closeToaster)="closeToaster()" [toasterType]="toasterType" [toasterMsg]="toasterMsg"
+            [hideToster]="showToaster"></app-toaster>
+        <div class="modalTitle mx-auto text-center mt30">
+            <i class="icon-delete font42 color000"></i>
+            <h2 class="fontPoppin font18 fontSemiBold mt15 color000">
+                Are you sure you want<br> to permanently delete customer(s)?</h2>
+        </div>
+        <br>
+        <form autocomplete="off">
+            <div class="row mb15">
+                <div class="col-lg-12">
+                    <label [ngClass]="{'is-invalid':inValidEmail}"
+                        class="fontPoppin mb0 font12 fontSemiBold color000">User Name</label>
+                    <input (click)='hideError()' [ngClass]="{'bounce':inValidEmail}" [(ngModel)]="userEmail" type="text"
+                        class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                        placeholder="example@example.com" [ngModelOptions]="{standalone: true}">
+                </div>
+            </div>
+            <div class="row mb15">
+                <div class="col-lg-12">
+                    <label [ngClass]="{'is-invalid':inValidPass}"
+                        class="fontPoppin mb0 font12 fontSemiBold color000">Password Name</label>
+                    <input (click)='hideError()' [ngClass]="{'bounce':inValidPass}" [(ngModel)]="userPwd"
+                        type="password" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                        placeholder="Type the password here" [ngModelOptions]="{standalone: true}">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div [ngClass]="{'bounce':inValidPass}" class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button type="button" (click)="permanentDeleteCustomerFun()"
+            [ngClass]="{'disableDiv': userEmail==''|| userPwd==''}"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Yes, delete
+        </button>
+        <button (click)="modalRef.hide()" type="button" class="btn modalSaveBtnReceive fontPoppin borderRadius20">No,
+            go back</button>
+    </div>
+</ng-template>
+
+<ng-template #open_removeCustomerFromCart>
+    <div class="modal-body">
+        <div class="modalTitle mx-auto text-center mt30">
+            <i class="icon-invoice font42 color000"></i>
+            <h2 class="fontPoppin font18 fontSemiBold mt15 color000">
+                Changing customer will<br>clear the cart!
+            </h2>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb40">
+        <button (click)="onDiscardOrder(); closeModel()" type="button"
+            class="btn modalSaveBtnReceive fontPoppin borderRadius20 mb5 bgBlack colorWhite">Yes,
+            remove </button>
+        <button (click)="closeModel()" type="button" class="btn modalSaveBtnReceive fontPoppin borderRadius20">No,
+            go back</button>
+    </div>
+</ng-template>
+<app-import-items #importModal [ItemToImport]="ItemToImport" [mappedColumns]="customersMappedColumns"
+    [sampleCsvPath]="sampleCsvPath" [nonSkipAbleFieldsIndex]="nonSkipAbleFieldsIndex"
+    (importCustomer)="importCustomers($event)"></app-import-items>
+
+<app-yes-no #yesNoModal (yesNoModalEmit)="callFunction($event)"> </app-yes-no>

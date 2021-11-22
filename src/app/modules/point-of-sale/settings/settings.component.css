@@ -1,0 +1,37 @@
+.settings-wrapper .right #user #stock-supplier #po-wrapper .po-top-info div.inner:nth-child(4) span,
+.settings-wrapper .right #user #stock-supplier #po-wrapper .po-top-info div.inner:nth-child(5) span{
+text-align: center;
+}
+#ch-box-SubAcc{
+    height: 24px;
+}
+#ErrorAcc{
+    text-align: center;
+}
+#discount-cat-btn {
+    padding: 0px;
+    border: none;
+    width: 75%;
+    height: 27px;
+}
+#discount-cat-btn a {
+    font-size: 12px;
+    padding: 5px;
+    cursor: pointer;
+    line-height: 14px;
+    cursor: pointer;
+}
+#searchbtn {
+    border: 1px solid #000;
+    background-color: #000;
+    margin-left: 15px;
+    padding: 0px 8px;
+    text-align: center;
+    margin-top: 0px;
+    color: #fff;
+    box-shadow: none !important;
+}
+#discount-cat-btn button:hover {
+    background-color:gray;
+    color: white;
+}

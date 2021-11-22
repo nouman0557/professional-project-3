@@ -1,0 +1,354 @@
+
+@font-face {
+  font-family: Raleway-Semibold;
+  src: url(../../../../../assets/Fonts/Raleway/Raleway-SemiBoldItalic.ttf);
+}
+
+.title-view {
+  color: black;
+  /*font-weight: bold;*/
+  font-family: Raleway-Semibold;
+}
+
+.container-view-review {
+/*color: #000;
+padding: 40px 70px;*/
+padding: 0px 20px 90px 20px;
+overflow-y: scroll;
+height: inherit;
+color: #000;
+}
+
+.container-view-review .row div {
+  border-bottom-width: 0px !important;
+}
+
+/*Style from sub container and schedule content*/
+.sub-container.schedule-content {
+  padding: 0px 60px;
+}
+
+/*Style from sub container and social link content*/
+.sub-container.social-link-content {
+  padding: 0px 110px;
+}
+
+/*Style from week day schedule*/
+.row-week-day {
+  padding: 3px 0px 3px 15px
+}
+
+/*Style from customize divider*/
+.custom-divider {
+  margin: 50px 0px !important;
+}
+
+
+/*style from divider*/
+.divider {
+  height: 0 !important;
+  margin: .5rem 0;
+  overflow: hidden !important;
+  border-top: 1px solid #c3c3c3 !important;
+  width: 100% !important;
+}
+
+/*Styles from edit button*/
+.options-button button {
+  color: #000;
+  background-color: #fff;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-family: "BebasNeue-Bold";
+  text-align: center;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-left: 10px;
+  /* margin-right: 0px; */
+}
+
+.options-button {
+  text-align: start;
+}
+
+.options-button button:first-child {
+  margin-left: 0px;
+  background-color: #fff;
+  color: #000;
+}
+
+.options-button button:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.options-button button:disabled:hover {
+  background-color: #fcfcfc !important;
+  color: #c1c1c1 !important;
+  cursor: not-allowed !important;
+}
+
+
+/*Styles from container controls*/
+.container-options {
+  padding: 10px;
+}
+
+/*Styles from gallery and form information*/
+.sub-container {
+  padding: 0px 35px;
+}
+
+.store-name {
+  font-weight: bold;
+}
+
+.checkbox-position {
+  display: inline-block;
+  margin: 0px 5px 0px 0px;
+  vertical-align: middle;
+}
+
+.store-label {
+  font-size: 20px;
+  margin-bottom: -0.1rem;
+  color: #606060
+}
+
+/*Styles from slider component*/
+* {box-sizing: border-box}
+body {font-family: Verdana, sans-serif; margin:0}
+.mySlides {display: none}
+img {vertical-align: middle;}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/*Styles for meridem select*/
+.meriden-select {
+  width: auto;
+}
+
+/* The dots/bullets/indicators */
+.dotUpdate {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0px 10px;
+  background-color: #606060;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active, .dotUpdate:hover {
+  background-color: #03caae;
+}
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 5.5s;
+  animation-name: fade;
+  animation-duration: 5.5s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .prev, .next,.text {font-size: 11px}
+}
+
+
+.position-float {
+  width: 50%;
+  float: left;
+}
+
+/*Styles from header content*/
+.custom-header {
+  width: auto;
+  margin-right: 15px;
+}
+
+
+.padding-check {
+  padding-top: 60px;
+}
+
+.header-content {
+  padding: 15px;
+  border-bottom: 1px solid black;
+  background: white;
+}
+
+.custom-reply-btn {
+  width: 50%;
+  margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.custom-body {
+  text-align: center;
+  color: black;
+}
+
+.custom-textarea {
+  margin-top: 8px;
+  border: 1px solid #bbbaba;
+}
+
+
+.custom-title {
+  /*font-size: 200%;*/
+}
+
+
+.custom-content {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.custom-card {
+  height: 100%;
+  max-height: 240px;
+  -webkit-box-shadow: 0px 0px 5px 1px rgba(224,224,224,1);
+-moz-box-shadow: 0px 0px 5px 1px rgba(224,224,224,1);
+box-shadow: 0px 0px 5px 1px rgba(224,224,224,1);
+}
+
+.custom-content-btn-reply {
+  /*text-align: center;*/
+}
+
+
+.custom-body-reviews {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.custom-content-raiting {
+  /*min-width: max-content;*/
+}
+
+.card-text {
+  /*margin-top: 30px;*/
+}
+
+.position-float {
+  width: 50%;
+  float: left;
+}
+
+
+.custom-date {
+  position: relative;
+  /*background: orange;*/
+  float: right;
+  top: auto;
+  font-family: sans-serif;
+}
+
+.custom-rate {
+  position: relative;
+ /* background: red;*/
+  float: left;
+  top: auto;
+  text-align: left;
+  padding-top: 13px;
+}
+
+.custom-title-rate {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.custom-date-rate {
+  margin-bottom: 0px;
+}
+
+.card-header {
+  background: #ffffff;
+  border: 0px;
+}
+
+.custom-btn-reply {
+  width: 80px;
+}
+
+
+.custom-content-btn-save {
+  margin-top: 18px;
+  text-align: right;
+}
+
+
+.custom-title-content {
+  color: #52caaf;
+  text-align: left; padding-top: 15px;text-align: left;margin-bottom: 5px;
+}

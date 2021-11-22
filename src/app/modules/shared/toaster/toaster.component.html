@@ -1,0 +1,8 @@
+<div class="tosterMsgBox text-center" [ngClass]="{'hide': hideToster , 'show': !hideToster , 'bgError' : toasterType == 'error'
+, 'bgSuccess' : toasterType == 'success' , 'bgWarning' : toasterType == 'warning' }">
+    <i *ngIf="toasterType == 'success'" class="far fa-check-circle dInlinetable colorWhite font14"></i>
+    <i *ngIf="toasterType == 'warning'" class="fas fa-exclamation-triangle dInlinetable colorWhite font14"></i>
+    <i *ngIf="toasterType == 'error'" class="far fa-times-circle dInlinetable colorWhite font14"></i>
+    <span class="tosterMsg dInlinetable pr15 pl15 font14 fontPoppin fontSemiBold500">{{toasterMsg}}.</span>
+    <a (click)="closetoster()" href="JavaScript:void(0)" ><i class="fas fa-close dInlinetable colorWhite font14"></i></a>
+</div>

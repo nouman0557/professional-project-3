@@ -1,0 +1,300 @@
+<div class="tab-pane fade active show" id="tab-s-one">
+    <div id="existing-products" [ngClass]="{'empty':''}">
+        <div *ngIf='productsLoader' class="luna-loading"></div>
+        <div class="product-search-area">
+            <div class="dInlinetable valignMiddle wd90Percent">
+                <div class="search-field input-group">
+                    <div class=" input-group-addon wd35percent">
+                        <div id="discount-cat-btn" class="btn-group height30px wd100Percent">
+                            <a [ngClass]="{'active': deviceId , 'notActive' : !deviceId}"
+                                (click)="changeProductFilter(false)"
+                                class="btn wd50percent lineHeight22px">Selected Device</a>
+                            <a [ngClass]="{'active': !deviceId , 'notActive' : deviceId}"
+                                (click)="changeProductFilter(true)"
+                                class="btn wd50percent lineHeight22px">All Products</a>
+                        </div>
+                    </div>
+                    <input [formControl]="searchProduct" type="text" class="form-control"
+                                placeholder="Search by product name, SKU, product type... ">
+                    <a href="JavaScript:void(0)" class="input-group-addon">
+                        <i *ngIf="searchProduct.value" (click)="searchProduct.reset()"
+                            class="fas fa-times-circle"></i>
+                        <i class="icon-search"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="dInlinetable valignMiddle wd10percent text-right">
+                <a tooltip="Scanner" placement="bottom" class="receivingIcon dInlineBlock" href="JavaScript:void(0)">
+                    <i class="icon-scan1"></i>
+                </a>
+                <a tooltip="Clear filters" placement="bottom" (click)="resetProductFilter()" class="receivingIcon dInlineBlock ml5" href="JavaScript:void(0)">
+                    <i class="icon-clear_all"></i></a>
+            </div>
+        </div>
+        <!-- <div *ngIf="recentTags?.length !==0" class="category-tags-info">
+            <div class="inner">
+                <span *ngFor="let rTag of recentTags; let i = index;">{{rTag}} <a><i
+                            (click)="removeRecentTags(i)" class="fa fa-close"></i></a></span>
+            </div>
+        </div>
+        <div *ngIf="recentTags?.length ===0" style="display: none;" class="category-tags-info">
+            <div class="inner">
+                <span *ngFor="let rTag of recentTags; let i = index;">{{rTag}} <a><i
+                            (click)="removeRecentTags(i)" class="fa fa-close"></i></a></span>
+            </div>
+        </div> --> 
+        <div id="po-wrapper">
+            <div class="empty-text">
+                <h2><i class="fa fa-product-hunt" aria-hidden="true"></i>No Product Available</h2>
+            </div>
+            <div *ngIf="loadProducts" class="luna-loading"></div>
+            <div class="po-top-info">
+                <div class="inner wd11percent text-center"><span>On Shelf</span></div>
+                <div class="inner wd11percent text-center"><span>In Order</span></div>
+                <div class="inner wd11percent text-center"><span>Incoming</span></div>
+                <div class="inner wd50percent text-left"><span class="text-left">Product Name</span></div>
+                <div class="inner wd11percent text-center"><span>Price</span></div>
+            </div>
+            <div class="po-inner-list">
+                <ul>
+                     <!--Gift Card Dynamic -->
+                    <li (dblclick)="onSelectGift()" class="">
+                        <div class="inner wd11percent">
+                            <span class="countBox bgBlack">
+                                <i class="icon-giftcard_tickets"></i>
+                            </span>
+                        </div>
+                        <div class="inner wd11percent">
+                            <span class="countBox bgBlack">
+                                <i class="icon-giftcard_tickets"></i>
+                            </span>
+                        </div>
+                        <div class="inner wd11percent">
+                            <span class="countBox bgBlack">
+                                <i class="icon-giftcard_tickets"></i>
+                            </span>
+                        </div>
+                        <div class="inner wd50percent">
+                            <span class="text-left">Gift Card</span>
+                        </div>
+                        <div class="inner wd11percent posRelative">
+                            <span class="text-center priceBox">----</span>
+                        </div>
+                    </li>
+                    <!-- class to replace in ng class noSale -->
+                    <li [ngClass]="{'' : product.is_product && product.f && product.is_track_stock && product.max_bundle == 0}" 
+                    *ngFor="let product of allProducts; let i = index" class="" (dblclick)="onSelectProduct(product)"> 
+                        <div class="inner wd11percent">
+                        	<!-- Simple service -->
+                            <span *ngIf="!product.is_product && !product.is_bundle_product" class="countBox bgBlack">
+                                <i class="icon-service"></i>
+                            </span>
+                            <!-- Bundle Service -->
+                            <span *ngIf="!product.is_product && product.is_bundle_product" class="countBox bgBlack">
+                                <i class="icon-bundle_service"></i>
+                            </span>
+                            <!-- Product -->
+                            <span [ngClass]="{'bgcolorRed': product.ProductStockPrice[0]?.qty_available <= 0 ,
+                            'bgcolorOrange': product.ProductStockPrice[0]?.qty_available <= product.ProductStockPrice[0]?.alert_quantity && product.ProductStockPrice[0]?.qty_available > 0 , 
+                            'bgcolorGreen': product.ProductStockPrice[0]?.qty_available >= product.ProductStockPrice[0]?.alert_quantity } "
+                             *ngIf="product.is_product && !product.is_bundle_product" class="countBox">
+                                {{product?.ProductStockPrice[0]?.qty_available}}
+                            </span>
+                             <!-- Bundle product -->
+                             <span *ngIf="product.is_product && product.is_bundle_product && !product.bundle_products?.is_manufactured_qty" class="countBox bgBlack">
+                                <i class="icon-bundle_product"></i>
+                            </span>
+                            <!--Manfacture Bundle product -->
+                            <span *ngIf="product.is_product && product.is_bundle_product && product.bundle_products?.is_manufactured_qty" class="countBox bgBlack">
+                                <i class="icon-manufacture_bundle_product"></i>
+                            </span>
+                        </div>
+                        <div class="inner wd11percent">
+                            <!-- Simple service -->
+                            <span *ngIf="!product.is_product && !product.is_bundle_product" class="countBox bgBlack">
+                                <i class="icon-service"></i>
+                            </span>
+                            <!-- Bundle Service -->
+                            <span *ngIf="!product.is_product && product.is_bundle_product" class="countBox bgBlack">
+                                <i class="icon-bundle_service"></i>
+                            </span>
+                            <!-- Product -->
+                            <span *ngIf="product.is_product && !product.is_bundle_product" class="countBox bgBlack">
+                                {{product?.ProductStockPrice[0]?.order_qty}}
+                            </span>
+                             <!-- Bundle product -->
+                             <span *ngIf="product.is_product && product.is_bundle_product && !product.bundle_products?.is_manufactured_qty" class="countBox bgBlack">
+                                <i class="icon-bundle_product"></i>
+                            </span>
+                            <!--Manfacture Bundle product -->
+                            <span *ngIf="product.is_product && product.is_bundle_product && product.bundle_products?.is_manufactured_qty" class="countBox bgBlack">
+                                <i class="icon-manufacture_bundle_product"></i>
+                            </span>
+                        </div>
+                        <div class="inner wd11percent">
+                            <!-- Simple service -->
+                            <span *ngIf="!product.is_product && !product.is_bundle_product" class="countBox bgBlack">
+                                <i class="icon-service"></i>
+                            </span>
+                            <!-- Bundle Service -->
+                            <span *ngIf="!product.is_product && product.is_bundle_product" class="countBox bgBlack">
+                                <i class="icon-bundle_service"></i>
+                            </span>
+                            <!-- Product -->
+                            <span *ngIf="product.is_product && !product.is_bundle_product" class="countBox bgcolorcolorPurple">
+                                {{product?.incoming_item}}
+                            </span>
+                            <!-- Bundle product -->
+                            <span *ngIf="product.is_product && product.is_bundle_product && !product.bundle_products?.is_manufactured_qty" class="countBox bgBlack">
+                                <i class="icon-bundle_product"></i>
+                            </span>
+                            <!--Manfacture Bundle product -->
+                            <span *ngIf="product.is_product && product.is_bundle_product && product.bundle_products?.is_manufactured_qty" class="countBox bgBlack">
+                                <i class="icon-manufacture_bundle_product"></i>
+                            </span>
+                        </div>
+                        <div class="inner wd50percent">
+                            <span class="text-left textOverflow maxWidth290" tooltip="{{product?.product_name}}" placement="bottom">{{product?.product_name}}</span>
+                        </div>
+                        <div class="inner wd11percent posRelative">
+                            <span class="text-center priceBox">{{product?.ProductStockPrice[0]?.sell_price_inc_tax}}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="bottomActionBar">
+            <div class="dtableCell wd60percent">
+                <div class="filterLinks pOfilter bottomBarFilter newfilters noposRelative">
+                    <label>Quick filter:</label>
+                    <div class="filterWhenActive dInlineBlock">
+                        <a tooltip="Products" placement="top"
+                            [ngClass]="{'active': productTypeFilter == 'Product'}"
+                            (click)="changeProductFilter('productTypeFilter' , 'Product')"
+                            href="JavaScript:void(0)" class="color000">
+                            <i class="icon-product"></i>
+                        </a>
+                        <a tooltip="Services" [ngClass]="{'active': productTypeFilter == 'Service'}"
+                            (click)="changeProductFilter('productTypeFilter' , 'Service')"
+                            placement="top" href="JavaScript:void(0)" class="color000">
+                            <i class="icon-service"></i>
+                        </a>
+                        <a tooltip="Bundle Service"
+                            [ngClass]="{'active': productTypeFilter == 'BundleService'}"
+                            (click)="changeProductFilter('productTypeFilter' , 'BundleService')"
+                            placement="top" href="JavaScript:void(0)" class="color000">
+                            <i class="icon-bundle_service"></i>
+                        </a>
+                        <a tooltip="Bundle Product"
+                            [ngClass]="{'active': productTypeFilter == 'BundleProduct'}"
+                            (click)="changeProductFilter('productTypeFilter' , 'BundleProduct')"
+                            placement="top" href="JavaScript:void(0)" class="color000">
+                            <i class="icon-bundle_product"></i>
+                        </a>
+                        <a tooltip="Manufacture Bundle Product"
+                            [ngClass]="{'active': productTypeFilter == 'ManufactureProduct'}"
+                            (click)="changeProductFilter('productTypeFilter' , 'ManufactureProduct')"
+                            placement="top" href="JavaScript:void(0)" class="color000">
+                            <i class="icon-manufacture_bundle_product"></i>
+                        </a>
+                        <!-- <a tooltip="Incomplete"
+                            [ngClass]="{'active': productTypeFilter == 'IncompleteProduct'}"
+                            (click)="changeProductFilter('productTypeFilter' , 'IncompleteProduct')"
+                            placement="top" href="JavaScript:void(0)" class="color000">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+            <div class="dtableCell wd40percent text-right">
+                <a href="JavaScript:void(0)" class="innerStatusBtns noFloat dInlineBlock add-btn-item"
+                (click)="openModal(addCustomProduct,'custModal wd600')">Add Custom Product</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<ng-template #addCustomProduct>
+    <div class="modal-header noborder pt40 pb0">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font24 fontSemiBold color000">Add Custom Product</h2>
+            <p class="fontPoppin font12 mb10 color000">Fill in data to register a custom product to this customer.</p>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="items-form-content pl30 pr30">
+            <form [formGroup]="customProductForm" autocomplete="off" (ngSubmit)="addCustomProducts()">
+                <div class="row mb15">
+                    <div class="col-lg-12">
+                        <label [ngClass]="{'bounce field-error-msg':submitted && fcustomProductForm.product_name.errors}" for="p-name" class="color000 mb0 fontPoppin font12 fontSemiBold">Product name</label>
+                        <input [ngClass]="{'bounce field-error-msg':submitted && fcustomProductForm.product_name.errors}" formControlName="product_name" type="text" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                            placeholder="Example: Screen Replacement for LG Stylo Plus 4">
+                        <span *ngIf="submitted && fcustomProductForm.product_name.errors" class="bounce field-error-msg">
+                            Product Name is required
+                        </span>
+                    </div>
+                </div>
+                <div class="row mb15">
+                    <div class="col-lg-3 pr0">
+                        <label [ngClass]="{'bounce field-error-msg':submitted && fcustomProductForm.cost_price.errors}" for="p-cost" class="color000 mb0 fontPoppin font12 fontSemiBold">Product cost</label>
+                        <input [ngClass]="{'bounce field-error-msg':submitted && fcustomProductForm.cost_price.errors}" formControlName="cost_price" appTwoDigitDecimaNumber type="text"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="$0.00" />
+                        <span *ngIf="submitted && fcustomProductForm.cost_price.errors" class="bounce field-error-msg">
+                            Cost is required
+                        </span>
+                    </div>
+                    <div class="col-lg-3 pr0 pl5">
+                        <label [ngClass]="{'bounce field-error-msg':submitted && fcustomProductForm.default_sell_price.errors}" for="p-price" class="color000 mb0 fontPoppin font12 fontSemiBold">Selling price</label>
+                        <input [ngClass]="{'bounce field-error-msg':submitted && fcustomProductForm.default_sell_price.errors}" formControlName="default_sell_price" appTwoDigitDecimaNumber type="text"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="$0.00" />
+                        <span *ngIf="submitted && fcustomProductForm.default_sell_price.errors" class="bounce field-error-msg">
+                            Selling price is required
+                        </span>
+                    </div>
+                    <div class="col-lg-3 pr0 pl5">
+                        <label [ngClass]="{'bounce field-error-msg':submitted && fcustomProductForm.quantity.errors}" for="p-qty" class="color000 mb0 fontPoppin font12 fontSemiBold">Quantity</label>
+                        <input [ngClass]="{'bounce field-error-msg':submitted && fcustomProductForm.quantity.errors}" formControlName="quantity" type="text"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="0" />
+                        <span *ngIf="submitted && fcustomProductForm.quantity.errors" class="bounce field-error-msg">
+                            Quantity is required
+                        </span>
+                    </div>
+                    <div class="col-lg-3 pl5">
+                        <label for="p-tax" class="color000 mb0 fontPoppin font12 fontSemiBold">Product is taxable</label>
+                        <div id="discount-cat-btn" class="btn-group height30px dInlineBlock">
+                            <a [ngClass]="{'active': customProductForm.controls.is_taxable.value , 'notActive' : !customProductForm.controls.is_taxable.value}"
+                                (click)="changeFormValue('customProductForm','is_taxable' , true)"
+                                class="btn wd50percent lineHeight12px active">Yes</a>
+                            <a [ngClass]="{'active': !customProductForm.controls.is_taxable.value , 'notActive' : customProductForm.controls.is_taxable.value}"
+                                (click)="changeFormValue('customProductForm','is_taxable' , false)"
+                                class="btn wd50percent lineHeight12px notActive">No</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb15">
+                    <div *ngIf="customProductForm.controls.is_taxable.value" class="col-lg-3 pr0">
+                        <label [ngClass]="{'bounce field-error-msg':submitted && fcustomProductForm.sell_price_inc_tax.errors}" for="p-pTax" class="color000 mb0 fontPoppin font12 fontSemiBold">Price Inc Tax:</label>
+                        <input [ngClass]="{'bounce field-error-msg':submitted && fcustomProductForm.sell_price_inc_tax.errors}" formControlName="sell_price_inc_tax" appTwoDigitDecimaNumber type="text"
+                            class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="0" />
+                        <span *ngIf="submitted && fcustomProductForm.sell_price_inc_tax.errors" class="bounce field-error-msg">
+                            Price including tax is required
+                        </span>
+                    </div>
+                    <div [ngClass]="{'col-lg-9 pl5':customProductForm.controls.is_taxable.value , 'col-lg-12': !customProductForm.controls.is_taxable.value}">
+                        <label for="p-notes" class="color000 mb0 fontPoppin font12 fontSemiBold">Notes</label>
+                        <input type="text" formControlName="note" class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                            placeholder="Type a note here" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto">
+        <button type="button" (click)="addCustomProducts()"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Add Product</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<!-- Modals Ends here -->

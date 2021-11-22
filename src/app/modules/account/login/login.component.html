@@ -1,0 +1,892 @@
+<div class="main-bg">
+    <!-----------------------System Logo----------------------------->
+    <div *ngIf="!splashScreenOpening && !splashScreenClosing && !recoveryEmailInputSection && !recoveryEmailVCSection && !recoveryPLinkSection && !recoveryPasswordSection && 
+    !recoveryLinkSection && !recoveryCodeSection &&!recoveryURLSection &&!recoveryURLInputSection &&!recoveryURLVCSection && !twoWayAuthentication"
+        id="sm-logo" class="logo pb50">
+        <h2 class="txt-center">Tech Bar <span>®</span></h2>
+        <!-- <img src="../../../../../assets/images/logo.png" alt='luna-logo' width='250'> -->
+    </div>
+    <!-----------------------Enter Business URL----------------------------->
+    <section *ngIf="busAddress">
+        <section id="login-section" class="center-position">
+            <div class="inner-content">
+                <div class="login-field">
+                    <label>Business Address:</label>
+                    <div class="text-field">
+                        <input type="text" (keypress)="UrlOnly($event)" (keyup.enter)="loadSections('W')"
+                            [(ngModel)]="businessName" name="email" class="form-control" placeholder="yourbusinessname"
+                            autoFocus>
+                        <span *ngIf="err" class="field-error-msg">
+                            Plaese enter Business Url
+                        </span>
+                        <label>.techbar.com</label>
+                    </div>
+                </div>
+                <div class="login-buttons mt30 click-wrap">
+                    <a (click)="loadSections('W')" href="JavaScript:void(0);"
+                        [ngClass]="{'block-event': businessName == '' || businessName == ' '}"
+                        class="parallelogram click-btn">
+                        <span class="skew-fix">Go to store</span>
+                    </a>
+                    <!-- <a *ngIf="businessName !== '' && businessName !== ' '" href="JavaScript:void(0);"
+                        (click)="loadSections('W')" class="parallelogram click-btn">
+                        <span class="skew-fix">{{loginText}}</span>
+                    </a> -->
+                </div>
+            </div>
+            <div id="fortget-address" (click)="loadSections('U')" class="forget-address"><a
+                    href="JavaScript:void(0);">Forgot your business URL?</a>
+            </div>
+        </section>
+    </section>
+    <!-----------------------Address Not Found----------------------------->
+    <section *ngIf="addressNotFound" class="center-position">
+        <div class="inner-content">
+            <div class="error-field">
+                <label><img src="../../../assets/images/cross.png" alt='luna-logo' width='15'> This Business Name does
+                    not exist
+                </label>
+            </div>
+            <div class="login-buttons mt10 click-wrap">
+                <a href="JavaScript:void(0);" class="parallelogram" (click)="tryAgain()"><span class="skew-fix">Try
+                        Again</span></a>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Welcome Business URL----------------------------->
+    <section *ngIf="welcome" id="welcome-message-section" class="center-position">
+        <div class="inner-content">
+            <div class="welcome-field">
+                <label>Welcome back <span>{{businessName}}</span></label>
+            </div>
+            <div class="login-buttons click-wrap">
+                <a href="JavaScript:void(0);" class="parallelogram click-btn" (click)="loadSections('S')"><span
+                        class="skew-fix">Continue</span></a>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Select User Old----------------------------->
+    <section *ngIf="accSelection" id="account-selection-section" class="center-position">
+        <div class="inner-content">
+            <div class="user-list click-wrap">
+                <ul>
+                    <li (click)="selectUser(user)" *ngFor="let user of loginDetails" class="parallelogram-img">
+                        <a href="JavaScript:void(0);" class="skew-fix-img click-btn">
+                            <div *ngIf="user.avatar_location != '' && user.avatar_location != null"
+                                class="store-image one"
+                                [ngStyle]="{'background-image':'url('+ [baseUrl+user.avatar_location] +')'}"></div>
+                            <div *ngIf="user.avatar_location == '' || user.avatar_location == null"
+                                class="store-image one"
+                                style="background-image: url(../../../../assets/images/userplaceholder.png);"></div>
+                            <!-- <span class="storeName">{{user.first_name + '  ' + user.last_name}}</span> -->
+                            <i>{{user.first_name + '  ' + user.last_name}}</i>
+                        </a>
+                    </li>
+                    <li *ngIf="loginDetails.length==0" class="parallelogram-img">
+                        <h3>No Record Found.</h3>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!-----------------------User Login Screen----------------------------->
+    <section *ngIf="accPasswordSelection" id="account-password-section" class="center-position">
+        <div class="inner-content">
+            <div class="login-field mt50">
+                <div class="parallelogram-img">
+                    <span class="skew-fix-img pb20">
+                        <div *ngIf="userInfo?.avatar_location != '' && userInfo?.avatar_location != null"
+                            class="store-image one"
+                            [ngStyle]="{'background-image':'url('+ [baseUrl+userInfo?.avatar_location] +')'}"></div>
+                        <div *ngIf="userInfo?.avatar_location == '' || userInfo?.avatar_location == null"
+                            class="store-image one"
+                            style="background-image: url(../../../../assets/images/userplaceholder.png);">
+                        </div>
+                        <i *ngIf="userInfo != null || userInfo != undefined"
+                            style="font-style: normal;">{{userInfo?.first_name + ' ' + userInfo?.last_name  || 'User Name'}}
+                        </i>
+                        <i *ngIf="userInfo == null || userInfo == undefined" style="font-style: normal;">User Name </i>
+                    </span>
+                </div>
+                <div class="inputFieldBox">
+                    <input [ngClass]="{'bounce':userNotFound}" [(ngModel)]="userToFetch" type="text"
+                        (focusout)="getUserDetail(true)" name="email" class="form-control"
+                        placeholder="Please enter your email" [appAutoFocus]="loginFocus" autoFocus>
+                    <!-- <span *ngIf="userNotFound" class="inputError">{{userNotFoundMessage}}</span> -->
+                    <span [ngClass]="{'ErrorTrue':userNotFound}" class="errorMessageBox">{{userNotFoundMessage}}</span>
+
+                </div>
+                <div class="inputFieldBox mt15 mb15">
+                    <input [ngClass]="{'bounce':err}" [readonly]="LoginAttemp" (keyup.enter)="Login()"
+                        [(ngModel)]="password" type="password" (click)="errMessageHide()" name="email"
+                        class="form-control" #passwordfield placeholder="Password" [appAutoFocus]="!loginFocus"
+                        autoFocus>
+                    <span class="fa fa-fw fa-eye field-icon" (click)="togglePassword(passwordfield,$event)"></span>
+                    <!-- <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> -->
+                    <!-- <span *ngIf="err" class="inputError">{{errorMessage}}</span> -->
+                    <span *ngIf="err" [ngClass]="{'ErrorTrue':err}" class="errorMessageBox">{{errorMessage}}</span>
+                    <span *ngIf="LoginAttemp" class="errorMessageBox3 bounce">{{errorMessage +' '}} <i
+                        class="waitTimer">{{seconds +' '}}</i>{{'seconds'}}</span>
+                </div>
+
+            </div>
+            <div class="login-buttons mt30 click-wrap">
+                <a [ngClass]="{'block-event':password == '' || password == ' ' || loginText == 'login ...' || userInfo == null || userInfo == undefined}"
+                    href="JavaScript:void(0);" (click)="Login()" class="parallelogram  click-btn"><span
+                        class="skew-fix">{{loginText}}</span></a>
+            </div>
+        </div>
+        <div *ngIf="!isEmailVerified" id="fortget-password" class="forget-address">
+            <a (click)="loadSections('RE')" href="JavaScript:void(0);">Forgot your email?</a>
+        </div>
+        <div *ngIf="isEmailVerified" id="fortget-password" class="forget-address">
+            <a (click)="loadForgetUserPassword()" href="JavaScript:void(0);">Forgot your password?</a>
+        </div>
+    </section>
+    <!-----------------------Select Store----------------------------->
+    <section *ngIf="showStore" id="store-selection-section" class="center-position">
+        <div *ngIf='allowdStoresLoader==true' class="luna-loader"> </div>
+        <div class="inner-content">
+            <div class="store-field pb5">
+                <label>Choose your store</label>
+            </div>
+            <div class="user-list click-wrap">
+                <ul>
+                    <li *ngFor="let st of allowdStores;" class="parallelogram-img">
+                        <a (click)="getLocationWithDrawer(st)" class="skew-fix-img click-btn">
+                            <div *ngIf="st.logo != '' && st.logo != null" class="store-image one"
+                                [ngStyle]="{'background-image':'url('+ [baseUrl+st.logo] +')'}"></div>
+                            <div *ngIf="st.logo == '' || st.logo == null" class="store-image one"
+                                style="background-image: url(../../../../assets/images/store1.jpg);"></div>
+                                <span class="storeName">{{st.store_name}}</span>
+                            <!-- {{st.store_name.length > 7 ? st.store_name.substring(0, 8)+ '..' || st.address_1.substring(0, 8): st.store_name}} -->
+                                <span>{{st.state}}</span>
+                        </a>
+                    </li>
+                    <li *ngIf="allowdStores.length==0 && allowdStoresLoader !=true" class="parallelogram-img">
+                        <h3>No Record Found</h3>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Select Business----------------------------->
+    <section *ngIf="showBusiness" id="store-selection-section" class="center-position">
+        <!-- <div *ngIf='allowdStoresLoader==true' class="luna-loader"> </div> -->
+        <div class="inner-content">
+            <div class="store-field pb5">
+                <label>Choose your Business</label>
+            </div>
+            <div class="user-list click-wrap">
+                <ul>
+                    <li *ngFor="let business of allBusinesses;" class="parallelogram-img">
+                        <a (click)="chooseBusiness(business)" href="JavaScript:void(0);" class="skew-fix-img click-btn">
+                            <div *ngIf="business.logo == ''" class="store-image one"
+                                style="background-image: url(../../../../assets/images/store1.jpg);"></div>
+                            <div *ngIf="business.logo != ''" class="store-image one"
+                                [ngStyle]="{'background-image':'url('+ [baseUrl+business.logo] +')'}"></div>
+                            <i style="font-style: normal;">{{business.business_system_name | titlecase}}</i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Select Cash Register----------------------------->
+    <section *ngIf="selectCashier" id="register-selection-section" class="center-position">
+        <div class="inner-content">
+            <div class="register-field pb5">
+                <label>Select a cashier register</label>
+            </div>
+            <div class="user-list click-wrap">
+                <ul>
+                    <li *ngFor="let dr of drawers; let i = index;" class="parallelogram-img">
+                        <a href="JavaScript:void(0);" (click)="checkRegisterar(dr)" class="skew-fix-img click-btn">
+                            <!-- <div class="cash-register-image one"></div>cash register {{i+1}} -->
+                            <div class="cash-register-image one"></div>{{dr.name || 'Cash Register'}}
+                        </a>
+                    </li>
+                    <li *ngIf="isObjectEmpty(drawers)" class="parallelogram-img">
+                        <h3>No Record Found</h3>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Splash Screen Opening----------------------------->
+    <section *ngIf="splashScreenOpening" id="register-selection-section" class="center-position">
+      <div class="splashScreen">
+          <div class="splashScreenOpening"></div>
+      </div>
+    </section>
+    <!-----------------------Splash Screen Closing----------------------------->
+    <section *ngIf="splashScreenClosing" id="register-selection-section" class="center-position">
+        <div class="splashScreen">
+            <div class="splashScreenClosing"></div>
+        </div>
+      </section>
+    <!-----------------------Clockin Authorizing----------------------------->
+    <section *ngIf="authorized" id="authorizing-message-clockin" class="center-position">
+        <div class="inner-content">
+            <div class="inuse-field pt30">
+                <label>Would you like to Clock in?</label>
+            </div>
+            <div class="login-buttons mt10">
+                <div routerLink="/Pointofsale" class="click-wrap inline-btn"><a href="JavaScript:void(0);"
+                        class="parallelogram click-btn"><span class="skew-fix">No</span></a></div>
+                <div class="click-wrap inline-btn"><a href="JavaScript:void(0);" (click)="clockIn()"
+                        class="parallelogram bg click-btn" routerLink="/Pointofsale"><span
+                            class="skew-fix">Yes</span></a></div>
+            </div>
+        </div>
+    </section>
+    <!-----------------------If Register not Authorize----------------------------->
+    <section *ngIf="notAuthorized" id="authorizing-message-access" class="center-position">
+        <div class="inner-content">
+            <div class="authorize-field pt30">
+                <label>Not authorized to access cash register Request Access?</label>
+            </div>
+            <div class="login-buttons mt30">
+                <div routerLink="/" class="click-wrap inline-btn"><a href="JavaScript:void(0);"
+                        class="parallelogram click-btn"><span class="skew-fix">No</span></a></div>
+                <div routerLink="/" class="click-wrap inline-btn"><a href="JavaScript:void(0);"
+                        class="parallelogram bg click-btn"><span class="skew-fix">Yes</span></a></div>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Selected User and Store----------------------------->
+    <div *ngIf="isUserSelected && !splashScreenOpening && !splashScreenClosing" class="external-data">
+        <!-----------------------Selected Store----------------------------->
+        <div *ngIf="storeStatus" id="store-status-section">
+            <div id="status-store-out" class="user-status-field">
+                <div class="parallelogram-img">
+                    <span class="skew-fix-img pb20">
+                        <div class="clock-status">
+                            <div class="user-status-name">
+                                <h2>Store</h2>
+                            </div>
+                            <div class="currernt-status clocked-out">
+                                <div class="btn-group" dropdown>
+                                    <button id="button-animated" dropdownToggle type="button"
+                                        class="btn btn-primary dropdown-toggle"
+                                        aria-controls="dropdown-animated">{{changeStore}} <span class="caret"></span>
+                                    </button>
+                                    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                                        aria-labelledby="button-animated">
+                                        <li [ngClass]="{'block-event  active':slectedStoreName == store.store_name }"
+                                            *ngFor="let store of allowdStores;"
+                                            (click)="changeValue('changeStore',store.store_name)" role="menuitem">
+                                            <a (click)="getLocationWithDrawer(store)" class="dropdown-item"
+                                                href="javascript:void(0);">
+                                                {{store.store_name.length > 16 ? store.store_name.substring(0, 15)+ '..' : store.store_name}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- style="background-image: url('+ [baseUrl+slectedStoreLogo] +');" -->
+                        <!-- style="background-image: url(../../../../assets/images/store1.jpg);" -->
+                        <!-- style="background-image: url('+ [baseUrl+slectedStoreLogo] +');"  -->
+                        <div *ngIf="slectedStoreLogo!=null" class="store-status-image one"
+                        [ngStyle]="{'background-image':'url('+ [baseUrl+slectedStoreLogo] +')'}">
+                        </div>
+                        <div *ngIf="slectedStoreLogo ==null" class="store-status-image one"
+                        style="background-image: url(../../../../assets/images/store1.jpg);">
+                        </div>
+                        <!-- *ngIf="slectedStoreLogo != '' && slectedStoreLogo != null" -->
+                        <!-- <div  *ngIf="slectedStoreLogo == '' && slectedStoreLogo == null" class="store-status-image one"
+                        style="background-image: url(../../../../assets/images/store1.jpg);" >
+                        </div> -->
+
+                        <div class="nameWidth">{{slectedStoreName}}</div>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-----------------------Selected User----------------------------->
+        <div *ngIf="allowdStores.length != 1" id="account-status-section">
+            <div *ngIf="showSelectedUser" id="status-clocked-out" class="user-status-field">
+                <div class="parallelogram-img">
+                    <span class="skew-fix-img pb20">
+                        <div class="clock-status">
+                            <div class="user-status-name">
+                                <h2>User</h2>
+                            </div>
+                            <div class="currernt-status clocked-out">
+                                <a routerLink="/Login" (click)="signOutUser()" href="JavaScript:void(0);">Logout</a>
+                            </div>
+                        </div>
+                        <div *ngIf="userInfo?.avatar_location != '' && userInfo?.avatar_location != null"
+                            [ngStyle]="{'background-image':'url('+ [baseUrl+userInfo?.avatar_location] +')'}"
+                            class="user-status-image one"></div>
+                        <div *ngIf="userInfo?.avatar_location == '' || userInfo?.avatar_location == null"
+                            class="user-status-image one"
+                            style="background-image: url(../../../../assets/images/userplaceholder.png);"></div>
+                        <div class="nameWidth">{{ userInfo['first_name'] + ' ' + userInfo['last_name'] }}</div>
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="isClockedIn" id="status-clocked-in" class="user-status-field">
+                <div class="parallelogram-img">
+                    <span class="skew-fix-img pb20">
+                        <div class="clock-status">
+                            <div class="user-status-name">
+                                <h2>User</h2>
+                            </div>
+                            <div class="currernt-status clocked-in">
+                                <p>Status: <span>Clocked in</span></p>
+                            </div>
+                        </div>
+                        <div class="user-status-image one"
+                            style="background-image: url(../../../../assets/images/userplaceholder.png);"></div>
+                        <div class="nameWidth">{{userName}}</div>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-----------------------Forget your password----------------------------->
+    <section *ngIf="recoveryLinkSection" id="recovery-section" class="center-position">
+        <div class="inner-content">
+            <div class="recoveryTopInfo">
+                <h2>Trouble Logging in?</h2>
+                <p>Select an Option and we'll send you a link to get back into your account.</p>
+            </div>
+            <div class="boxWrapper">
+                <div class="boxInner">
+                    <div class="top">
+                        <h2>Phone Call</h2>
+                    </div>
+                    <div class="mid">
+                        <p>We will call you to reset your password.</p>
+                    </div>
+                    <div class="bottom">
+                        <div class="login-buttons mt30 click-wrap">
+                            <a (click)="openPasswordModel(openSmsPopUp,'custModal wd300','Call')"
+                                class="roundBtn click-btn"><span class="">Send</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxInner">
+                    <div class="top">
+                        <h2>Email</h2>
+                    </div>
+                    <div class="mid">
+                        <p>We will send you OTP code to your registered email </p>
+                    </div>
+                    <div class="bottom">
+                        <div class="login-buttons mt30 click-wrap">
+                            <a (click)="openPasswordModel(openSmsPopUp,'custModal wd300','Email')"
+                                class="roundBtn click-btn"><span class="">Send</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxInner">
+                    <div class="top">
+                        <h2>SMS</h2>
+                    </div>
+                    <div class="mid">
+                        <p>We will send you a OTP code to the registered phone number.</p>
+                    </div>
+                    <div class="bottom">
+                        <div class="login-buttons mt30 click-wrap">
+                            <a (click)="openPasswordModel(openSmsPopUp,'custModal wd300','Sms')"
+                                class="roundBtn click-btn"><span class="">Send</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Reset your Password----------------------------->
+    <section *ngIf="recoveryCodeSection" id="recoveryCode-section" class="center-position">
+        <div class="inner-content">
+            <div class="recoveryTopInfo">
+                <h2>Reset Your Password</h2>
+            </div>
+            <div class="login-field mt50">
+                <div class="row">
+                    <div class="col-lg-12 mb25 inputFieldBox">
+                        <label class="passLabel" [ngClass]="{'bounce':passwordSubmitted && newPassword == ''}"
+                            for="newPassword">New
+                            Password</label>
+                        <div class="passField">
+                            <input #newpasswordfield [ngClass]="{'bounce':passwordSubmitted && newPassword == ''}"
+                                type="password" [(ngModel)]="newPassword" name="newPassword" id="newPassword"
+                                class="form-control cust-field">
+                            <span class="fa fa-fw fa-eye field-icon"
+                                (click)="togglePassword(newpasswordfield,$event)"></span>
+                            <!-- <span *ngIf="passwordSubmitted && newPassword == ''" class="inputError">New password is
+                            required</span> -->
+                            <span [ngClass]="{'ErrorTrue longMsg':passwordSubmitted && newPassword == ''}"
+                                class="errorMessageBox longBox">New password is
+                                required</span>
+                                <span [ngClass]="{'ErrorTrue longMsg':passwordSubmitted && newPassword.length < 6 && newPassword != ''}"
+                                class="errorMessageBox longBox">Password too short</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mb15 inputFieldBox">
+                        <label class="passLabel"
+                            [ngClass]="{'bounce':passwordSubmitted && (confirmPassword == '' || confirmPassword != newPassword) }"
+                            for="confirmnewPassword">New Password Confirmation</label>
+                        <div class="passField">
+                            <input #confirmpasswordfield
+                                [ngClass]="{'bounce':passwordSubmitted && (confirmPassword == '' || confirmPassword != newPassword)}"
+                                type="password" [(ngModel)]="confirmPassword" name="confirmnewPassword"
+                                id="confirmnewPassword" class="form-control cust-field">
+                            <span class="fa fa-fw fa-eye field-icon"
+                                (click)="togglePassword(confirmpasswordfield,$event)"></span>
+                            <!-- <span *ngIf="passwordSubmitted && confirmPassword == '' " class="inputError">
+                            Confirm password is required.</span> -->
+                            <!-- <span *ngIf="passwordSubmitted && (confirmPassword != '' && confirmPassword != newPassword)"
+                            class="inputError">
+                             Password does not match.</span> -->
+                            <span [ngClass]="{'ErrorTrue longMsg':passwordSubmitted && confirmPassword == '' }"
+                                class="errorMessageBox longBox">Confirm password is required</span>
+                            <span
+                                [ngClass]="{'ErrorTrue longMsg':passwordSubmitted && (confirmPassword != '' && confirmPassword != newPassword)}"
+                                class="errorMessageBox longBox">Password does not match</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="login-buttons mt30 click-wrap">
+                <a href="JavaScript:void(0);" (click)="updatePassword()" class="roundBtn  click-btn"><span
+                        class="">Reset Your Password</span></a>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Forget Business URL Request----------------------------->
+    <section *ngIf="recoveryURLSection" id="recovery-section" class="center-position">
+        <div class="inner-content">
+            <div class="recoveryTopInfo">
+                <h2>Trouble with business URL?</h2>
+                <p>Select an Option and we'll help you to get back into your business.</p>
+            </div>
+            <div class="boxWrapper">
+                <div class="boxInner">
+                    <div class="top">
+                        <h2>Phone Call</h2>
+                    </div>
+                    <div class="mid">
+                        <p>Registered phone number with the business</p>
+                    </div>
+                    <div class="bottom">
+                        <div class="login-buttons mt30 click-wrap">
+                            <a (click)="recoverURL('phone','Call')" class="roundBtn click-btn"><span
+                                    class="">Select</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxInner">
+                    <div class="top">
+                        <h2>Email</h2>
+                    </div>
+                    <div class="mid">
+                        <p>Registerd email address with the business</p>
+                    </div>
+                    <div class="bottom">
+                        <div class="login-buttons mt30 click-wrap">
+                            <a (click)="recoverURL('email','Email')" class="roundBtn click-btn"><span
+                                    class="">Select</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxInner">
+                    <div class="top">
+                        <h2>SMS</h2>
+                    </div>
+                    <div class="mid">
+                        <p>Registered phone number with the business</p>
+                    </div>
+                    <div class="bottom">
+                        <div class="login-buttons mt30 click-wrap">
+                            <a (click)="recoverURL('phone','Sms')" class="roundBtn click-btn"><span
+                                    class="">Select</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <span class="errorMessageBox2 bounce">Maximum Attempts Reached</span> -->
+        </div>
+    </section>
+    <!-----------------------Forget Business URL Enter Number----------------------------->
+    <section *ngIf="recoveryURLInputSection" id="recovery-section" class="center-position">
+        <div class="inner-content">
+            <div class="recoveryTopInfo">
+                <h2>Enter your {{title}}</h2>
+                <p>{{ title | titlecase }} registered with your business.</p>
+            </div>
+            <div class="login-field mt50 wd400 mx-auto">
+                <div class="row">
+                    <div class="col-lg-12 mb15">
+                        <input [ngClass]="{'bounce':urlError}" *ngIf="title == 'email'" type="text" name="vEmail"
+                            id="vEmail" placeholder="Enter your email address" [(ngModel)]="urlEmail"
+                            class="form-control cust-field" autoFocus>
+                        <ngx-intl-tel-input [ngClass]="{'bounce':urlError}" *ngIf="title != 'email'"
+                            [cssClass]="'form-control cust-field roundBox'" [preferredCountries]="preferredCountries"
+                            [enableAutoCountrySelect]="true" [enablePlaceholder]="true" [searchCountryFlag]="true"
+                            [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                            [selectFirstCountry]="true" [selectedCountryISO]="defaultCountry" [maxLength]="15"
+                            [phoneValidation]="false" [separateDialCode]="separateDialCode" name="phone"
+                            [(ngModel)]="urlNumber" autoFocus> </ngx-intl-tel-input>
+                        <span [ngClass]="{'ErrorTrue longMsg2':urlError}" class="errorMessageBox longBox">{{urlErrorMessage}}</span>
+                        <!-- <span *ngIf="urlError" class="inputError">{{urlErrorMessage}}</span> -->
+                    </div>
+                </div>
+            </div>
+            <div class="login-buttons mt30 click-wrap">
+                <a href="JavaScript:void(0);" (click)="sendURL()" class="roundBtn  click-btn"><span
+                        class="">Send</span></a>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Forget Business URL Verification Code----------------------------->
+    <section *ngIf="recoveryURLVCSection" id="recovery-section" class="center-position">
+        <div class="inner-content">
+            <div class="recoveryTopInfo">
+                <h2>Account Verification</h2>
+                <p>Please enter the 6-digit verification code we sent via {{method}}</p>
+            </div>
+            <div class="login-field mt50 wd600 mx-auto vCode">
+                <div class="row">
+                    <div class="col-lg-12 mb15">
+                        <ng-otp-input (onInputChange)="onOtpChange($event)" [config]="config"></ng-otp-input>
+                        <!-- <input [(ngModel)]="urlOTP1" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" autoFocus />
+                        <input [(ngModel)]="urlOTP2" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="urlOTP3" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="urlOTP4" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="urlOTP5" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="urlOTP6" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" /> -->
+                        <span *ngIf="urlOTPCodeError" class="errorMessageBox2 bounce">Invalid OTP Code.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="login-buttons mt30 click-wrap">
+                <!-- <a href="JavaScript:void(0);" class="roundBtn resendTimer  click-btn">
+                    <span class="">00:30</span>
+                </a>
+                <a href="JavaScript:void(0);" class="roundBtn resendBtn click-btn">
+                    <span class="">Resend</span>
+                </a> -->
+                <a href="JavaScript:void(0);" (click)="verifyBusinessURL()" class="roundBtn click-btn">
+                    <span class="">Verify</span>
+                </a>
+            </div>
+        </div>
+        <div class="forget-address">
+            <span>Didn't get the code?
+                <i *ngIf="startTimer" class="resendTimer">Wait for <span>{{resetCount}} sec</span></i>
+                <a *ngIf="!startTimer" class="resendCode" (click)="sendURL()" href="JavaScript:void(0);">Resend code</a>
+            </span>
+        </div>
+    </section>
+    <!-----------------------Forget Email Address Enter Phone Number----------------------------->
+    <section *ngIf="recoveryEmailInputSection" id="recovery-section" class="center-position">
+        <div class="inner-content">
+            <div class="recoveryTopInfo">
+                <h2>Enter your Phone Number</h2>
+                <p>Phone Number registered with your business and Email.</p>
+            </div>
+            <div class="login-field mt50 wd400 mx-auto">
+                <div class="row">
+                    <div class="col-lg-12 mb15">
+                        <ngx-intl-tel-input [ngClass]="{'bounce':userFotrgetEmailError}"
+                            [cssClass]="'form-control cust-field roundBox'" [preferredCountries]="preferredCountries"
+                            [enableAutoCountrySelect]="true" [enablePlaceholder]="true" [searchCountryFlag]="true"
+                            [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                            [selectFirstCountry]="true" [selectedCountryISO]="defaultCountry" [maxLength]="15"
+                            [phoneValidation]="false" [separateDialCode]="separateDialCode" name="phone"
+                            [(ngModel)]="forgetEmailPhone"> </ngx-intl-tel-input>
+                        <span [ngClass]="{'ErrorTrue longMsg':userFotrgetEmailError}"
+                            class="errorMessageBox longBox">{{userFotrgetEmailMessage}}</span>
+                        <!-- <span *ngIf="userFotrgetEmailError" class="inputError">{{userFotrgetEmailMessage}}</span> -->
+                    </div>
+                </div>
+            </div>
+            <div class="login-buttons mt30 click-wrap">
+                <a href="JavaScript:void(0);" (click)="userForgetEmail()" class="roundBtn  click-btn"><span
+                        class="">Send</span></a>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Forget Email Address Verification Code----------------------------->
+    <section *ngIf="recoveryEmailVCSection" id="recovery-section" class="center-position">
+        <div class="inner-content">
+            <div class="recoveryTopInfo">
+                <h2>Account Verification</h2>
+                <p>Please enter the 6-digit verification code we sent via SMS</p>
+            </div>
+            <div class="login-field mt50 wd600 mx-auto vCode">
+                <div class="row">
+                    <div class="col-lg-12 mb15">
+                        <ng-otp-input [ngClass]="{'bounce':emailOTPCodeError}" (onInputChange)="onOtpChange($event)"
+                            [config]="config"></ng-otp-input>
+                        <!-- <input [(ngModel)]="emailOTP1" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" autoFocus />
+                        <input [(ngModel)]="emailOTP2" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="emailOTP3" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="emailOTP4" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="emailOTP5" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="emailOTP6" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" /> -->
+                        <span *ngIf="emailOTPCodeError" class="errorMessageBox2 bounce">Invalid OTP Code</span>
+                    </div>
+                </div>
+            </div>
+            <div class="login-buttons mt30 click-wrap">
+                <!-- <a href="JavaScript:void(0);" class="roundBtn resendTimer  click-btn">
+                    <span class="">00:30</span>
+                </a>
+                <a href="JavaScript:void(0);" class="roundBtn resendBtn click-btn">
+                    <span class="">Resend</span>
+                </a> -->
+                <a href="JavaScript:void(0);" (click)="verifyUserEmailOTPCode()" class="roundBtn  click-btn"><span
+                        class="">Verify</span></a>
+            </div>
+        </div>
+        <div class="forget-address">
+            <span>Didn't get the code?
+                <i *ngIf="startTimer" class="resendTimer">Wait for <span>{{resetCount}} sec</span></i>
+                <a *ngIf="!startTimer" (click)="userForgetEmail()" class="resendCode" href="JavaScript:void(0);">Resend
+                    code</a>
+            </span>
+        </div>
+    </section>
+    <!-----------------------Forget your password----------------------------->
+    <section *ngIf="recoveryPLinkSection" id="recovery-section" class="center-position">
+        <div class="inner-content">
+            <div class="recoveryTopInfo">
+                <h2>{{recoveryPLinkSectionText}}</h2>
+                <p>Select an Option and we'll send you 6-digit verification code to reset your password.</p>
+            </div>
+            <div class="boxWrapper">
+                <div class="boxInner" (click)="forgetUserPassword('Call')">
+                    <div class="top">
+                        <h2>Phone Call</h2>
+                    </div>
+                    <div class="mid">
+                        <p>We will call you on the phone number ending
+                            {{userInfo?.phone.substr(userInfo?.phone.length - 4)}}.</p>
+                    </div>
+                    <div class="bottom">
+                        <div class="login-buttons mt30 click-wrap">
+                            <a class="roundBtn click-btn"><span class="">Send</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxInner" (click)="forgetUserPassword('Email')">
+                    <div class="top">
+                        <h2>Email</h2>
+                    </div>
+                    <div class="mid">
+                        <p>We will send you an email to
+                            {{userInfo?.email.charAt(0) + '*****' + userInfo?.email.substr(userInfo?.email.length - 4) }}
+                        </p>
+                    </div>
+                    <div class="bottom">
+                        <div class="login-buttons mt30 click-wrap">
+                            <a class="roundBtn click-btn"><span class="">Send</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxInner" (click)="forgetUserPassword('Sms')">
+                    <div class="top">
+                        <h2>SMS</h2>
+                    </div>
+                    <div class="mid">
+                        <p>We will send you SMS on the phone number ending
+                            {{userInfo?.phone.substr(userInfo?.phone.length - 4)}}.</p>
+                    </div>
+                    <div class="bottom">
+                        <div class="login-buttons mt30 click-wrap">
+                            <a class="roundBtn click-btn"><span class="">Send</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span *ngIf="errorSendingPasswordOTP" class="errorMessageBox2 bounce">{{errorSendingPasswordMessage}}</span>
+        </div>
+    </section>
+    <!-----------------------Forget Password Verification Code----------------------------->
+    <section *ngIf="recoveryPasswordSection" id="recovery-section" class="center-position">
+        <div class="inner-content">
+            <div class="recoveryTopInfo">
+                <h2>Account Verification</h2>
+                <p>Please enter the 6-digit verification code we sent via {{method}}</p>
+            </div>
+            <div class="login-field mt50 wd600 mx-auto vCode">
+                <div class="row">
+                    <div class="col-lg-12 mb15">
+                        <ng-otp-input [ngClass]="{'bounce':passwordOTPCodeError}" (onInputChange)="onOtpChange($event)"
+                            [config]="config"></ng-otp-input>
+                        <!-- <input [(ngModel)]="passwordOTP1" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" autoFocus />
+                        <input [(ngModel)]="passwordOTP2" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="passwordOTP3" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="passwordOTP4" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="passwordOTP5" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" />
+                        <input [(ngModel)]="passwordOTP6" type="text" maxLength="1" size="1" min="0" max="9"
+                            pattern="[0-9]{1}" /> -->
+                        <span *ngIf="passwordOTPCodeError" class="errorMessageBox2 bounce">Invalid OTP Code</span>
+                    </div>
+                </div>
+            </div>
+            <div class="login-buttons mt30 click-wrap">
+                <!-- <a href="JavaScript:void(0);" class="roundBtn resendTimer  click-btn">
+                    <span class="">00:30</span>
+                </a>
+                <a href="JavaScript:void(0);" class="roundBtn resendBtn click-btn">
+                    <span class="">Resend</span>
+                </a> -->
+                <a href="JavaScript:void(0);" (click)="verifyCode()" class="roundBtn  click-btn"><span
+                        class="">Verify</span></a>
+            </div>
+        </div>
+        <div class="forget-address">
+            <span>Didn't get the code?
+                <i *ngIf="startTimer" class="resendTimer">Wait for <span>{{resetCount}} sec</span></i>
+                <a *ngIf="!startTimer" (click)="forgetUserPassword(chooseMethod)" class="resendCode"
+                    href="JavaScript:void(0);">Resend code</a>
+            </span>
+        </div>
+    </section>
+    <!-----------------------Select User After forgetting----------------------------->
+    <section *ngIf="showUser" id="store-selection-section" class="center-position">
+        <div class="inner-content">
+            <div class="store-field pb5">
+                <label>Select your User</label>
+            </div>
+            <div class="user-list click-wrap">
+                <ul>
+                    <li (click)="selectUser(user)" *ngFor="let user of loginDetails" class="parallelogram-img">
+                        <a href="JavaScript:void(0);" class="skew-fix-img click-btn">
+                            <div *ngIf="user.avatar_location != '' && user.avatar_location != null"
+                                class="store-image one"
+                                [ngStyle]="{'background-image':'url('+ [baseUrl+user.avatar_location] +')'}"></div>
+                            <div *ngIf="user.avatar_location == '' || user.avatar_location == null"
+                                class="store-image one"
+                                style="background-image: url(../../../../assets/images/userplaceholder.png);"></div>
+                            <i>{{user.first_name + '  ' + user.last_name}}</i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!-----------------------Two way Authentication----------------------------------->
+    <section *ngIf="twoWayAuthentication" id="recovery-section" class="center-position">
+        <div class="inner-content">
+            <div class="recoveryTopInfo">
+                <h2>Account Verification</h2>
+                <p>Please enter the 6-digit verification code we sent via SMS</p>
+            </div>
+            <div class="login-field mt50 wd600 mx-auto vCode">
+                <div class="row">
+                    <div class="col-lg-12 mb15">
+                        <ng-otp-input [ngClass]="{'bounce':passwordOTPCodeError}" (onInputChange)="onOtpChange($event)"
+                            [config]="config"></ng-otp-input>
+                        <span *ngIf="passwordOTPCodeError" class="errorMessageBox2 bounce">Invalid OTP Code</span>
+                    </div>
+                </div>
+            </div>
+            <div class="login-buttons mt30 click-wrap">
+                <a href="JavaScript:void(0);" (click)="verifyCode()" class="roundBtn  click-btn">
+                    <span class="">Verify</span>
+                </a>
+            </div>
+        </div>
+        <div class="forget-address">
+            <span>Didn't get the code?
+                <i *ngIf="startTimer" class="resendTimer">Wait for <span>{{resetCount}} sec</span></i>
+                <a *ngIf="!startTimer" (click)="forgetUserPassword(chooseMethod)" class="resendCode"
+                    href="JavaScript:void(0);">Resend code</a>
+            </span>
+        </div>
+    </section>
+    <div *ngIf="(backButton && !twoWayAuthentication) || (showStore) || (!busAddress && !addressNotFound && !welcome && !accSelection && !accPasswordSelection 
+    && !splashScreenOpening && !showStore && !recoveryCodeSection && !twoWayAuthentication)" id="setting-icon" class="settings-icon">
+        <a (click)="backToLastSection();">
+            <img src="../../../assets/images/back.png" alt="setting" width="60" />
+        </a>
+    </div>
+</div>
+<ng-template #openSmsPopUp>
+    <div class="modal-header noborder pt30">
+        <div class="modalTitle mx-auto text-center">
+            <h2 class="fontPoppin font22 fontSemiBold color000 mb5">Enter code</h2>
+            <p class="fontPoppin font12 mb0 color808080">We sent a verification code<br>to your phone number</p>
+        </div>
+    </div>
+    <div class="modal-body pl40 pt0 pr40">
+        <input [ngClass]="{'bounce':!otpSMSValid}" [(ngModel)]="OTPCode" type="text" class="text-center form-control cust-field font12 borderColorcbcbcb borderRadius5"
+            placeholder="Please enter the code" required autoFocus>
+        <span *ngIf="!otpSMSValid" class="bounce field-error-msg text-center">
+            Incorrect Code
+        </span>
+    </div>
+    <div class="modal-footer dBlock noborder text-center mx-auto pt10 pb5 mb15">
+        <button (click)="verifyCode()" type="button"
+            class="btn modalSaveBtn fontPoppin fontSemiBold borderRadius20">Verify</button>
+        <button (click)="closeModel()" type="button"
+            class="btn modalCancelBtn font12 fontLato fontSemiBold mx-auto">Cancel</button>
+    </div>
+</ng-template>
+<!-- <ng-template #openSmsPopUp>
+    <div class="modal-header"></div>
+    <div class="modal-body">
+        <img src="../../../../assets/images/box-saveorder.png" alt="" width="40">
+        <h2>Enter code</h2>
+        <p>We sent a verification code to your phone number</p>
+        <input type="text" [(ngModel)]="OTPCode" class="form-control cust-field input-code"
+            placeholder="Please enter the code" required autoFocus>
+        <span *ngIf="!otpSMSValid" class="field-error-msg text-center"> Incorrect Code</span>
+    </div>
+    <div class="modal-footer">
+        <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button (click)="verifyCode()" type="button" class="btn btn-default" data-dismiss="modal">Verify</button>
+    </div>
+</ng-template> -->
+<ng-template #openURLPopup>
+    <div class="modal-header"></div>
+    <div class="modal-body">
+        <h2>Enter Email Address</h2>
+        <p>Business URL will be share on {{method}} </p>
+        <input type="text" autoFocus [(ngModel)]="urlEmail" name="verify-url" class="form-control cust-field input-code"
+            placeholder="Your email address...">
+    </div>
+    <div class="modal-footer">
+        <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button (click)="sendURL()" type="button" class="btn btn-default" data-dismiss="modal">Send</button>
+    </div>
+</ng-template>
+<ng-template #open_signOut>
+    <div *ngIf='signOutLoader2' class="luna-loading"></div>
+    <div class="modal-header"></div>
+    <div class="modal-body">
+        <img src="../../../../assets/images/logout.png" alt="" width="50">
+        <h2 style="color: black;">Sign Out</h2>
+        <p style="color: black;">Will clock out you. Are you sure?
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button (click)="closeModel()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button (click)="closeModel()" (click)="signOutUser()" type="button" class="btn btn-default"
+            data-dismiss="modal">Yes</button>
+    </div>
+</ng-template>

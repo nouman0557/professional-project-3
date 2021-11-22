@@ -1,0 +1,155 @@
+<div class="termsCredit creditSec">
+    <div class="cut-search-area">
+        <div class="top">
+            <div class="lt">
+                <a (click)="cancelProcess('manageCredit','cutomerInfo')"
+                    class="back-cust-list valignMiddle mr10">Back</a>
+            </div>
+            <div class="rt">
+                <div id="discount-cat-btn" class="btn-group height31px dInlineBlock">
+                    <a (click)="cancelProcess('manageCredit','loadStoreCredit')" class="btn wd50percent active">Manage
+                        Credit</a>
+                    <a (click)="cancelProcess('manageCredit','loadStoreTransCredit')"
+                        class="btn wd50percent notActive">Transfer Credit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="div-border noborderBottom Netborder-bottom bgWhite formScroll padding10px">
+    <div *ngIf="manageCreditLoader" class="luna-loading">
+    </div>
+    <div class="mb10">
+        <div class="row m0">
+            <div class="col-lg-12 noborderBottom text-right">
+                <p class="dInlineBlock valignMiddle color000 font11">Store Credit <span
+                        class="colorGreen fontSemiBold">{{supplier?.supplier_store_credit[0].supplier_credit_amount | currency}}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <form autocomplete="off" action="#" [formGroup]="manageCreditForm">
+        <!-- <div *ngIf='storeCreditsLoader==true' class="luna-loading"></div> -->
+        <div class="row m0">
+            <div class="col-lg-6 pl0">
+                <label for="Amount" [ngClass]="{ 'is-invalid': submitManageCredit && manageCreditForm.controls.amount.errors}">Store credit amount<sup>*</sup></label>
+                <input [ngClass]="{ 'bounce': submitManageCredit && manageCreditForm.controls.amount.errors}" appTwoDigitDecimaNumber formControlName="amount" type="text" name="Amount"
+                    class="form-control text-right cust-field font12 borderColorcbcbcb borderRadius5"
+                    placeholder="0.00">
+                <span class="dollarSymbol">$</span>
+                <span *ngIf="submitManageCredit && manageCreditForm.controls.amount.errors" class="field-error-msg mt10">
+                    Store credit amount is required
+                </span>
+            </div>
+        </div>
+        <div class="row m0">
+            <div class="col-md-6 pl0">
+                <label for="Increase-Decrease-Credit">Reason<sup>*</sup></label>
+                <div class="btn-group" dropdown>
+                    <button id="button-animated" dropdownToggle type="button"
+                        class="btn font12 borderColorcbcbcb borderRadius5 dropdown-toggle"
+                        aria-controls="dropdown-animated">{{chooseReason}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu"
+                        aria-labelledby="button-animated">
+                        <li *ngFor="let reason of storeCreditReasons"
+                            (click)="onChangeReason('chooseReason', reason.reason_name)" role="menuitem">
+                            <a class="dropdown-item">{{reason.reason_name}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 p0">
+                <label for="amount" [ngClass]="{ 'is-invalid': submitManageCredit && manageCreditForm.controls.reason.errors}">Order ID<sup>*</sup></label>
+                <input [ngClass]="{ 'bounce': submitManageCredit && manageCreditForm.controls.reason.errors}" formControlName="orderId" type="text" name="amount"
+                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="#xxx-xxxxxx">
+                <span *ngIf="submitManageCredit && manageCreditForm.controls.reason.errors" class="field-error-msg">
+                    Order ID is equired
+                </span>
+            </div>
+        </div>
+        <!-- <div class="row m0">
+                <div class="col-lg-6 pl0">
+                    <label for="adminUserName">Admin user name<sup>*</sup></label>
+                    <input formControlName="email" type="text" name="adminUserName"
+                        class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="Name">
+                    <span *ngIf="StoreCreditsSubmitted && fStoreCreditsForm.email.errors"
+                        class="field-error-msg">
+                        Required
+                    </span>
+                </div>
+                <div class="col-lg-6 pr0">
+                    <label for="adminPassword">Admin Password<sup>*</sup></label>
+                    <input formControlName="password" type="password" name="adminPassword"
+                        class="form-control cust-field font12 borderColorcbcbcb borderRadius5" placeholder="*******">
+                    <span *ngIf="StoreCreditsSubmitted && fStoreCreditsForm.password.errors"
+                        class="field-error-msg">
+                        Required
+                    </span>
+                </div>
+            </div> -->
+        <div class="row m0">
+            <div class="col-lg-6 pl0">
+                <label for="note" [ngClass]="{ 'is-invalid': submitManageCredit && manageCreditForm.controls.note.errors}">Note<sup>*</sup></label>
+                <input [ngClass]="{ 'bounce': submitManageCredit && manageCreditForm.controls.note.errors}" formControlName="note" type="text" name="note"
+                    class="form-control cust-field font12 borderColorcbcbcb borderRadius5"
+                    placeholder="Write a note...">
+                <span *ngIf="submitManageCredit && manageCreditForm.controls.note.errors" class="field-error-msg">
+                    Note is required
+                </span>
+            </div>
+            <div class="col-lg-6 p0">
+                <label for="note">Date<sup>*</sup></label>
+                <input formControlName="date" type="text" placeholder="Month/Day/Year"
+                    class="form-control cust-field font11 borderColorcbcbcb borderRadius5"
+                    [bsConfig]="{showWeekNumbers:false, minDate: todayDate, isAnimated: true  , dateInputFormat: 'MMM/D/YY'}"
+                    bsDatepicker placement="top" [isOpen]="isOpenpaymentDate">
+                <span (click)="isOpenpaymentDate = !isOpenpaymentDate" class="datePickerIcon"></span>
+            </div>
+        </div>
+        <div class="row m0">
+            <div class="col-md-12 p0">
+                <button (click)="onSubmitMangeCredit()" class="btnSubmit">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="div-border bggrey p0 borderWidth1pxSolid borderColor808080">
+    <div id="stock-supplier">
+        <div id="po-wrapper" [ngClass]="{'empty': supplierService.isObjectEmpty(supplierCreditLogs)}">
+            <div class="po-top-info">
+                <div class="inner wd10percent"><span>Date</span></div>
+                <div class="inner wd10percent"><span>Order ID</span></div>
+                <div class="inner wd12Percent"><span>Transaction ID</span></div>
+                <div class="inner wd10percent"><span>Reason</span></div>
+                <div class="inner wd12Percent"><span>Credit Balance</span></div>
+                <div class="inner wd15percent"><span>Added / Deducted</span></div>
+                <div class="inner wd19percent"><span>Notes</span></div>
+            </div>
+            <div class="po-inner-list">
+                <div *ngIf="showCreditLogLoader" class="luna-loading">
+                </div>
+                <div class="empty-text">
+                    <h2>
+                        No Store credits Available
+                    </h2>
+                </div>
+                <ul>
+                    <li class="" *ngFor="let log of supplierCreditLogs">
+                        <div class="inner wd10percent"><span class="text-center">{{log.date | customDateFormat}}</span>
+                        </div>
+                        <div class="inner wd10percent"><span>{{log.order_id}}</span></div>
+                        <div class="inner wd12Percent"><span>{{log.transaction_no}}</span></div>
+                        <div class="inner wd10percent"><span>{{log.reason}}</span></div>
+                        <div class="inner wd12Percent"><span>{{log.balance | currency}}</span></div>
+                        <div class="inner wd15percent">
+                            <span>{{log.is_increase ? "":"-"}}{{log.amount | currency}}</span></div>
+                        <div class="inner wd19percent"><span>{{log.note}}</span></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+

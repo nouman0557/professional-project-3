@@ -1,0 +1,49 @@
+<section id="order-invoice">
+    <div class="row">
+        <div class="col-lg-12 p0">
+            <div class="existing-order-wrapper reportsWrapper text-center table-responsive">
+                <div class="top-info">
+                    <div class="left">
+                        <h2>Device Information</h2>
+                    </div>
+                    <div class="right">
+                        <div>
+                            <button class="innerStatusBtns" href="JavaScript:void(0)" (click)="getDevicesRecord()">Refresh Records</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="po-wrapper" [ngClass]="{'empty': isObjectEmpty(devicesData)}">
+                    <div class="empty-text">
+                        <h2 class="color808080 font16 fontSemiBold500" >No Record Found.</h2>
+                    </div>
+                    <div class="po-top-info">
+                        <div class="inner wd15percent"><span>Device ID</span></div>
+                        <div class="inner wd15percent"><span>Brand and Model</span></div>
+                        <div class="inner wd15percent"><span>Device Version</span></div>
+                        <div class="inner wd30percent"><span>IMEI/SNN</span></div>
+                    </div>
+                    <div class="po-inner-list">
+                        <div *ngIf='deviceLoader' class="luna-loading"></div>
+                        <ul> 
+                            <li *ngFor="let device of devicesData">
+                                <div class="inner wd15percent">
+                                    <span>{{device?.deviceID || "N/A" }}</span>
+                                </div>
+                                <div class="inner wd15percent">
+                                    <span>{{device?.deviceModel | titlecase  }}</span>
+                                </div>
+                                <div class="inner wd15percent">
+                                    <span>{{device?.deviceVersion || "N/A" }}</span>
+                                </div>
+                                <div class="inner wd30percent">
+                                    <span >{{device?.deviceImei || "N/A" }}</span>
+                                </div>
+                                <!-- tooltip="{{device?.deviceImei}}" placement="bottom" git pull upstream development-->
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

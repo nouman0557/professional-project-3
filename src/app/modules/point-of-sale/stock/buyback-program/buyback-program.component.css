@@ -1,0 +1,9 @@
+.createBuyBack#stock-supplier #po-wrapper .po-inner-list li:hover a {
+    color: #000 !important;
+}
+.createBuyBack#stock-supplier #po-wrapper .po-inner-list li:hover a.addAdditionalItemsBtn{
+    color: #000 !important;
+}
+.createBuyBack#stock-supplier #po-wrapper .po-inner-list li:hover a.addAdditionalItemsBtn:hover{
+    color: #fff !important;
+}
